@@ -1,0 +1,558 @@
+/* =========================================================
+   OdulBox — script.js
+   Dil / Çark / Auth / Referral / Gizli Admin / Monetag Kurulum
+   ========================================================= */
+
+// ============ 1. DİL PAKETİ (11 dil) ============
+const languages = {
+    tr: { welcome:"OdulBox'a Hoş Geldiniz!", subtitle:"Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!", balance:"Bakiye: ", adTopTxt:"[Sponsorlu Reklam Bandı]", adMidTxt:"[Yüksek Kazançlı Reklam Alanı]", adSideTxt:"[🔥 REKLAM ALANI]", spinBtn:"ÇEVİR!", winAlert:"Tebrikler! Kazandığınız:", authNavBtn:"Giriş Yap / Kayıt Ol", logoutBtnTxt:"Çıkış Yap", loginTitle:"Hesaba Giriş Yap", registerTitle:"Hesap Oluştur", noAccount:"Hesabınız yok mu?", haveAccount:"Zaten üye misiniz?", usernamePlh:"Kullanıcı Adı", tasksTitle:"Günlük Görevler", rewardsTitle:"Ödülünü Çek", taskInsta:"Instagram Hesabını Takip Et", taskYoutube:"30sn YouTube Videosu İzle", doTaskBtn:"Görevi Yap", claimBtn:"Talep Et", referralTitle:"Davet Et & Kazan", referralDesc:"Linkini paylaş — her arkadaşın katıldığında bonus kazanç!", copyBtn:"Kopyala", linkCopied:"Davet linki kopyalandı! 🎉", referralPlaceholder:"Davet linkin için giriş yap", loginFirst:"Lütfen önce giriş yapın!", taskDone:"Görev tamamlandı!", addedBalance:"bakiyenize eklendi.", withdrawOK:"Talebiniz alındı! Ödülünüz 24-48 saat içinde işlenecektir.", withdrawFail:"Yetersiz bakiye! Gerekli:", spinLogin:"Çarkı çevirmek için giriş yapmalısınız!", invitedBy:"Davet edildin! Davet eden arkadaşına bonus verildi 🎉", refs:"davet", yourRefs:"Toplam davet: " },
+    en: { welcome:"Welcome to OdulBox!", subtitle:"Spin the wheel every day, complete tasks and win real rewards!", balance:"Balance: ", adTopTxt:"[SPONSORED BANNER]", adMidTxt:"[HIGH PAYING AD SPACE]", adSideTxt:"[🔥 AD SPACE]", spinBtn:"SPIN!", winAlert:"Congratulations! You won:", authNavBtn:"Login / Register", logoutBtnTxt:"Logout", loginTitle:"Login to Account", registerTitle:"Create Account", noAccount:"Don't have an account?", haveAccount:"Already have an account?", usernamePlh:"Username", tasksTitle:"Daily Tasks", rewardsTitle:"Withdraw Rewards", taskInsta:"Follow Instagram Account", taskYoutube:"Watch 30s YouTube Video", doTaskBtn:"Do Task", claimBtn:"Claim", referralTitle:"Invite & Earn", referralDesc:"Share your link — earn bonus every time a friend joins!", copyBtn:"Copy", linkCopied:"Referral link copied! 🎉", referralPlaceholder:"Login to get your referral link", loginFirst:"Please login first!", taskDone:"Task completed!", addedBalance:"added to your balance.", withdrawOK:"Request received! Reward processed in 24-48h.", withdrawFail:"Insufficient balance! Required:", spinLogin:"You must login to spin!", invitedBy:"You were invited! Your friend got a bonus 🎉", refs:"refs", yourRefs:"Total invites: " },
+    es: { welcome:"¡Bienvenido a OdulBox!", subtitle:"¡Gira la rueda cada día, completa tareas y gana recompensas reales!", balance:"Saldo: ", adTopTxt:"[BANNER PATROCINADO]", adMidTxt:"[ESPACIO PUBLICITARIO PREMIUM]", adSideTxt:"[🔥 ESPACIO PUBLICITARIO]", spinBtn:"¡GIRA!", winAlert:"¡Felicidades! Ganaste:", authNavBtn:"Iniciar sesión", logoutBtnTxt:"Salir", loginTitle:"Iniciar Sesión", registerTitle:"Crear Cuenta", noAccount:"¿No tienes cuenta?", haveAccount:"¿Ya tienes cuenta?", usernamePlh:"Usuario", tasksTitle:"Tareas Diarias", rewardsTitle:"Retirar Premios", taskInsta:"Seguir cuenta de Instagram", taskYoutube:"Ver video de 30s en YouTube", doTaskBtn:"Hacer Tarea", claimBtn:"Reclamar", referralTitle:"Invita y Gana", referralDesc:"¡Comparte tu enlace — gana bonos por cada amigo!", copyBtn:"Copiar", linkCopied:"¡Enlace copiado! 🎉", referralPlaceholder:"Inicia sesión para tu enlace", loginFirst:"¡Inicia sesión primero!", taskDone:"¡Tarea completada!", addedBalance:"añadido a tu saldo.", withdrawOK:"¡Solicitud recibida! Procesada en 24-48h.", withdrawFail:"Saldo insuficiente! Requerido:", spinLogin:"¡Debes iniciar sesión para girar!", invitedBy:"¡Fuiste invitado! Tu amigo recibió un bono 🎉", refs:"invitaciones", yourRefs:"Invitaciones totales: " },
+    de: { welcome:"Willkommen bei OdulBox!", subtitle:"Drehe jeden Tag das Rad, erledige Aufgaben und gewinne echte Prämien!", balance:"Guthaben: ", adTopTxt:"[WERBEBANNER]", adMidTxt:"[PREMIUM WERBEFLÄCHE]", adSideTxt:"[🔥 WERBEFLÄCHE]", spinBtn:"DREHEN!", winAlert:"Glückwunsch! Du hast gewonnen:", authNavBtn:"Anmelden / Registrieren", logoutBtnTxt:"Abmelden", loginTitle:"Anmelden", registerTitle:"Konto Erstellen", noAccount:"Noch kein Konto?", haveAccount:"Schon registriert?", usernamePlh:"Benutzername", tasksTitle:"Tägliche Aufgaben", rewardsTitle:"Prämien Abheben", taskInsta:"Instagram-Konto folgen", taskYoutube:"30s YouTube-Video ansehen", doTaskBtn:"Aufgabe Starten", claimBtn:"Anfordern", referralTitle:"Einladen & Verdienen", referralDesc:"Teile deinen Link — Bonus pro Freund!", copyBtn:"Kopieren", linkCopied:"Link kopiert! 🎉", referralPlaceholder:"Für deinen Link anmelden", loginFirst:"Bitte zuerst anmelden!", taskDone:"Aufgabe erledigt!", addedBalance:"zum Guthaben hinzugefügt.", withdrawOK:"Anfrage erhalten! Bearbeitung in 24-48h.", withdrawFail:"Unzureichendes Guthaben! Erforderlich:", spinLogin:"Zum Drehen bitte anmelden!", invitedBy:"Du wurdest eingeladen! Dein Freund erhielt einen Bonus 🎉", refs:"Einladungen", yourRefs:"Einladungen gesamt: " },
+    fr: { welcome:"Bienvenue sur OdulBox !", subtitle:"Tournez la roue chaque jour, terminez des tâches et gagnez de vraies récompenses !", balance:"Solde : ", adTopTxt:"[BANNIÈRE SPONSORISÉE]", adMidTxt:"[ESPACE PUBLICITAIRE PREMIUM]", adSideTxt:"[🔥 ESPACE PUBLICITAIRE]", spinBtn:"TOURNER !", winAlert:"Félicitations ! Vous avez gagné :", authNavBtn:"Connexion / Inscription", logoutBtnTxt:"Déconnexion", loginTitle:"Se Connecter", registerTitle:"Créer un Compte", noAccount:"Pas de compte ?", haveAccount:"Déjà inscrit ?", usernamePlh:"Nom d'utilisateur", tasksTitle:"Tâches Quotidiennes", rewardsTitle:"Retirer Récompenses", taskInsta:"Suivre le compte Instagram", taskYoutube:"Regarder vidéo YouTube 30s", doTaskBtn:"Faire la Tâche", claimBtn:"Réclamer", referralTitle:"Inviter & Gagner", referralDesc:"Partagez votre lien — bonus par ami !", copyBtn:"Copier", linkCopied:"Lien copié ! 🎉", referralPlaceholder:"Connectez-vous pour votre lien", loginFirst:"Connectez-vous d'abord !", taskDone:"Tâche terminée !", addedBalance:"ajouté au solde.", withdrawOK:"Demande reçue ! Traitée en 24-48h.", withdrawFail:"Solde insuffisant ! Requis :", spinLogin:"Connectez-vous pour tourner !", invitedBy:"Vous avez été invité ! Bonus envoyé à votre ami 🎉", refs:"invitations", yourRefs:"Total invitations : " },
+    pt: { welcome:"Bem-vindo ao OdulBox!", subtitle:"Gire a roda todos os dias, complete tarefas e ganhe recompensas reais!", balance:"Saldo: ", adTopTxt:"[BANNER PATROCINADO]", adMidTxt:"[ESPAÇO PUBLICITÁRIO PREMIUM]", adSideTxt:"[🔥 ESPAÇO PUBLICITÁRIO]", spinBtn:"GIRAR!", winAlert:"Parabéns! Você ganhou:", authNavBtn:"Entrar / Registrar", logoutBtnTxt:"Sair", loginTitle:"Entrar", registerTitle:"Criar Conta", noAccount:"Não tem conta?", haveAccount:"Já tem conta?", usernamePlh:"Usuário", tasksTitle:"Tarefas Diárias", rewardsTitle:"Sacar Prêmios", taskInsta:"Seguir conta no Instagram", taskYoutube:"Assistir vídeo de 30s no YouTube", doTaskBtn:"Fazer Tarefa", claimBtn:"Resgatar", referralTitle:"Convide & Ganhe", referralDesc:"Compartilhe seu link — bônus por amigo!", copyBtn:"Copiar", linkCopied:"Link copiado! 🎉", referralPlaceholder:"Entre para obter seu link", loginFirst:"Entre primeiro!", taskDone:"Tarefa concluída!", addedBalance:"adicionado ao saldo.", withdrawOK:"Solicitação recebida! Processada em 24-48h.", withdrawFail:"Saldo insuficiente! Necessário:", spinLogin:"Entre para girar!", invitedBy:"Você foi convidado! Bônus enviado 🎉", refs:"convites", yourRefs:"Convites totais: " },
+    ru: { welcome:"Добро пожаловать в OdulBox!", subtitle:"Крутите колесо каждый день, выполняйте задания и получайте реальные награды!", balance:"Баланс: ", adTopTxt:"[РЕКЛАМНЫЙ БАННЕР]", adMidTxt:"[ПРЕМИУМ РЕКЛАМА]", adSideTxt:"[🔥 РЕКЛАМНОЕ МЕСТО]", spinBtn:"КРУТИТЬ!", winAlert:"Поздравляем! Вы выиграли:", authNavBtn:"Вход / Регистрация", logoutBtnTxt:"Выход", loginTitle:"Вход в Аккаунт", registerTitle:"Создать Аккаунт", noAccount:"Нет аккаунта?", haveAccount:"Уже зарегистрированы?", usernamePlh:"Имя пользователя", tasksTitle:"Ежедневные Задания", rewardsTitle:"Вывод Наград", taskInsta:"Подписаться на Instagram", taskYoutube:"Смотреть видео YouTube 30 сек", doTaskBtn:"Выполнить", claimBtn:"Получить", referralTitle:"Приглашай и Зарабатывай", referralDesc:"Поделитесь ссылкой — бонус за каждого друга!", copyBtn:"Копировать", linkCopied:"Ссылка скопирована! 🎉", referralPlaceholder:"Войдите для получения ссылки", loginFirst:"Сначала войдите!", taskDone:"Задание выполнено!", addedBalance:"добавлено на баланс.", withdrawOK:"Заявка принята! Обработка 24-48ч.", withdrawFail:"Недостаточно средств! Требуется:", spinLogin:"Войдите, чтобы крутить!", invitedBy:"Вас пригласили! Бонус отправлен 🎉", refs:"приглашений", yourRefs:"Всего приглашений: " },
+    ar: { welcome:"مرحباً بك في OdulBox!", subtitle:"أدر العجلة كل يوم، أكمل المهام واربح مكافآت حقيقية!", balance:"الرصيد: ", adTopTxt:"[إعلان مدعوم]", adMidTxt:"[مساحة إعلانية مميزة]", adSideTxt:"[🔥 مساحة إعلانية]", spinBtn:"أدر!", winAlert:"مبروك! لقد ربحت:", authNavBtn:"تسجيل الدخول", logoutBtnTxt:"خروج", loginTitle:"تسجيل الدخول", registerTitle:"إنشاء حساب", noAccount:"ليس لديك حساب؟", haveAccount:"لديك حساب بالفعل؟", usernamePlh:"اسم المستخدم", tasksTitle:"المهام اليومية", rewardsTitle:"سحب المكافآت", taskInsta:"تابع حساب إنستغرام", taskYoutube:"شاهد فيديو يوتيوب 30 ثانية", doTaskBtn:"إنجاز المهمة", claimBtn:"اطلب", referralTitle:"ادعُ واربح", referralDesc:"شارك رابطك — مكافأة عن كل صديق!", copyBtn:"نسخ", linkCopied:"تم نسخ الرابط! 🎉", referralPlaceholder:"سجّل الدخول للحصول على رابطك", loginFirst:"سجّل الدخول أولاً!", taskDone:"تمت المهمة!", addedBalance:"أُضيف إلى رصيدك.", withdrawOK:"تم استلام طلبك! المعالجة خلال 24-48 ساعة.", withdrawFail:"الرصيد غير كافٍ! المطلوب:", spinLogin:"سجّل الدخول للدوران!", invitedBy:"تمت دعوتك! أُرسلت مكافأة لصديقك 🎉", refs:"دعوة", yourRefs:"إجمالي الدعوات: " },
+    id: { welcome:"Selamat dat!", subtitle:"Putar roda setiap hari, selesaikan tugas, dan menangkan hadiah nyata!", balance:"Saldo: ", adTopTxt:"[BANNER SPONSOR]", adMidTxt:"[RUANG IKLAN PREMIUM]", adSideTxt:"[🔥 RUANG IKLAN]", spinBtn:"PUTAR!", winAlert:"Selamat! Anda memenangkan:", authNavBtn:"Masuk / Daftar", logoutBtnTxt:"Keluar", loginTitle:"Masuk Akun", registerTitle:"Buat Akun", noAccount:"Belum punya akun?", haveAccount:"Sudah punya akun?", usernamePlh:"Nama Pengguna", tasksTitle:"Tugas Harian", rewardsTitle:"Tarik Hadiah", taskInsta:"Ikuti Akun Instagram", taskYoutube:"Tonton Video YouTube 30s", doTaskBtn:"Kerjakan", claimBtn:"Klaim", referralTitle:"Undang & Menang", referralDesc:"Bagikan tautan Anda — bonus tiap teman bergabung!", copyBtn:"Salin", linkCopied:"Tautan disalin! 🎉", referralPlaceholder:"Masuk untuk mendapatkan tautan", loginFirst:"Masuk dulu!", taskDone:"Tugas selesai!", addedBalance:"ditambahkan ke saldo.", withdrawOK:"Permintaan diterima! Diproses 24-48 jam.", withdrawFail:"Saldo tidak cukup! Diperlukan:", spinLogin:"Masuk untuk memutar!", invitedBy:"Anda diundang! Bonus terkirim 🎉", refs:"undangan", yourRefs:"Total undangan: " },
+    hi: { welcome:"OdulBox में आपका स्वागत है!", subtitle:"हर दिन पहिया घुमाएं, कार्य पूरे करें और असली इनाम जीतें!", balance:"बैलेंस: ", adTopTxt:"[प्रायोजित बैनर]", adMidTxt:"[प्रीमियम विज्ञापन स्थान]", adSideTxt:"[🔥 विज्ञापन स्थान]", spinBtn:"घुमाओ!", winAlert:"बधाई! आपने जीता:", authNavBtn:"लॉगिन / रजिस्टर", logoutBtnTxt:"लॉगआउट", loginTitle:"लॉगिन करें", registerTitle:"खाता बनाएं", noAccount:"खाता नहीं है?", haveAccount:"पहले से खाता है?", usernamePlh:"उपयोगकर्ता नाम", tasksTitle:"दैनिक कार्य", rewardsTitle:"इनाम निकालें", taskInsta:"Instagram फॉलो करें", taskYoutube:"30 सेकंड YouTube वीडियो देखें", doTaskBtn:"कार्य करें", claimBtn:"क्लेम करें", referralTitle:"आमंत्रित करें और कमाएं", referralDesc:"अपना लिंक साझा करें — हर दोस्त पर बोनस!", copyBtn:"कॉपी", linkCopied:"लिंक कॉपी हो गया! 🎉", referralPlaceholder:"लिंक के लिए लॉगिन करें", loginFirst:"पहले लॉगिन करें!", taskDone:"कार्य पूरा!", addedBalance:"बैलेंस में जोड़ा गया।", withdrawOK:"अनुरोध मिला! 24-48 घंटे में प्रक्रिया।", withdrawFail:"अपर्याप्त बैलेंस! आवश्यक:", spinLogin:"घुमाने के लिए लॉगिन करें!", invitedBy:"आप आमंत्रित हुए! बोनस भेजा गया 🎉", refs:"आमंत्रण", yourRefs:"कुल आमंत्रण: " },
+    bn: { welcome:"OdulBox-এ স্বাগতম!", subtitle:"প্রতিদিন চাকা ঘোরান, কাজ সম্পূর্ণ করুন এবং আসল পুরস্কার জিতুন!", balance:"ব্যালেন্স: ", adTopTxt:"[স্পন্সর ব্যানার]", adMidTxt:"[প্রিমিয়াম বিজ্ঞাপন]", adSideTxt:"[🔥 বিজ্ঞাপন]", spinBtn:"ঘোরাও!", winAlert:"অভিনন্দন! আপনি জিতেছেন:", authNavBtn:"লগইন / রেজিস্টার", logoutBtnTxt:"লগআউট", loginTitle:"লগইন", registerTitle:"অ্যাকাউন্ট তৈরি", noAccount:"অ্যাকাউন্ট নেই?", haveAccount:"আগে থেকেই অ্যাকাউন্ট?", usernamePlh:"ব্যবহারকারীর নাম", tasksTitle:"দৈনিক কাজ", rewardsTitle:"পুরস্কার তুলুন", taskInsta:"Instagram ফলো করুন", taskYoutube:"৩০ সেকেন্ড YouTube ভিডিও দেখুন", doTaskBtn:"কাজ করুন", claimBtn:"ক্লেইম", referralTitle:"আমন্ত্রণ করুন ও জিতুন", referralDesc:"লিংক শেয়ার করুন — প্রতি বন্ধুতে বোনাস!", copyBtn:"কপি", linkCopied:"লিংক কপি হয়েছে! 🎉", referralPlaceholder:"লিংকের জন্য লগইন করুন", loginFirst:"প্রথমে লগইন করুন!", taskDone:"কাজ সম্পূর্ণ!", addedBalance:"ব্যালেন্সে যোগ হয়েছে।", withdrawOK:"অনুরোধ পেয়েছি! ২৪-৪৮ ঘণ্টায় প্রক্রিয়া।", withdrawFail:"অপর্যাপ্ত ব্যালেন্স! প্রয়োজন:", spinLogin:"ঘোরাতে লগইন করুন!", invitedBy:"আপনি আমন্ত্রিত! বোনাস পাঠানো হয়েছে 🎉", refs:"আমন্ত্রণ", yourRefs:"মোট আমন্ত্রণ: " },
+    ja: { welcome:"OdulBoxへようこそ！", subtitle:"毎日ルーレットを回して、タスクをこなしてリアルな報酬を獲得！", balance:"残高: ", adTopTxt:"[スポンサーバナー]", adMidTxt:"[プレミアム広告枠]", adSideTxt:"[🔥 広告枠]", spinBtn:"回す!", winAlert:"おめでとうございます！獲得:", authNavBtn:"ログイン / 登録", logoutBtnTxt:"ログアウト", loginTitle:"ログイン", registerTitle:"アカウント作成", noAccount:"アカウントをお持ちでない？", haveAccount:"既にアカウントをお持ち？", usernamePlh:"ユーザー名", tasksTitle:"デイリータスク", rewardsTitle:"報酬を出金", taskInsta:"Instagramをフォロー", taskYoutube:"30秒YouTube動画を見る", doTaskBtn:"タスク実行", claimBtn:"請求", referralTitle:"招待して稼ぐ", referralDesc:"リンクを共有 — 友達が参加するごとにボーナス！", copyBtn:"コピー", linkCopied:"リンクをコピーしました！ 🎉", referralPlaceholder:"リンク取得にはログイン", loginFirst:"まずログインしてください！", taskDone:"タスク完了！", addedBalance:"残高に追加されました。", withdrawOK:"リクエスト受付！24-48時間で処理。", withdrawFail:"残高不足！必要:", spinLogin:"回すにはログインが必要です！", invitedBy:"招待されました！ボーナス送信済み 🎉", refs:"招待", yourRefs:"合計招待: " }
+};
+
+let userLang = (navigator.language || navigator.userLanguage || "en").substring(0,2);
+if (!languages[userLang]) userLang = 'en';
+const lang = languages[userLang];
+document.documentElement.lang = userLang;
+if (userLang === 'ar') document.documentElement.dir = 'rtl';
+
+// ============ 2. ÇEVİRİ UYGULA ============
+function applyTranslations() {
+    const map = {
+        'txt-welcome':'welcome','txt-subtitle':'subtitle','txt-ad-top':'adTopTxt','txt-ad-mid':'adMidTxt',
+        'txt-ad-left':'adSideTxt','txt-ad-right':'adSideTxt','spin-btn':'spinBtn','auth-nav-btn':'authNavBtn',
+        'logout-btn':'logoutBtnTxt','txt-login-title':'loginTitle','txt-register-title':'registerTitle',
+        'txt-no-account':'noAccount','txt-have-account':'haveAccount','reg-username':'usernamePlh',
+        'txt-tasks-title':'tasksTitle','txt-rewards-title':'rewardsTitle','txt-task-1':'taskInsta','txt-task-2':'taskYoutube',
+        'txt-referral-title':'referralTitle','txt-referral-desc':'referralDesc','copy-ref-btn':'copyBtn','referral-link':'referralPlaceholder'
+    };
+    try {
+        for (const [id, key] of Object.entries(map)) {
+            const el = document.getElementById(id);
+            if (!el) continue;
+            if (id === 'reg-username' || id === 'referral-link') el.placeholder = lang[key];
+            else el.innerText = lang[key];
+        }
+        document.querySelectorAll('.task-btn:not(#copy-ref-btn)').forEach(b => b.innerText = lang.doTaskBtn);
+        document.querySelectorAll('.withdraw-btn').forEach(b => b.innerText = lang.claimBtn);
+    } catch(e) { console.log("Lang skipped:", e); }
+}
+
+// ============ 3. YAPILANDIRMA (Admin'den gelir) ============
+const DEFAULTS = {
+    adminPassHash: null,
+    zonePopunder:"", zoneOnclick:"", zoneInterstitial:"", zoneBanner:"", zoneNative:"",
+    antiBlock:false,
+    directLink:"https://uplcm.com/4/12156047",
+    refBonus:0.25, task1Reward:0.05, task2Reward:0.10,
+    task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
+    minWithdraw:5.00
+};
+let cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
+
+function saveCfg() { localStorage.setItem('odulbox_cfg', JSON.stringify(cfg)); }
+
+// Basit hash (gizli panel için yeterli; sunucu tarafı auth yerine localStorage kullanılır)
+function simpleHash(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;} return 'h'+Math.abs(h); }
+
+// ============ 4. AUTH / KULLANICI ============
+const modal = document.getElementById("auth-modal");
+const authNavBtn = document.getElementById("auth-nav-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const closeBtns = document.querySelectorAll(".close-btn");
+const goToRegister = document.getElementById("go-to-register");
+const goToLogin = document.getElementById("go-to-login");
+const loginBox = document.getElementById("login-form-box");
+const registerBox = document.getElementById("register-form-box");
+
+let loggedInUser = JSON.parse(localStorage.getItem('odulbox_current_user')) || null;
+
+function updateUIForLoggedInUser() {
+    if (loggedInUser) {
+        document.getElementById('txt-balance').innerText = `${lang.balance} ${loggedInUser.balance.toFixed(2)} $`;
+        authNavBtn.innerText = loggedInUser.username;
+        authNavBtn.style.pointerEvents = "none";
+        logoutBtn.style.display = "block";
+        // Referral link
+        const base = location.origin + location.pathname;
+        document.getElementById('referral-link').value = `${base}?ref=${loggedInUser.refCode}`;
+        document.getElementById('txt-referral-stats').innerText = `${lang.yourRefs} ${(loggedInUser.refs||0)}`;
+    } else {
+        document.getElementById('txt-balance').innerText = `${lang.balance} 0.00 $`;
+        authNavBtn.innerText = lang.authNavBtn;
+        authNavBtn.style.pointerEvents = "auto";
+        logoutBtn.style.display = "none";
+        document.getElementById('txt-referral-stats').innerText = "";
+    }
+}
+
+// Modal aç/kapa
+if (authNavBtn) authNavBtn.onclick = () => modal.style.display = "flex";
+closeBtns.forEach(cb => cb.onclick = function(){ document.getElementById(this.dataset.close || 'auth-modal').style.display = "none"; });
+window.onclick = e => { if (e.target == modal) modal.style.display = "none"; if (e.target == adminPanelEl) adminPanelEl.style.display = "none"; };
+
+if (goToRegister) goToRegister.onclick = e => { e.preventDefault(); loginBox.style.display="none"; registerBox.style.display="block"; };
+if (goToLogin) goToLogin.onclick = e => { e.preventDefault(); registerBox.style.display="none"; loginBox.style.display="block"; };
+
+if (logoutBtn) logoutBtn.onclick = () => {
+    localStorage.removeItem('odulbox_current_user');
+    loggedInUser = null;
+    updateUIForLoggedInUser();
+    alert(userLang === 'tr' ? "Başarıyla çıkış yapıldı." : "Logged out successfully.");
+};
+
+// Referral kodu: ?ref= parametresini yakala ve kayıt sırasında işle
+let pendingRef = null;
+try {
+    const urlP = new URLSearchParams(location.search);
+    if (urlP.get('ref')) {
+        pendingRef = urlP.get('ref');
+        localStorage.setItem('odulbox_pending_ref', pendingRef);
+        sessionStorage.setItem('odulbox_invited', '1');
+    } else if (localStorage.getItem('odulbox_pending_ref')) {
+        pendingRef = localStorage.getItem('odulbox_pending_ref');
+    }
+} catch(e) {}
+
+document.getElementById('register-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('reg-username').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+
+    let allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    if (allUsers.find(u => u.email === email)) {
+        alert(userLang === 'tr' ? "Bu e-posta zaten kayıtlı!" : "Email already registered!");
+        return;
+    }
+
+    const refCode = Math.random().toString(36).substring(2,8).toUpperCase();
+    const newUser = {
+        username, email, password: simpleHash(password),
+        balance: 0.00, refCode, refs: 0, joinedAt: Date.now(), tasksDone:{}, lastSpin:0
+    };
+
+    // Davet edildiyse: davet edene bonus ver
+    if (pendingRef) {
+        const inviter = allUsers.find(u => u.refCode === pendingRef);
+        if (inviter) {
+            inviter.balance = +(inviter.balance + cfg.refBonus).toFixed(2);
+            inviter.refs = (inviter.refs||0) + 1;
+            newUser.balance = 0; // yeni kullanıcı bonus almaz, davet eden alır
+            sessionStorage.setItem('odulbox_show_invite_msg','1');
+            localStorage.removeItem('odulbox_pending_ref');
+            pendingRef = null;
+        }
+    }
+
+    allUsers.push(newUser);
+    localStorage.setItem('odulbox_users', JSON.stringify(allUsers));
+    alert(userLang === 'tr' ? "Kayıt başarılı! Giriş yapabilirsiniz." : "Registration success! Please login.");
+    registerBox.style.display = "none";
+    loginBox.style.display = "block";
+});
+
+document.getElementById('login-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    let allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    const user = allUsers.find(u => u.email === email && u.password === simpleHash(password));
+    if (user) {
+        loggedInUser = user;
+        localStorage.setItem('odulbox_current_user', JSON.stringify(user));
+        updateUIForLoggedInUser();
+        modal.style.display = "none";
+        if (sessionStorage.getItem('odulbox_show_invite_msg')) {
+            sessionStorage.removeItem('odulbox_show_invite_msg');
+            alert(lang.invitedBy);
+        } else {
+            alert(userLang === 'tr' ? `Hoş geldin, ${user.username}!` : `Welcome, ${user.username}!`);
+        }
+    } else {
+        alert(userLang === 'tr' ? "Hatalı e-posta veya şifre!" : "Incorrect email or password!");
+    }
+});
+
+// Kopyalama
+document.getElementById('copy-ref-btn').onclick = function() {
+    const input = document.getElementById('referral-link');
+    if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
+    navigator.clipboard.writeText(input.value).then(() => alert(lang.linkCopied));
+};
+
+// ============ 5. KAZANÇ EKLE ============
+function addBalance(amount) {
+    if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return false; }
+    loggedInUser.balance = +(loggedInUser.balance + amount).toFixed(2);
+    localStorage.setItem('odulbox_current_user', JSON.stringify(loggedInUser));
+    const allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    const idx = allUsers.findIndex(u => u.email === loggedInUser.email);
+    if (idx > -1) { allUsers[idx].balance = loggedInUser.balance; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); }
+    updateUIForLoggedInUser();
+    return true;
+}
+
+// Görevler
+document.getElementById('btn-task-1').addEventListener('click', () => {
+    if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
+    window.open(cfg.task1Url, '_blank');
+    setTimeout(() => {
+        if (addBalance(cfg.task1Reward)) alert(`${lang.taskDone} +${cfg.task1Reward.toFixed(2)} $ ${lang.addedBalance}`);
+    }, 1500);
+});
+document.getElementById('btn-task-2').addEventListener('click', () => {
+    if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
+    window.open(cfg.task2Url, '_blank');
+    setTimeout(() => {
+        if (addBalance(cfg.task2Reward)) alert(`${lang.taskDone} +${cfg.task2Reward.toFixed(2)} $ ${lang.addedBalance}`);
+    }, 1500);
+});
+
+// Çekim
+function handleWithdraw(minAmount, rewardName) {
+    if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
+    if (loggedInUser.balance < minAmount) {
+        alert(`${lang.withdrawFail} ${minAmount.toFixed(2)} $ / ${lang.balance} ${loggedInUser.balance.toFixed(2)} $`);
+        return;
+    }
+    alert(lang.withdrawOK);
+}
+document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(cfg.minWithdraw, "PayPal/Papara"));
+document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(cfg.minWithdraw + 5, "Steam Wallet"));
+
+// ============ 6. ŞANS ÇARKI ============
+const wheelCanvas = document.getElementById('wheel');
+const spinButton = document.getElementById('spin-btn');
+const wheelSegments = [
+    { label:"0.01 $", value:0.01, color:"#FF6B6B" }, { label:"0.05 $", value:0.05, color:"#4ECDC4" },
+    { label:"0.02 $", value:0.02, color:"#FFD93D" }, { label:"0.10 $", value:0.10, color:"#6BCB77" },
+    { label:"0.01 $", value:0.01, color:"#FF8C42" }, { label:"0.20 $", value:0.20, color:"#9B5DE5" },
+    { label:"0.03 $", value:0.03, color:"#00B4D8" }, { label:"0.50 $", value:0.50, color:"#F72585" }
+];
+const segmentAngle = (Math.PI*2)/wheelSegments.length;
+let currentRotation = 0, isSpinning = false;
+
+function drawWheel() {
+    if (!wheelCanvas) return;
+    const ctx = wheelCanvas.getContext('2d');
+    const cx = wheelCanvas.width/2, cy = wheelCanvas.height/2, r = wheelCanvas.width/2 - 5;
+    ctx.clearRect(0,0,wheelCanvas.width,wheelCanvas.height);
+    wheelSegments.forEach((s,i) => {
+        ctx.beginPath(); ctx.moveTo(cx,cy);
+        ctx.arc(cx,cy,r, i*segmentAngle, (i+1)*segmentAngle); ctx.closePath();
+        ctx.fillStyle = s.color; ctx.fill();
+        ctx.strokeStyle = "#1a1a2e"; ctx.lineWidth=3; ctx.stroke();
+        ctx.save(); ctx.translate(cx,cy); ctx.rotate(i*segmentAngle + segmentAngle/2);
+        ctx.textAlign="right"; ctx.fillStyle="#fff"; ctx.font="bold 18px Arial";
+        ctx.fillText(s.label, r-15, 6); ctx.restore();
+    });
+    ctx.beginPath(); ctx.arc(cx,cy,35,0,Math.PI*2); ctx.fillStyle="#1a1a2e"; ctx.fill();
+    ctx.fillStyle="#fff"; ctx.font="bold 20px Arial"; ctx.textAlign="center"; ctx.fillText("🎁", cx, cy+7);
+}
+
+function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
+
+function spinWheel() {
+    if (isSpinning) return;
+    if (!loggedInUser) { alert(lang.spinLogin); modal.style.display="flex"; return; }
+
+    // Günlük limit: her 30 saniyede bir çevirme (kolay test için; admin'den değiştirilebilir)
+    const now = Date.now();
+    if (loggedInUser.lastSpin && (now - loggedInUser.lastSpin) < 30000) {
+        const wait = Math.ceil((30000 - (now - loggedInUser.lastSpin))/1000);
+        alert(userLang==='tr' ? `Lütfen ${wait} saniye bekleyin.` : `Please wait ${wait} seconds.`);
+        return;
+    }
+
+    isSpinning = true;
+    spinButton.disabled = true;
+    spinButton.style.opacity = "0.6";
+
+    const spins = 5 + Math.floor(Math.random()*3);
+    const randomAngle = Math.random()*Math.PI*2;
+    const targetRotation = currentRotation + (spins*Math.PI*2) + randomAngle;
+    const duration = 5000, startRotation = currentRotation, startTime = performance.now();
+
+    function animate(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed/duration, 1);
+        const eased = easeOutCubic(progress);
+        currentRotation = startRotation + (targetRotation - startRotation)*eased;
+        wheelCanvas.style.transform = `rotate(${currentRotation}rad)`;
+        if (progress < 1) { requestAnimationFrame(animate); return; }
+
+        isSpinning = false;
+        spinButton.disabled = false;
+        spinButton.style.opacity = "1";
+
+        // Monetag: çark dönüşü sonrası interstitial reklam tetikle
+        showMonetagInterstitial();
+
+        let pointerAngle = (Math.PI*2 - (currentRotation % (Math.PI*2))) % (Math.PI*2);
+        if (pointerAngle < 0) pointerAngle += Math.PI*2;
+        const wi = Math.floor(pointerAngle/segmentAngle) % wheelSegments.length;
+        const won = wheelSegments[wi];
+
+        loggedInUser.lastSpin = now;
+        addBalance(won.value);
+        alert(`${lang.winAlert} ${won.label} 🎉`);
+    }
+    requestAnimationFrame(animate);
+}
+spinButton.addEventListener('click', spinWheel);
+
+// ============ 7. MONETAG REKLAM MOTORU ============
+// showMonetagInterstitial(), showMonetagPopunder(), initMonetagZones()
+const MONETAG_SDK = "https://libtl.com/sdk";
+
+function showMonetagInterstitial() {
+    if (!cfg.zoneInterstitial) return;
+    try {
+        window.z_ = window.z_ || [];
+        window.z_.push(["_interstitial", { zone: cfg.zoneInterstitial }]);
+        if (!window._mgInterstitialLoaded) {
+            window._mgInterstitialLoaded = true;
+            const s = document.createElement('script');
+            s.src = `${MONETAG_SDK}/i.js?z=${cfg.zoneInterstitial}`;
+            s.async = true; document.body.appendChild(s);
+        }
+    } catch(e) { console.warn("Interstitial err:", e); }
+}
+
+function initMonetagZones() {
+    // DIRECT LINK modu: Monetag'ten aldığın hazır bağlantı linki.
+    // Zone ID girmeye gerek kalmadan tüm site linkleri/klikleri üzerinden reklam gelir.
+    if (cfg.directLink) {
+        initDirectLinkMode();
+    }
+
+    // Banner / Native slotlara Monetag etiketi koy
+    if (cfg.zoneNative) {
+        document.querySelectorAll('.ad-banner[data-slot]').forEach(el => loadMonetagTag(el, cfg.zoneNative, 'native'));
+    }
+    if (cfg.zoneBanner) {
+        document.querySelectorAll('.ad-sidebar[data-slot="sidebar"]').forEach(el => loadMonetagTag(el, cfg.zoneBanner, 'banner'));
+    }
+    if (cfg.zonePopunder) {
+        const s = document.createElement('script');
+        s.src = `${MONETAG_SDK}/pu.js?z=${cfg.zonePopunder}`;
+        s.async = true; document.body.appendChild(s);
+    }
+    if (cfg.zoneOnclick) {
+        // Onclick vignette: tıklamalarda tetiklenir
+        document.addEventListener('click', function onClickAd() {
+            try {
+                const s = document.createElement('script');
+                s.src = `${MONETAG_SDK}/vignette.js?z=${cfg.zoneOnclick}`;
+                s.async = true; document.body.appendChild(s);
+            } catch(e) {}
+            document.removeEventListener('click', onClickAd);
+        }, { once:true });
+    }
+    if (cfg.antiBlock) loadAntiBlock();
+}
+
+function loadMonetagTag(container, zone, type) {
+    if (!container || container.dataset.loaded) return;
+    container.dataset.loaded = "1";
+    container.innerHTML = `<iframe src="about:blank" style="width:100%;height:${type==='sidebar'?'580':'90'}px;border:0;"></iframe>`;
+    const iframe = container.querySelector('iframe');
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open(); doc.write(`<body style="margin:0;overflow:hidden;">
+        <script src="${MONETAG_SDK}/${type}.js?z=${zone}" async><\/script>
+        </body>`); doc.close();
+}
+
+function loadAntiBlock() {
+    // Anti-adblock helper
+    const s = document.createElement('script');
+    s.src = `${MONETAG_SDK}/aab.js`; s.async = true; document.body.appendChild(s);
+}
+
+// ---- DIRECT LINK MODU ----
+// Monetag'in verdiği hazır bağlantı linkini kullanır.
+// Tüm butonlar ve linkler için URL'yi otomatik bir parametreyle açar,
+// ayrıca çark dönüşü sonrası ve görev tıklamalarında otomatik açılır.
+let _directLinkUsedThisSession = false;
+
+function openDirectLink() {
+    if (!cfg.directLink || _directLinkUsedThisSession) return;
+    try { window.open(cfg.directLink, '_blank'); } catch(e) {}
+}
+
+function initDirectLinkMode() {
+    // 1) Çark dönüşü sonrası otomatik aç
+    const origSpinEnd = showMonetagInterstitial;
+    window.showMonetagInterstitial = function() {
+        openDirectLink();
+        origSpinEnd.call(this);
+    };
+
+    // 2) Görev butonlarında: görev linki yerine Direct Link'i önce aç
+    document.querySelectorAll('.task-btn, .withdraw-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            if (btn.id === 'btn-task-1' || btn.id === 'btn-task-2') {
+                setTimeout(openDirectLink, 200); // görev linkiyle birlikte çalışır
+            }
+        });
+    });
+
+    // 3) Çark çevir butonunda
+    document.getElementById('spin-btn')?.addEventListener('click', () => {
+        setTimeout(openDirectLink, 500);
+    });
+}
+
+// ============ 8. GİZLİ ADMIN PANELİ ============
+const adminPanelEl = document.getElementById('admin-panel');
+const adminSetupBox = document.getElementById('admin-setup-box');
+const adminLoginBox = document.getElementById('admin-login-box');
+const adminDashboard = document.getElementById('admin-dashboard');
+
+function openAdmin() {
+    adminPanelEl.style.display = "flex";
+    renderAdminState();
+}
+function renderAdminState() {
+    if (!cfg.adminPassHash) {
+        adminSetupBox.style.display = "block"; adminLoginBox.style.display = "none"; adminDashboard.style.display = "none";
+    } else if (sessionStorage.getItem('odulbox_admin_session')) {
+        adminSetupBox.style.display = "none"; adminLoginBox.style.display = "none"; adminDashboard.style.display = "block";
+        fillAdminForm();
+   } else {
+        adminSetupBox.style.display = "none"; adminLoginBox.style.display = "block"; adminDashboard.style.display = "none";
+    }
+}
+
+// Gizli tetikleyiciler:
+// 1) URL hash:  #admin-panel
+// 2) Klavye:    Shift+A basılı tutup "admin" yaz (tr/klavye uyumlu)
+// 3) Logo'ya 3 saniye basılı tut (mobil uyumlu, kazara tıklamayla açılmaz)
+if (location.hash === '#admin-panel') openAdmin();
+window.addEventListener('hashchange', () => { if (location.hash === '#admin-panel') openAdmin(); });
+
+let keyBuffer = '';
+document.addEventListener('keydown', e => {
+    if (e.key.length === 1 && /[a-zA-Z]/.test(e.key)) {
+        keyBuffer = (keyBuffer + e.key.toLowerCase()).slice(-8);
+        if (keyBuffer.endsWith('admin')) { openAdmin(); keyBuffer=''; }
+    }
+});
+
+// Logo long-press (3 saniye) — mobil dokunuş + fare ile çalışır
+(function setupLogoLongPress() {
+    const logo = document.querySelector('.logo');
+    if (!logo) return;
+    let pressTimer = null;
+    const start = () => {
+        pressTimer = setTimeout(() => { openAdmin(); navigator.vibrate && navigator.vibrate(120); }, 3000);
+    };
+    const cancel = () => { clearTimeout(pressTimer); };
+    logo.addEventListener('mousedown', start);
+    logo.addEventListener('touchstart', start, {passive:true});
+    ['mouseup','mouseleave','touchend','touchmove','touchcancel'].forEach(ev => logo.addEventListener(ev, cancel));
+    logo.addEventListener('contextmenu', e => e.preventDefault()); // uzun basışta mobil menü çıkmasın
+})();
+
+// Kurulum formu
+document.getElementById('admin-setup-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const p1 = document.getElementById('admin-setup-pass').value;
+    const p2 = document.getElementById('admin-setup-pass2').value;
+    if (p1.length < 6) { alert("Şifre en az 6 karakter olmalı."); return; }
+    if (p1 !== p2) { alert("Şifreler eşleşmiyor."); return; }
+    cfg.adminPassHash = simpleHash(p1);
+    saveCfg();
+    sessionStorage.setItem('odulbox_admin_session', '1');
+    renderAdminState();
+});
+
+// Giriş formu
+document.getElementById('admin-login-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const pass = document.getElementById('admin-login-pass').value;
+    if (simpleHash(pass) === cfg.adminPassHash) {
+        sessionStorage.setItem('odulbox_admin_session', '1');
+        renderAdminState();
+    } else { alert("Hatalı şifre!"); }
+});
+
+document.getElementById('admin-logout-btn').onclick = () => {
+    sessionStorage.removeItem('odulbox_admin_session');
+    adminPanelEl.style.display = "none";
+};
+
+// Formu verilerle doldur
+function fillAdminForm() {
+    document.getElementById('cfg-direct-link').value = cfg.directLink || '';
+    document.getElementById('cfg-zone-popunder').value = cfg.zonePopunder;
+    document.getElementById('cfg-zone-onclick').value = cfg.zoneOnclick;
+    document.getElementById('cfg-zone-interstitial').value = cfg.zoneInterstitial;
+    document.getElementById('cfg-zone-banner').value = cfg.zoneBanner;
+    document.getElementById('cfg-zone-native').value = cfg.zoneNative;
+    document.getElementById('cfg-antiblock').checked = cfg.antiBlock;
+    document.getElementById('cfg-ref-bonus').value = cfg.refBonus;
+    document.getElementById('cfg-task1').value = cfg.task1Reward;
+    document.getElementById('cfg-task2').value = cfg.task2Reward;
+    document.getElementById('cfg-task1-url').value = cfg.task1Url;
+    document.getElementById('cfg-task2-url').value = cfg.task2Url;
+    document.getElementById('cfg-min-withdraw').value = cfg.minWithdraw;
+    renderAdminUsers();
+}
+
+function renderAdminUsers() {
+    const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    const box = document.getElementById('admin-users-list');
+    if (!users.length) { box.innerHTML = '<p class="admin-note">Henüz kullanıcı yok.</p>'; return; }
+    box.innerHTML = users.map(u => `
+        <div class="admin-user-row">
+            <span>${u.username} <small>(${u.email})</small></span>
+            <span>$${(u.balance||0).toFixed(2)} • ${u.refs||0} davet</span>
+        </div>`).join('');
+}
+
+// Kaydet & Uygula
+document.getElementById('admin-save-btn').onclick = () => {
+    cfg.directLink       = document.getElementById('cfg-direct-link').value.trim();
+    cfg.zonePopunder     = document.getElementById('cfg-zone-popunder').value.trim();
+    cfg.zoneOnclick      = document.getElementById('cfg-zone-onclick').value.trim();
+    cfg.zoneInterstitial = document.getElementById('cfg-zone-interstitial').value.trim();
+    cfg.zoneBanner       = document.getElementById('cfg-zone-banner').value.trim();
+    cfg.zoneNative       = document.getElementById('cfg-zone-native').value.trim();
+    cfg.antiBlock        = document.getElementById('cfg-antiblock').checked;
+    cfg.refBonus         = parseFloat(document.getElementById('cfg-ref-bonus').value) || 0.25;
+    cfg.task1Reward      = parseFloat(document.getElementById('cfg-task1').value) || 0.05;
+    cfg.task2Reward      = parseFloat(document.getElementById('cfg-task2').value) || 0.10;
+    cfg.task1Url         = document.getElementById('cfg-task1-url').value.trim() || "https://instagram.com/";
+    cfg.task2Url         = document.getElementById('cfg-task2-url').value.trim() || "https://youtube.com/";
+    cfg.minWithdraw      = parseFloat(document.getElementById('cfg-min-withdraw').value) || 5.00;
+    saveCfg();
+
+    // Banner slotlarını yeniden yükle
+    document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; el.innerHTML = ""; });
+    initMonetagZones();
+    alert("✅ Ayarlar kaydedildi ve reklam motoru yeniden başlatıldı!");
+};
+
+// ============ 9. BAŞLATMA ============
+document.addEventListener('DOMContentLoaded', () => {
+    applyTranslations();
+    drawWheel();
+    updateUIForLoggedInUser();
+    initMonetagZones();
+    if (sessionStorage.getItem('odulbox_show_invite_msg') && loggedInUser) {
+        sessionStorage.removeItem('odulbox_show_invite_msg');
+        alert(lang.invitedBy);
+    }
+});
