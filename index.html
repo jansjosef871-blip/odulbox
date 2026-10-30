@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="monetag" content="7715ba8fc62264e1c986fed392996563">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OdulBox - Spin & Win Real Rewards Every Day</title>
 
@@ -26,27 +27,12 @@
     <meta name="twitter:title" content="OdulBox - Spin & Win Real Rewards">
     <meta name="twitter:description" content="Spin, complete tasks, refer friends — win real rewards!">
 
-    <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "OdulBox",
-      "url": "https://jansjosef871-blip.github.io/odulbox/",
-      "applicationCategory": "EntertainmentApplication",
-      "operatingSystem": "Any",
-      "description": "Spin the daily wheel, complete tasks and invite friends to win real rewards.",
-      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-    }
-    </script>
-
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
     <link rel="stylesheet" href="style.css">
     
     <style>
-        /* Tam uyumluluk için gerekli ek stiller */
         .referral-link-row { display: flex; gap: 10px; margin: 10px 0; }
-        .referral-link-row input { flex: 1; padding: 10px; background: #0f0c1b; border: 1px solid #231d42; color: #white; border-radius: 8px; outline: none; }
+        .referral-link-row input { flex: 1; padding: 10px; background: #0f0c1b; border: 1px solid #231d42; color: white; border-radius: 8px; outline: none; }
         .referral-stats { font-size: 13px; color: #2ecc71; margin-top: 5px; font-weight: bold; }
         .admin-section-title { text-align: left; font-size: 14px; color: #ff3366; font-weight: bold; margin: 15px 0 8px 0; border-left: 3px solid #ff3366; padding-left: 8px; }
         .admin-label { display: block; text-align: left; font-size: 12px; color: #a29bfe; margin-bottom: 4px; }
@@ -167,15 +153,26 @@
         <div class="modal-content">
             <span class="close-btn" id="close-auth-btn">&times;</span>
             <div id="login-form-box">
-                <h2 id="txt-login-title">Login to Account</h2>
+                <h2>Login to Account</h2>
                 <form id="login-form">
                     <input type="email" id="login-email" placeholder="Email" required>
                     <input type="password" id="login-password" placeholder="Password" required>
                     <button type="submit" class="form-submit-btn" id="btn-login-submit">Login</button>
                 </form>
-                <p class="switch-form-txt"><span id="txt-no-account">Don't have an account?</span> <a href="#" id="go-to-register">Register</a></p>
+                <p class="switch-form-txt">Don't have an account? <a href="#" id="go-to-register">Register</a></p>
             </div>
             <div id="register-form-box" style="display: none;">
-                <h2 id="txt-register-title">Create Account</h2>
+                <h2>Create Account</h2>
                 <form id="register-form">
+                    <input type="text" id="reg-username" placeholder="Username" required>
+                    <input type="email" id="reg-email" placeholder="Email" required>
+                    <input type="password" id="reg-password" placeholder="Password" required>
+                    <button type="submit" class="form-submit-btn" id="btn-register-submit">Register</button>
+                </form>
+                <p class="switch-form-txt">Already have an account? <a href="#" id="go-to-login">Login</a></p>
+            </div>
+        </div>
+    </div>
 
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
