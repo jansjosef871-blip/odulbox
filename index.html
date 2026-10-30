@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="monetag" content="7715ba8fc62264e1c986fed392996563">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OdulBox - Earn Rewards & Spin Online</title>
     <meta name="description" content="Complete simple tasks, unlock gift boxes and earn real cash rewards globally!">
     <meta name="keywords" content="make money online, rewards, gift cards, tasks, work from home">
     <meta name="robots" content="index, follow">
-    <meta name="monetag" content="7715ba8fc62264e1c986fed392996563">
     <link href="https://googleapis.com" rel="stylesheet">
     
     <style>
@@ -69,72 +69,60 @@
 <body>
 
     <!-- Reklam Panelleri -->
-    <div id="ad-left-area" class="ad-sidebar ad-left">[🔥 REKLAM]</div>
-    <div id="ad-right-area" class="ad-sidebar ad-right">[🔥 REKLAM]</div>
+    <div id="ad-left-area" class="ad-sidebar ad-left">[🔥 REKLAM ALANI]</div>
+    <div id="ad-right-area" class="ad-sidebar ad-right">[🔥 REKLAM ALANI]</div>
 
     <header>
         <div id="site-logo" class="logo">🎁 Odul<span>Box</span></div>
         <div class="header-right">
-            <span id="txt-balance" class="user-status"></span>
-            <button id="auth-nav-btn" class="auth-trigger-btn"></button>
-            <button id="logout-btn" class="logout-btn"></button>
+            <span id="txt-balance" class="user-status">Bakiye: 0.00 $</span>
+            <button id="auth-nav-btn" class="auth-trigger-btn">Giriş Yap / Kayıt Ol</button>
+            <button id="logout-btn" class="logout-btn">Çıkış Yap</button>
         </div>
     </header>
 
     <main class="container">
-        <div id="ad-top-area" class="ad-banner ad-top">[TOP AD BANNER]</div>
-        <h1 id="txt-welcome"></h1>
-        <p id="txt-subtitle"></p>
+        <div id="ad-top-area" class="ad-banner ad-top">[Sponsorlu Reklam Bandı 728x90 - Reklam Verin]</div>
+        <h1 id="txt-welcome">OdulBox'a Hoş Geldiniz!</h1>
+        <p id="txt-subtitle">Görevleri tamamlayın, şans kutusunu açın ve gerçek dolar ödülleri kazanın!</p>
 
         <div class="mega-box-container">
             <div class="gift-box-icon">🎁</div>
-            <button id="btn-spin" class="mega-spin-link-btn"></button>
+            <button id="btn-spin" class="mega-spin-link-btn">ŞANS KUTUSUNU AÇ VE KAZAN!</button>
         </div>
 
-        <div id="ad-mid-area" class="ad-banner ad-middle">[NATIVE AD]</div>
+        <div id="ad-mid-area" class="ad-banner ad-middle">[Yüksek Kazançlı Sponsorlu Reklam Alanı]</div>
 
         <section class="tasks-rewards-section">
             <div class="info-box">
-                <h3 id="txt-tasks-title"></h3>
-                <div id="tasks-list-container"></div>
+                <h3 id="txt-tasks-title">Günlük Görevler</h3>
+                <div id="tasks-list-container">
+                    <!-- Statik Görevler (Dinamik kilide takılmayan en güvenli model) -->
+                    <div class="task-item">
+                        <div class="task-info">
+                            <span class="task-icon">📱</span>
+                            <div>
+                                <p>Instagram Hesabını Takip Et</p>
+                                <span class="task-reward-amount">+ 0.05 $</span>
+                            </div>
+                        </div>
+                        <button class="task-link-button custom-action-btn" data-action="task" data-id="task1" data-reward="0.05">Görevi Yap</button>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <span class="task-icon">🎥</span>
+                            <div>
+                                <p>30sn YouTube Videosu İzle</p>
+                                <span class="task-reward-amount">+ 0.10 $</span>
+                            </div>
+                        </div>
+                        <button class="task-link-button custom-action-btn" data-action="task" data-id="task2" data-reward="0.10">Görevi Yap</button>
+                    </div>
+                </div>
             </div>
 
             <div class="info-box">
-                <h3 id="txt-rewards-title"></h3>
-                <div id="rewards-list-container"></div>
-            </div>
-        </section>
-    </main>
-
-    <!-- AUTH MODAL -->
-    <div id="auth-modal" class="modal">
-        <div class="modal-content">
-            <span id="close-auth-btn" class="close-btn">&times;</span>
-            
-            <div id="login-form-box">
-                <h2 id="modal-login-title"></h2>
-                <form id="login-form">
-                    <input type="email" id="login-email" placeholder="Email" required>
-                    <input type="password" id="login-password" placeholder="Password" required>
-                    <button type="submit" class="form-submit-btn" id="modal-login-btn"></button>
-                </form>
-                <p class="switch-form-txt"><span id="modal-no-acc"></span> <a href="#" id="go-to-register"></a></p>
-            </div>
-
-            <div id="register-form-box" style="display: none;">
-                <h2 id="modal-reg-title"></h2>
-                <form id="register-form">
-                    <input type="text" id="reg-username" placeholder="Username" required>
-                    <input type="email" id="reg-email" placeholder="Email" required>
-                    <input type="password" id="reg-password" placeholder="Password" required>
-                    <button type="submit" class="form-submit-btn" id="modal-reg-btn"></button>
-                </form>
-                <p class="switch-form-txt"><span id="modal-have-acc"></span> <a href="#" id="go-to-login"></a></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- DEV ADMIN PANEL MODAL -->
-    <div id="admin-modal" class="modal">
-        <div class="modal-content">
-            <span id="close-admin-btn" class="close-btn">&times;</span>
+                <h3 id="txt-rewards-title">Ödülünü Çek</h3>
+                <div id="rewards-list-container">
+                    <div class="reward-item">
+                        <span>💵 PayPal / Papara (Min. 5$)</span>
