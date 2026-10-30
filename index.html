@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OdulBox - Spin & Win Global</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Sol ve Sağ Dikey Reklam Alanları -->
+    <div class="ad-sidebar ad-left" id="txt-ad-left">[🔥 REKLAM ALANI]</div>
+    <div class="ad-sidebar ad-right" id="txt-ad-right">[🔥 REKLAM ALANI]</div>
+
+    <!-- Üst Menü -->
+    <header>
+        <div class="logo">🎁 Odul<span>Box</span></div>
+        <div class="header-right">
+            <span id="txt-balance" class="user-status">Bakiye: 0.00 $</span>
+            <button id="auth-nav-btn" class="auth-trigger-btn">Giriş Yap / Kayıt Ol</button>
+            <button id="logout-btn" class="logout-btn" style="display: none;">Çıkış Yap</button>
+        </div>
+    </header>
+
+    <!-- Ana İçerik Alanı -->
+    <main class="container">
+        <!-- Üst Banner Reklam Alanı -->
+        <div class="ad-banner ad-top" id="txt-ad-top">
+            [Sponsorlu Reklam Bandı 728x90 - Reklam Verin]
+        </div>
+
+        <h1 id="txt-welcome">OdulBox'a Hoş Geldiniz!</h1>
+        <p id="txt-subtitle">Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!</p>
+
+        <!-- Şans Çarkı Alanı -->
+        <div class="wheel-container">
+            <div class="pointer">▼</div>
+            <canvas id="wheel" width="400" height="400"></canvas>
+            <button id="spin-btn">ÇEVİR!</button>
+        </div>
+
+        <!-- Çark Altı Native Reklam Alanı -->
+        <div class="ad-banner ad-middle" id="txt-ad-mid">
+            [Yüksek Kazançlı Sponsorlu Reklam Alanı]
+        </div>
+
+        <!-- GÖREVLER VE ÖDÜLLER BÖLÜMÜ -->
+        <section class="tasks-rewards-section">
+            <!-- Görevler Bloku -->
+            <div class="info-box">
+                <h3 id="txt-tasks-title">Günlük Görevler</h3>
+                
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-icon">📱</span>
+                        <div>
+                            <p class="task-name">Instagram Hesabını Takip Et</p>
+                            <span class="task-reward-amount">+ 0.05 $</span>
+                        </div>
+                    </div>
+                    <button class="task-btn" id="btn-task-1">Görevi Yap</button>
+                </div>
+
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-icon">🎥</span>
+                        <div>
+                            <p class="task-name">30sn YouTube Videosu İzle</p>
+                            <span class="task-reward-amount">+ 0.10 $</span>
+                        </div>
+                    </div>
+                    <button class="task-btn" id="btn-task-2">Görevi Yap</button>
+                </div>
+            </div>
+
+            <!-- Ödül Çekme Bloku -->
+            <div class="info-box">
+                <h3 id="txt-rewards-title">Ödülünü Çek</h3>
+                <div class="reward-item">
+                    <span>💵 PayPal / Papara (Min. 5$)</span>
+                    <button class="withdraw-btn" id="btn-draw-1">Talep Et</button>
+                </div>
+                <div class="reward-item">
+                    <span>🎮 Steam Wallet Code (Min. 10$)</span>
+                    <button class="withdraw-btn" id="btn-draw-2">Talep Et</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- GİRİŞ YAP / KAYIT OL AÇILIR PENCERESİ (MODAL) -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            
+            <!-- Giriş Formu -->
+            <div id="login-form-box">
+                <h2 id="txt-login-title">Hesaba Giriş Yap</h2>
+                <form id="login-form">
+                    <input type="email" id="login-email" placeholder="Email" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button type="submit" class="form-submit-btn" id="btn-login-submit">Login</button>
+                </form>
+                <p class="switch-form-txt"><span id="txt-no-account">Hesabınız yok mu?</span> <a href="#" id="go-to-register">Register</a></p>
+            </div>
+
+            <!-- Kayıt Formu -->
+            <div id="register-form-box" style="display: none;">
+                <h2 id="txt-register-title">Hesap Oluştur</h2>
+                <form id="register-form">
+                    <input type="text" id="reg-username" placeholder="Kullanıcı Adı" required>
+                    <input type="email" id="reg-email" placeholder="Email" required>
+                    <input type="password" id="reg-password" placeholder="Password" required>
+                    <button type="submit" class="form-submit-btn" id="btn-register-submit">Register</button>
+                </form>
+                <p class="switch-form-txt"><span id="txt-have-account">Zaten üye misiniz?</span> <a href="#" id="go-to-login">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
