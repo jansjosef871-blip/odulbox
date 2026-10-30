@@ -1,4 +1,3 @@
-// 1. GLOBAL DİL PAKETİ
 const languages = {
     tr: {
         welcome: "OdulBox'a Hoş Geldiniz!",
@@ -45,6 +44,29 @@ const languages = {
         taskYoutube: "Watch 30s YouTube Video",
         doTaskBtn: "Do Task",
         claimBtn: "Claim"
+    },
+    de: {
+        welcome: "Willkommen bei OdulBox!",
+        subtitle: "Drehen Sie jeden Tag das Rad, erfüllen Sie Aufgaben und gewinnen Sie echte Belohnungen!",
+        balance: "Kontostand: ",
+        adTopTxt: "[Gesponserter Banner 728x90 - Hier werben]",
+        adMidTxt: "[Hochbezahlter gesponserter Werbeplatz]",
+        adSideTxt: "[🔥 WERBUNG]",
+        spinBtn: "DREHEN!",
+        winAlert: "Herzlichen Glückwunsch! Sie haben gewonnen: ",
+        authNavBtn: "Einloggen / Registrieren",
+        logoutBtnTxt: "Abmelden",
+        loginTitle: "Anmelden",
+        registerTitle: "Konto erstellen",
+        noAccount: "Kein Konto?",
+        haveAccount: "Bereits registriert?",
+        usernamePlh: "Nutzername",
+        tasksTitle: "Tägliche Aufgaben",
+        rewardsTitle: "Belohnungen abheben",
+        taskInsta: "Folgen Sie dem Instagram-Konto",
+        taskYoutube: "Sehen Sie sich das 30-Sekunden-YouTube-Video an",
+        doTaskBtn: "Aufgabe machen",
+        claimBtn: "Anfordern"
     }
 };
 
@@ -53,7 +75,6 @@ userLang = userLang.substring(0, 2);
 if (!languages[userLang]) { userLang = 'en'; }
 const lang = languages[userLang];
 
-// Tarayıcı kilitlenmelerini önleyen Güvenli Dil Uygulayıcıfonksiyon
 function applyTranslations() {
     try {
         if(document.getElementById('txt-welcome')) document.getElementById('txt-welcome').innerText = lang.welcome;
@@ -79,11 +100,10 @@ function applyTranslations() {
         let wBtns = document.querySelectorAll('.withdraw-btn');
         wBtns.forEach(btn => btn.innerText = lang.claimBtn);
     } catch(err) {
-        console.log("Dil yükleme atlandı, çark etkilenmedi:", err);
+        console.log(err);
     }
 }
 
-// GİRİŞ / KAYIT / ÇIKIŞ SEKANSLARI
 const modal = document.getElementById("auth-modal");
 const authNavBtn = document.getElementById("auth-nav-btn");
 const logoutBtn = document.getElementById("logout-btn");
@@ -176,190 +196,3 @@ function saveWinToBalance(amountString) {
         alert(userLang === 'tr' ? "Lütfen önce giriş yapın! Kazanç işlenmedi." : "Please login first! Earnings not saved.");
         return;
     }
-    const amount = parseFloat(amountString.replace(" $", ""));
-    loggedInUser.balance += amount;
-    localStorage.setItem('odulbox_current_user', JSON.stringify(loggedInUser));
-
-    let allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
-    allUsers = allUsers.map(user => {
-        if(user.email === loggedInUser.email) { user.balance = loggedInUser.balance; }
-        return user;
-    });
-    localStorage.setItem('odulbox_users', JSON.stringify(allUsers));
-    updateUIForLoggedInUser();
-}
-
-if(document.getElementById('btn-task-1')) {
-    document.getElementById('btn-task-1').addEventListener('click', () => {
-        if(!loggedInUser) { alert(userLang === 'tr' ? "Önce giriş yapmalısınız!" : "You must login first!"); return; }
-        saveWinToBalance("0.05 $");
-        alert(userLang === 'tr' ? "Görev tamamlandı! +0.05 $ bakiyenize eklendi." : "Task completed! +0.05 $ added to your balance.");
-    });
-}
-
-if(document.getElementById('btn-task-2')) {
-    document.getElementById('btn-task-2').addEventListener('click', () => {
-        if(!loggedInUser) { alert(userLang === 'tr' ? "Önce giriş yapmalısınız!" : "You must login first!"); return; }
-        saveWinToBalance("0.10 $");
-        alert(userLang === 'tr' ? "Görev tamamlandı! +0.10 $ bakiyenize eklendi." : "Task completed! +0.10 $ added to your balance.");
-    });
-}
-
-// ÖDÜL ÇEKME TALEPLERİ
-function handleWithdraw(minAmount, rewardName) {
-    if(!loggedInUser) {
-        alert(userLang === 'tr' ? "Önce giriş yapmalısınız!" : "You must login first!");
-        return;
-    }
-    if(loggedInUser.balance < minAmount) {
-        alert(userLang === 'tr'
-            ? `${rewardName} için minimum ${minAmount.toFixed(2)} $ bakiye gereklidir. Mevcut bakiye: ${loggedInUser.balance.toFixed(2)} $`
-            : `Minimum ${minAmount.toFixed(2)} $ balance required for ${rewardName}. Current balance: ${loggedInUser.balance.toFixed(2)} $`);
-        return;
-    }
-    alert(userLang === 'tr'
-        ? "Talebiniz alındı! Ödülünüz 24-48 saat içinde işlenecektir."
-        : "Your request has been received! Your reward will be processed within 24-48 hours.");
-}
-
-if(document.getElementById('btn-draw-1')) {
-    document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(5.00, "PayPal / Papara"));
-}
-if(document.getElementById('btn-draw-2')) {
-    document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(10.00, "Steam Wallet"));
-}
-
-// ============================================
-// ŞANS ÇARKI (WHEEL) MANTIĞI
-// ============================================
-const wheelCanvas = document.getElementById('wheel');
-const spinButton = document.getElementById('spin-btn');
-
-const wheelSegments = [
-    { label: "0.01 $", value: 0.01, color: "#FF6B6B" },
-    { label: "0.05 $", value: 0.05, color: "#4ECDC4" },
-    { label: "0.02 $", value: 0.02, color: "#FFD93D" },
-    { label: "0.10 $", value: 0.10, color: "#6BCB77" },
-    { label: "0.01 $", value: 0.01, color: "#FF8C42" },
-    { label: "0.20 $", value: 0.20, color: "#9B5DE5" },
-    { label: "0.03 $", value: 0.03, color: "#00B4D8" },
-    { label: "0.50 $", value: 0.50, color: "#F72585" }
-];
-
-const segmentAngle = (Math.PI * 2) / wheelSegments.length;
-let currentRotation = 0;
-let isSpinning = false;
-
-function drawWheel() {
-    if(!wheelCanvas) return;
-    const ctx = wheelCanvas.getContext('2d');
-    const centerX = wheelCanvas.width / 2;
-    const centerY = wheelCanvas.height / 2;
-    const radius = wheelCanvas.width / 2 - 5;
-
-    ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
-
-    wheelSegments.forEach((segment, index) => {
-        const startAngle = index * segmentAngle;
-        const endAngle = startAngle + segmentAngle;
-
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
-        ctx.closePath();
-        ctx.fillStyle = segment.color;
-        ctx.fill();
-        ctx.strokeStyle = "#1a1a2e";
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        // Segment etiketi
-        ctx.save();
-        ctx.translate(centerX, centerY);
-        ctx.rotate(startAngle + segmentAngle / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 18px Arial";
-        ctx.fillText(segment.label, radius - 15, 6);
-        ctx.restore();
-    });
-
-    // Merkez daire
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, 35, 0, Math.PI * 2);
-    ctx.fillStyle = "#1a1a2e";
-    ctx.fill();
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 20px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("🎁", centerX, centerY + 7);
-}
-
-function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-}
-
-function spinWheel() {
-    if(isSpinning) return;
-    if(!loggedInUser) {
-        alert(userLang === 'tr' ? "Çarkı çevirmek için giriş yapmalısınız!" : "You must login to spin the wheel!");
-        if(modal) modal.style.display = "flex";
-        return;
-    }
-
-    isSpinning = true;
-    spinButton.disabled = true;
-    spinButton.style.opacity = "0.6";
-
-    const spins = 5 + Math.floor(Math.random() * 3); // 5-7 tam tur
-    const randomAngle = Math.random() * Math.PI * 2;
-    const targetRotation = currentRotation + (spins * Math.PI * 2) + randomAngle;
-    const duration = 5000; // 5 saniye
-    const startRotation = currentRotation;
-    const startTime = performance.now();
-
-    function animate(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = easeOutCubic(progress);
-
-        currentRotation = startRotation + (targetRotation - startRotation) * eased;
-        if(wheelCanvas) {
-            wheelCanvas.style.transform = `rotate(${currentRotation}rad)`;
-        }
-
-        if(progress < 1) {
-            requestAnimationFrame(animate);
-        } else {
-            isSpinning = false;
-            spinButton.disabled = false;
-            spinButton.style.opacity = "1";
-
-            // İşaretçi üstte (0 rad) olduğu için kazanan segmenti hesapla
-            // Canvas dönüşü saat yönünde, işaretçi yukarıda: normalize et
-            let pointerAngle = (Math.PI * 2 - (currentRotation % (Math.PI * 2))) % (Math.PI * 2);
-            if(pointerAngle < 0) pointerAngle += Math.PI * 2;
-            const winningIndex = Math.floor(pointerAngle / segmentAngle) % wheelSegments.length;
-            const won = wheelSegments[winningIndex];
-
-            saveWinToBalance(`${won.value.toFixed(2)} $`);
-            alert(`${lang.winAlert} ${won.label} 🎉`);
-        }
-    }
-
-    requestAnimationFrame(animate);
-}
-
-if(spinButton) spinButton.addEventListener('click', spinWheel);
-
-// SAYFA YÜKLENDİĞİNDE BAŞLAT
-document.addEventListener('DOMContentLoaded', () => {
-    applyTranslations();
-    drawWheel();
-    updateUIForLoggedInUser();
-});
-
-// Script body sonunda yüklendiyse de garantiye al (script body'nin sonunda olduğu için DOM hazırdır)
-applyTranslations();
-drawWheel();
-updateUIForLoggedInUser();
