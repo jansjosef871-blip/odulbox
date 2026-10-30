@@ -7,7 +7,6 @@
     <title>OdulBox - Spin & Win Global</title>
     <link href="https://googleapis.com" rel="stylesheet">
     
-    <!-- İÇE GÖMÜLÜ GÜVENLİ TASARIM (ASLA REKLAM ALANLARI KAYMAZ) -->
     <style>
         * {
             margin: 0;
@@ -69,6 +68,22 @@
             cursor: pointer;
         }
 
+        .logout-btn {
+            background: transparent;
+            color: #a29bfe;
+            border: 1px solid #231d42;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #ff3366;
+            border-color: #ff3366;
+        }
+
         .container {
             text-align: center;
             padding: 20px 0 40px 0;
@@ -124,7 +139,6 @@
         .ad-left { left: 10px; }
         .ad-right { right: 10px; }
 
-        /* ŞANS KUTUSU ALANI */
         .mega-box-container {
             background: #1d183a;
             border: 2px solid #ff3366;
@@ -151,11 +165,13 @@
             font-weight: 700;
             font-size: 15px;
             text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            width: 100%;
         }
 
         .mega-spin-link-btn:hover { background: #e02454; }
 
-        /* GÖREVLER VE ÖDÜLLER */
         .tasks-rewards-section {
             display: flex;
             gap: 20px;
@@ -200,11 +216,12 @@
         .task-link-button {
             background: #ff3366;
             color: white;
-            text-decoration: none;
+            border: none;
             padding: 6px 15px;
             border-radius: 6px;
             font-size: 13px;
             font-weight: 600;
+            cursor: pointer;
         }
 
         .task-link-button:hover { background: #e02454; }
@@ -219,6 +236,40 @@
             font-weight: 600;
             cursor: pointer;
         }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 100; 
+            left: 0; top: 0; width: 100%; height: 100%; 
+            background-color: rgba(15, 12, 27, 0.8); 
+            backdrop-filter: blur(8px);
+            align-items: center; justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #1d183a;
+            padding: 40px;
+            border: 1px solid #231d42;
+            width: 90%; max-width: 400px;
+            border-radius: 15px; position: relative;
+            box-shadow: 0 0 25px rgba(255, 51, 102, 0.2);
+            text-align: center;
+        }
+
+        .close-btn { position: absolute; right: 20px; top: 15px; color: #a29bfe; font-size: 28px; cursor: pointer; }
+        .close-btn:hover { color: #ff3366; }
+        .modal h2 { margin-bottom: 25px; font-size: 24px; color: white; }
+        .modal input {
+            width: 100%; padding: 12px 15px; margin-bottom: 15px;
+            background: #0f0c1b; border: 1px solid #231d42;
+            border-radius: 8px; color: white; font-size: 14px; outline: none;
+        }
+        .modal input:focus { border-color: #ff3366; }
+        .form-submit-btn { width: 100%; padding: 12px; background: #ff3366; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; }
+        .form-submit-btn:hover { background: #e02454; }
+        .switch-form-txt { margin-top: 20px; font-size: 13px; color: #a29bfe; }
+        .switch-form-txt a { color: #ff3366; text-decoration: none; font-weight: 600; }
 
         @media (max-width: 1100px) {
             body { padding: 0 20px; }
@@ -239,30 +290,29 @@
     <header>
         <div class="logo">🎁 Odul<span>Box</span></div>
         <div class="header-right">
-            <span class="user-status">Bakiye: 0.00 $</span>
-            <button class="auth-trigger-btn">Hoş Geldiniz!</button>
+            <span id="txt-balance" class="user-status">Bakiye: 0.00 $</span>
+            <button id="auth-nav-btn" class="auth-trigger-btn">Giriş Yap / Kayıt Ol</button>
+            <button id="logout-btn" class="logout-btn" style="display: none;">Çıkış Yap</button>
         </div>
     </header>
 
     <!-- Ana İçerik Alanı -->
     <main class="container">
-        <!-- Üst Banner Reklam Alanı -->
         <div class="ad-banner ad-top">
             [Sponsorlu Reklam Bandı 728x90 - Reklam Verin]
         </div>
 
         <h1>OdulBox'a Hoş Geldiniz!</h1>
-        <p>Görevleri tamamlayın, reklamlara tıklayın ogrenin ve gerçek dolar ödülleri kazanın!</p>
+        <p>Görevleri tamamlayın, reklamlara tıklayın ve gerçek dolar ödülleri kazanın!</p>
 
         <!-- SAF HTML ŞANS KUTUSU -->
         <div class="mega-box-container">
             <div class="gift-box-icon">🎁</div>
-            <a href="https://uplcm.com/4/12156047" target="_blank" class="mega-spin-link-btn">
+            <button id="btn-spin" class="mega-spin-link-btn">
                 ŞANS KUTUSUNU AÇ VE KAZAN!
-            </a>
+            </button>
         </div>
 
-        <!-- Çark Altı Native Reklam Alanı -->
         <div class="ad-banner ad-middle">
             [Yüksek Kazançlı Sponsorlu Reklam Alanı]
         </div>
@@ -277,37 +327,3 @@
                         <span class="task-icon">📱</span>
                         <div>
                             <p class="task-name">Instagram Hesabını Takip Et</p>
-                            <span class="task-reward-amount">+ 0.05 $</span>
-                        </div>
-                    </div>
-                    <a href="https://uplcm.com/4/12156047" target="_blank" class="task-link-button">Görevi Yap</a>
-                </div>
-
-                <div class="task-item">
-                    <div class="task-info">
-                        <span class="task-icon">🎥</span>
-                        <div>
-                            <p class="task-name">30sn YouTube Videosu İzle</p>
-                            <span class="task-reward-amount">+ 0.10 $</span>
-                        </div>
-                    </div>
-                    <a href="https://uplcm.com/4/12156047" target="_blank" class="task-link-button">Görevi Yap</a>
-                </div>
-            </div>
-
-            <div class="info-box">
-                <h3>Ödülünü Çek</h3>
-                <div class="reward-item">
-                    <span>💵 PayPal / Papara (Min. 5$)</span>
-                    <button class="withdraw-btn">Talep Et</button>
-                </div>
-                <div class="reward-item">
-                    <span>🎮 Steam Wallet Code (Min. 10$)</span>
-                    <button class="withdraw-btn">Talep Et</button>
-                </div>
-            </div>
-        </section>
-    </main>
-
-</body>
-</html>
