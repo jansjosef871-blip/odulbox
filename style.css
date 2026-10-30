@@ -145,8 +145,16 @@ p {
 .wheel-container {
     position: relative;
     margin: 0 auto 30px auto;
-    width: 400px;
-    height: 400px;
+    width: min(400px, 92vw);
+    height: min(400px, 92vw);
+}
+
+#wheel {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
 }
 
 .pointer {
@@ -160,8 +168,30 @@ p {
 }
 
   #wheel {
+    display: block;
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+}
+
+/* Mobilde çark ekranı doldursun, buton da oransal büyüsün */
+@media (max-width: 600px) {
+    .wheel-container {
+        width: 96vw;
+        height: 96vw;
+        max-width: 440px;
+        max-height: 440px;
+        margin-bottom: 24px;
+    }
+    .pointer { font-size: 36px; top: -20px; }
+    #spin-btn {
+        width: 96px;
+        height: 96px;
+        font-size: 19px;
+        border-width: 5px;
+    }
+    .tasks-rewards-section { flex-direction: column; }
 }
 
 #spin-btn {
