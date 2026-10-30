@@ -75,7 +75,22 @@ const goToLogin = document.getElementById("go-to-login");
 const loginBox = document.getElementById("login-form-box");
 const registerBox = document.getElementById("register-form-box");
 
-let loggedInUser = JSON.parse(localStorage.getItem('odulbox_current_user')) || null;
+// Oturum: sessionStorage tabanlı — sekme/site kapatılıp açılınca temiz başlar.
+// Kullanıcı bilgi sessionStorage'da yoksa bakiye 0 görünür (login gerekir).
+function loadSession() {
+    try { return JSON.parse(sessionStorage.getItem('odulbox_session')) || null; } catch(e) { return null; }
+}
+function saveSession(user) {
+    sessionStorage.setItem('odulbox_session', JSON.stringify(user));
+}
+let loggedInUser = loadSession();
+// Geriye dönük uyumluluk: eski localStorage oturumu varsa taşı ve eski anahtarı sil
+if (!loggedInUser) {
+    try {
+        const legacy = JSON.parse(localStorage.getItem('odulbox_current_user'));
+        if (legacy) { loggedInUser = legacy; saveSession(legacy); localStorage.removeItem('odulbox_current_user'); }
+    } catch(e) {}
+}
 
 function updateUIForLoggedInUser() {
     if (loggedInUser) {
@@ -106,6 +121,7 @@ if (goToRegister) goToRegister.onclick = e => { e.preventDefault(); loginBox.sty
 if (goToLogin) goToLogin.onclick = e => { e.preventDefault(); registerBox.style.display="none"; loginBox.style.display="block"; };
 
 if (logoutBtn) logoutBtn.onclick = () => {
+    sessionStorage.removeItem('odulbox_session');
     localStorage.removeItem('odulbox_current_user');
     loggedInUser = null;
     updateUIForLoggedInUser();
@@ -172,10 +188,8 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
     const user = allUsers.find(u => u.email === email && u.password === simpleHash(password));
     if (user) {
         loggedInUser = user;
-        localStorage.setItem('odulbox_current_user', JSON.stringify(user));
+        saveSession(user);
         updateUIForLoggedInUser();
-        modal.style.display = "none";
-        updateUIForLoggedInUser(); // bakiye ve kullanıcı adını hemen göster
         if (sessionStorage.getItem('odulbox_show_invite_msg')) {
             sessionStorage.removeItem('odulbox_show_invite_msg');
             alert(lang.invitedBy);
@@ -198,7 +212,7 @@ document.getElementById('copy-ref-btn').onclick = function() {
 function addBalance(amount) {
     if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return false; }
     loggedInUser.balance = +(loggedInUser.balance + amount).toFixed(2);
-    localStorage.setItem('odulbox_current_user', JSON.stringify(loggedInUser));
+    saveSession(loggedInUser);
     const allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
     const idx = allUsers.findIndex(u => u.email === loggedInUser.email);
     if (idx > -1) { allUsers[idx].balance = loggedInUser.balance; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); }
