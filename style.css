@@ -1,42 +1,187 @@
-/* Yeni Şans Kutusu ve Buton Alanı Tasarımı */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #0f0c1b;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0 160px;
+}
+
+header {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #231d42;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.logo span {
+    color: #ff3366;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-status {
+    background: #1d183a;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    border: 1px solid #ff3366;
+}
+
+.auth-trigger-btn {
+    background: #ff3366;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.container {
+    text-align: center;
+    padding: 20px 0 40px 0;
+    max-width: 800px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #a29bfe;
+    margin-bottom: 30px;
+}
+
+.ad-banner {
+    background: linear-gradient(135deg, #1d183a 0%, #110d26 100%);
+    border: 1px dashed #4834d4;
+    padding: 15px;
+    border-radius: 10px;
+    color: #ff3366;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+}
+
+.ad-top { max-width: 728px; margin: 10px auto 25px auto; }
+.ad-middle { max-width: 500px; margin: 20px auto; }
+
+.ad-sidebar {
+    position: fixed;
+    top: 100px;
+    width: 140px;
+    height: 600px;
+    background: linear-gradient(180deg, #1d183a 0%, #0f0c1b 100%);
+    border: 1px dashed #ff3366;
+    color: #a29bfe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.ad-left { left: 10px; }
+.ad-right { right: 10px; }
+
+/* ŞANS KUTUSU ALANI */
 .mega-box-container {
-    background: linear-gradient(135deg, #1d183a 0%, #2e245e 100%);
+    background: #1d183a;
     border: 2px solid #ff3366;
     border-radius: 15px;
-    padding: 40px;
-    margin: 30px auto;
+    padding: 30px;
+    margin: 20px auto;
     max-width: 500px;
-    box-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+    box-shadow: 0 0 30px rgba(255, 51, 102, 0.2);
     text-align: center;
 }
 
 .gift-box-icon {
-    font-size: 80px;
-    margin-bottom: 20px;
-    animation: pulse 2s infinite;
+    font-size: 60px;
+    margin-bottom: 15px;
 }
 
 .mega-spin-link-btn {
-    display: inline-block;
+    display: block;
     background: #ff3366;
     color: white;
     text-decoration: none;
-    padding: 15px 30px;
+    padding: 12px 25px;
     border-radius: 30px;
     font-weight: 700;
-    font-size: 16px;
-    letter-spacing: 1px;
-    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
-    transition: transform 0.2s;
+    font-size: 15px;
 }
 
-.mega-spin-link-btn:hover {
-    transform: scale(1.05);
-    background: #e02454;
+.mega-spin-link-btn:hover { background: #e02454; }
+
+/* GÖREVLER VE ÖDÜLLER */
+.tasks-rewards-section {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    text-align: left;
 }
+
+.info-box {
+    flex: 1;
+    background: #1d183a;
+    border: 1px solid #231d42;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.info-box h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffffff;
+    border-bottom: 2px solid #ff3366;
+    padding-bottom: 5px;
+    display: inline-block;
+}
+
+.task-item, .reward-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f0c1b;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #231d42;
+}
+
+.task-info { display: flex; align-items: center; gap: 10px; }
+.task-info p { margin: 0; color: white; font-size: 14px; font-weight: 600; }
+.task-icon { font-size: 20px; }
+.task-reward-amount { font-size: 12px; color: #2ecc71; font-weight: bold; }
 
 .task-link-button {
-    display: inline-block;
     background: #ff3366;
     color: white;
     text-decoration: none;
@@ -46,12 +191,23 @@
     font-weight: 600;
 }
 
-.task-link-button:hover {
-    background: #e02454;
+.task-link-button:hover { background: #e02454; }
+
+.withdraw-btn {
+    background: #231d42;
+    color: #a29bfe;
+    border: 1px solid #ff3366;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+@media (max-width: 1100px) {
+    body { padding: 0 20px; }
+    .ad-sidebar { display: none; }
+}
+@media (max-width: 600px) {
+    .tasks-rewards-section { flex-direction: column; }
 }
