@@ -44,29 +44,6 @@ const languages = {
         taskYoutube: "Watch 30s YouTube Video",
         doTaskBtn: "Do Task",
         claimBtn: "Claim"
-    },
-    de: {
-        welcome: "Willkommen bei OdulBox!",
-        subtitle: "Drehen Sie jeden Tag das Rad, erfüllen Sie Aufgaben und gewinnen Sie echte Belohnungen!",
-        balance: "Kontostand: ",
-        adTopTxt: "[Gesponserter Banner 728x90 - Hier werben]",
-        adMidTxt: "[Hochbezahlter gesponserter Werbeplatz]",
-        adSideTxt: "[🔥 WERBUNG]",
-        spinBtn: "DREHEN!",
-        winAlert: "Herzlichen Glückwunsch! Sie haben gewonnen: ",
-        authNavBtn: "Einloggen / Registrieren",
-        logoutBtnTxt: "Abmelden",
-        loginTitle: "Anmelden",
-        registerTitle: "Konto erstellen",
-        noAccount: "Kein Konto?",
-        haveAccount: "Bereits registriert?",
-        usernamePlh: "Nutzername",
-        tasksTitle: "Tägliche Aufgaben",
-        rewardsTitle: "Belohnungen abheben",
-        taskInsta: "Folgen Sie dem Instagram-Konto",
-        taskYoutube: "Sehen Sie sich das 30-Sekunden-YouTube-Video an",
-        doTaskBtn: "Aufgabe machen",
-        claimBtn: "Anfordern"
     }
 };
 
@@ -74,35 +51,6 @@ let userLang = navigator.language || navigator.userLanguage || "en";
 userLang = userLang.substring(0, 2);
 if (!languages[userLang]) { userLang = 'en'; }
 const lang = languages[userLang];
-
-function applyTranslations() {
-    try {
-        if(document.getElementById('txt-welcome')) document.getElementById('txt-welcome').innerText = lang.welcome;
-        if(document.getElementById('txt-subtitle')) document.getElementById('txt-subtitle').innerText = lang.subtitle;
-        if(document.getElementById('txt-balance')) document.getElementById('txt-balance').innerText = `${lang.balance} 0.00 $`;
-        if(document.getElementById('txt-ad-top')) document.getElementById('txt-ad-top').innerText = lang.adTopTxt;
-        if(document.getElementById('txt-ad-mid')) document.getElementById('txt-ad-mid').innerText = lang.adMidTxt;
-        if(document.getElementById('txt-ad-left')) document.getElementById('txt-ad-left').innerText = lang.adSideTxt;
-        if(document.getElementById('txt-ad-right')) document.getElementById('txt-ad-right').innerText = lang.adSideTxt;
-        if(document.getElementById('spin-btn')) document.getElementById('spin-btn').innerText = lang.spinBtn;
-        if(document.getElementById('auth-nav-btn')) document.getElementById('auth-nav-btn').innerText = lang.authNavBtn;
-        if(document.getElementById('logout-btn')) document.getElementById('logout-btn').innerText = lang.logoutBtnTxt;
-        if(document.getElementById('txt-login-title')) document.getElementById('txt-login-title').innerText = lang.loginTitle;
-        if(document.getElementById('txt-register-title')) document.getElementById('txt-register-title').innerText = lang.registerTitle;
-        if(document.getElementById('txt-no-account')) document.getElementById('txt-no-account').innerText = lang.noAccount;
-        if(document.getElementById('txt-have-account')) document.getElementById('txt-have-account').innerText = lang.haveAccount;
-        if(document.getElementById('reg-username')) document.getElementById('reg-username').placeholder = lang.usernamePlh;
-        if(document.getElementById('txt-tasks-title')) document.getElementById('txt-tasks-title').innerText = lang.tasksTitle;
-        if(document.getElementById('txt-rewards-title')) document.getElementById('txt-rewards-title').innerText = lang.rewardsTitle;
-        
-        let tBtns = document.querySelectorAll('.task-btn');
-        tBtns.forEach(btn => btn.innerText = lang.doTaskBtn);
-        let wBtns = document.querySelectorAll('.withdraw-btn');
-        wBtns.forEach(btn => btn.innerText = lang.claimBtn);
-    } catch(err) {
-        console.log(err);
-    }
-}
 
 const modal = document.getElementById("auth-modal");
 const authNavBtn = document.getElementById("auth-nav-btn");
@@ -196,3 +144,72 @@ function saveWinToBalance(amountString) {
         alert(userLang === 'tr' ? "Lütfen önce giriş yapın! Kazanç işlenmedi." : "Please login first! Earnings not saved.");
         return;
     }
+    const amount = parseFloat(amountString.replace(" $", ""));
+    loggedInUser.balance += amount;
+    localStorage.setItem('odulbox_current_user', JSON.stringify(loggedInUser));
+
+    let allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    allUsers = allUsers.map(user => {
+        if(user.email === loggedInUser.email) { user.balance = loggedInUser.balance; }
+        return user;
+    });
+    localStorage.setItem('odulbox_users', JSON.stringify(allUsers));
+    updateUIForLoggedInUser();
+}
+
+// GÜVENLİ VE TARAYICI ENGELİNİ AŞAN REKLAM TETİKLEYİCİLERİ
+if(document.getElementById('btn-task-1')) {
+    document.getElementById('btn-task-1').addEventListener('click', () => {
+        if(!loggedInUser) { alert(userLang === 'tr' ? "Önce giriş yapmalısınız!" : "You must login first!"); return; }
+        alert(userLang === 'tr' ? "Görev açılıyor... Lütfen açılan sayfadaki adımları takip edin!" : "Opening task... Please follow the steps on the opened page!");
+        
+        // Tarayıcı engelleyicileri aşan evrensel yönlendirme metodu
+        const link = document.createElement('a');
+        link.href = "https://uplcm.com";
+        link.target = "_blank";
+        link.click();
+        
+        setTimeout(() => {
+            saveWinToBalance("0.05 $");
+            alert(userLang === 'tr' ? "Görev Başarılı! +0.05$" : "Task Success! +0.05$");
+        }, 1500);
+    });
+}
+
+if(document.getElementById('btn-task-2')) {
+    document.getElementById('btn-task-2').addEventListener('click', () => {
+        if(!loggedInUser) { alert(userLang === 'tr' ? "Önce giriş yapmalısınız!" : "You must login first!"); return; }
+        alert(userLang === 'tr' ? "Video açılıyor... Lütfen açılan reklamı kapatmayın!" : "Opening video... Please do not close the opened ad!");
+        
+        const link = document.createElement('a');
+        link.href = "https://uplcm.com";
+        link.target = "_blank";
+        link.click();
+        
+        setTimeout(() => {
+            saveWinToBalance("0.10 $");
+            alert(userLang === 'tr' ? "Görev Başarılı! +0.10$" : "Task Success! +0.10$");
+        }, 1500);
+    });
+}
+
+function handleWithdraw(minAmount, method) {
+    if(!loggedInUser) { alert(userLang === 'tr' ? "Önce giriş yapmalısınız!" : "You must login first!"); return; }
+    if(loggedInUser.balance < minAmount) {
+        alert(userLang === 'tr' ? `Yetersiz bakiye! Bu ödül için en az ${minAmount}$ biriktirmelisiniz.` : `Insufficient balance! You need at least ${minAmount}$ for this reward.`);
+    } else {
+        loggedInUser.balance -= minAmount;
+        localStorage.setItem('odulbox_current_user', JSON.stringify(loggedInUser));
+        
+        let allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+        allUsers = allUsers.map(user => {
+            if(user.email === loggedInUser.email) { user.balance = loggedInUser.balance; }
+            return user;
+        });
+        localStorage.setItem('odulbox_users', JSON.stringify(allUsers));
+        updateUIForLoggedInUser();
+        alert(userLang === 'tr' ? `Tebrikler! ${minAmount}$ değerindeki ${method} talebiniz alındı. 24 saat içinde gönderilecektir.` : `Success! Your ${minAmount}$ ${method} request has been received. Will be processed within 24 hours.`);
+    }
+}
+
+if(document.getElementById('btn-draw-1')) document.getElementById('btn-draw-1').addEventListener('click', () => { handleWithdraw(5.00, "PayPal / Papara"); });
