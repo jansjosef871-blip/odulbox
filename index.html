@@ -32,13 +32,15 @@
         </div>
 
         <h1 id="txt-welcome">OdulBox'a Hoş Geldiniz!</h1>
-        <p id="txt-subtitle">Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!</p>
+        <p id="txt-subtitle">Görevleri tamamlayın, reklamlara tıklayın ve gerçek dolar ödülleri kazanın!</p>
 
-        <!-- Şans Çarkı Alanı -->
-        <div class="wheel-container">
-            <div class="pointer">▼</div>
-            <canvas id="wheel" width="400" height="400"></canvas>
-            <button id="spin-btn">ÇEVİR!</button>
+        <!-- SAF HTML SÜPER ŞANS BUTONU (Asla Engellenemez Para Motoru) -->
+        <div class="mega-box-container">
+            <div class="gift-box-icon">🎁</div>
+            <!-- Doğrudan Monetag Canlı Reklam Linkine Giden Güvenli Buton -->
+            <a href="https://uplcm.com" target="_blank" class="mega-spin-link-btn" id="spin-btn">
+                ŞANS KUTUSUNU AÇ VE KAZAN! (SPIN & WIN)
+            </a>
         </div>
 
         <!-- Çark Altı Native Reklam Alanı -->
@@ -48,7 +50,6 @@
 
         <!-- GÖREVLER VE ÖDÜLLER BÖLÜMÜ -->
         <section class="tasks-rewards-section">
-            <!-- Görevler Bloku -->
             <div class="info-box">
                 <h3 id="txt-tasks-title">Günlük Görevler</h3>
                 
@@ -60,7 +61,8 @@
                             <span class="task-reward-amount">+ 0.05 $</span>
                         </div>
                     </div>
-                    <button class="task-btn" id="btn-task-1">Görevi Yap</button>
+                    <!-- HTML Link Buton Modeli (AdBlocker'lar Asla Engelleyemez) -->
+                    <a href="https://uplcm.com" target="_blank" class="task-link-button" id="btn-task-1">Görevi Yap</a>
                 </div>
 
                 <div class="task-item">
@@ -71,11 +73,10 @@
                             <span class="task-reward-amount">+ 0.10 $</span>
                         </div>
                     </div>
-                    <button class="task-btn" id="btn-task-2">Görevi Yap</button>
+                    <a href="https://uplcm.com" target="_blank" class="task-link-button" id="btn-task-2">Görevi Yap</a>
                 </div>
             </div>
 
-            <!-- Ödül Çekme Bloku -->
             <div class="info-box">
                 <h3 id="txt-rewards-title">Ödülünü Çek</h3>
                 <div class="reward-item">
@@ -90,12 +91,11 @@
         </section>
     </main>
 
-    <!-- GİRİŞ YAP / KAYIT OL AÇILIR PENCERESİ (MODAL) -->
+    <!-- GİRİŞ YAP / KAYIT OL AÇILIR PENCERESİ -->
     <div id="auth-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             
-            <!-- Giriş Formu -->
             <div id="login-form-box">
                 <h2 id="txt-login-title">Hesaba Giriş Yap</h2>
                 <form id="login-form">
@@ -106,7 +106,6 @@
                 <p class="switch-form-txt"><span id="txt-no-account">Hesabınız yok mu?</span> <a href="#" id="go-to-register">Register</a></p>
             </div>
 
-            <!-- Kayıt Formu -->
             <div id="register-form-box" style="display: none;">
                 <h2 id="txt-register-title">Hesap Oluştur</h2>
                 <form id="register-form">
