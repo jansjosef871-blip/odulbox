@@ -74,6 +74,7 @@
     <header>
         <div id="site-logo" class="logo">🎁 Odul<span>Box</span></div>
         <div class="header-right">
+            <!-- DÜNYA DİLLERİ SEÇİM KUTUSU (TR/EN/DE) -->
             <select id="site-lang-select" class="lang-selector">
                 <option value="tr">🇹🇷 TR</option>
                 <option value="en">🇺🇸 EN</option>
@@ -110,10 +111,11 @@
         </section>
     </main>
 
-    <!-- AUTH MODAL -->
+    <!-- AUTH GİRİŞ KAYIT MODAL -->
     <div id="auth-modal" class="modal">
         <div class="modal-content">
             <span id="close-auth-btn" class="close-btn">&times;</span>
+            
             <div id="login-form-box">
                 <h2 id="modal-login-title">Hesaba Giriş Yap</h2>
                 <form id="login-form">
@@ -121,13 +123,12 @@
                     <input type="password" id="login-password" placeholder="Şifre" required>
                     <button type="submit" class="form-submit-btn" id="modal-login-btn">Giriş Yap</button>
                 </form>
-                <p class="switch-form-txt">Hesabınız yok mu? <a href="#" id="go-to-register">Kayıt Ol</a></p>
+                <p class="switch-form-txt"><span id="modal-no-acc">Hesabınız yok mu?</span> <a href="#" id="go-to-register">Kayıt Ol</a></p>
             </div>
+
             <div id="register-form-box" style="display: none;">
-                <h2 id="modal-reg-title">Hesap Oluştur</h2>
+                <h2>Hesap Oluştur</h2>
                 <form id="register-form">
                     <input type="text" id="reg-username" placeholder="Kullanıcı Adı" required>
                     <input type="email" id="reg-email" placeholder="Email" required>
                     <input type="password" id="reg-password" placeholder="Şifre" required>
-                    <button type="submit" class="form-submit-btn" id="modal-reg-btn">Kayıt Ol</button>
-                </form>
