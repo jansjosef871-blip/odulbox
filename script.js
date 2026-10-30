@@ -53,6 +53,7 @@ const DEFAULTS = {
     zonePopunder:"", zoneOnclick:"", zoneInterstitial:"", zoneBanner:"", zoneNative:"",
     antiBlock:false,
     directLink:"https://uplcm.com/4/12156047",
+    customBanners:{},  // { "ad-zone-top": "<html>", ... }
     refBonus:0.25, task1Reward:0.05, task2Reward:0.10,
     task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
     minWithdraw:5.00
@@ -78,7 +79,8 @@ let loggedInUser = JSON.parse(localStorage.getItem('odulbox_current_user')) || n
 
 function updateUIForLoggedInUser() {
     if (loggedInUser) {
-        document.getElementById('txt-balance').innerText = `${lang.balance} ${loggedInUser.balance.toFixed(2)} $`;
+        const bal = (typeof loggedInUser.balance === 'number' && !isNaN(loggedInUser.balance)) ? loggedInUser.balance : 0;
+        document.getElementById('txt-balance').innerText = `${lang.balance} ${bal.toFixed(2)} $`;
         authNavBtn.innerText = loggedInUser.username;
         authNavBtn.style.pointerEvents = "none";
         logoutBtn.style.display = "block";
@@ -173,6 +175,7 @@ document.getElementById('login-form').addEventListener('submit', function(e) {
         localStorage.setItem('odulbox_current_user', JSON.stringify(user));
         updateUIForLoggedInUser();
         modal.style.display = "none";
+        updateUIForLoggedInUser(); // bakiye ve kullanıcı adını hemen göster
         if (sessionStorage.getItem('odulbox_show_invite_msg')) {
             sessionStorage.removeItem('odulbox_show_invite_msg');
             alert(lang.invitedBy);
@@ -267,11 +270,11 @@ function spinWheel() {
     if (isSpinning) return;
     if (!loggedInUser) { alert(lang.spinLogin); modal.style.display="flex"; return; }
 
-    // Günlük limit: her 30 saniyede bir çevirme (kolay test için; admin'den değiştirilebilir)
-    const now = Date.now();
-    if (loggedInUser.lastSpin && (now - loggedInUser.lastSpin) < 30000) {
-        const wait = Math.ceil((30000 - (now - loggedInUser.lastSpin))/1000);
-        alert(userLang==='tr' ? `Lütfen ${wait} saniye bekleyin.` : `Please wait ${wait} seconds.`);
+    // Günlük limit: günde 1 kez (yerel gün başına sıfırlanır)
+    const today = new Date().toDateString();
+    const lastSpinDate = loggedInUser.lastSpinDate || null;
+    if (lastSpinDate === today) {
+        alert(userLang==='tr' ? "Çarkı bugün zaten çevirdin! Yarın tekrar dene. 🎡" : "You already spun today! Come back tomorrow. 🎡");
         return;
     }
 
@@ -304,7 +307,8 @@ function spinWheel() {
         const wi = Math.floor(pointerAngle/segmentAngle) % wheelSegments.length;
         const won = wheelSegments[wi];
 
-        loggedInUser.lastSpin = now;
+        loggedInUser.lastSpin = Date.now();
+        loggedInUser.lastSpinDate = today;
         addBalance(won.value);
         alert(`${lang.winAlert} ${won.label} 🎉`);
     }
@@ -366,6 +370,19 @@ function initMonetagZones() {
 function loadMonetagTag(container, zone, type) {
     if (!container || container.dataset.loaded) return;
     container.dataset.loaded = "1";
+    // ADMIN ÖZEL REKLAM KODU: slot için admin HTML/JS kodu girilmişse onu kullan (AdSense, özel banner vs.)
+    const customCode = cfg.customBanners && cfg.customBanners[container.id];
+    if (customCode) {
+        container.innerHTML = customCode;
+        // Özel koddaki scriptleri çalıştır
+        container.querySelectorAll('script').forEach(old => {
+            const s = document.createElement('script');
+            if (old.src) s.src = old.src; else s.textContent = old.textContent;
+            Array.from(old.attributes).forEach(a => { if (a.name!=='src') s.setAttribute(a.name, a.value); });
+            document.head.appendChild(s);
+        });
+        return;
+    }
     container.innerHTML = `<iframe src="about:blank" style="width:100%;height:${type==='sidebar'?'580':'90'}px;border:0;"></iframe>`;
     const iframe = container.querySelector('iframe');
     const doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -508,6 +525,10 @@ function fillAdminForm() {
     document.getElementById('cfg-task1-url').value = cfg.task1Url;
     document.getElementById('cfg-task2-url').value = cfg.task2Url;
     document.getElementById('cfg-min-withdraw').value = cfg.minWithdraw;
+    // Özel banner kodları
+    ['ad-zone-top','ad-zone-mid','ad-zone-side-left','ad-zone-side-right'].forEach(id => {
+        document.getElementById('cb-'+id).value = (cfg.customBanners && cfg.customBanners[id]) || '';
+    });
     renderAdminUsers();
 }
 

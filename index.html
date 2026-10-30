@@ -11,15 +11,15 @@
     <meta name="robots" content="index, follow">
     <meta name="author" content="OdulBox">
     <meta name="theme-color" content="#0f0c1b">
-    <link rel="canonical" href="https://YOUR-USERNAME.github.io/odulbox/">
+    <link rel="canonical" href="https://jansjosef871-blip.github.io/odulbox/">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="OdulBox">
     <meta property="og:title" content="OdulBox - Spin & Win Real Rewards Every Day">
     <meta property="og:description" content="Spin the wheel, complete tasks, invite friends and win real rewards. Withdraw via PayPal, Papara or Steam!">
-    <meta property="og:url" content="https://YOUR-USERNAME.github.io/odulbox/">
-    <meta property="og:image" content="https://YOUR-USERNAME.github.io/odulbox/og-image.png">
+    <meta property="og:url" content="https://jansjosef871-blip.github.io/odulbox/">
+    <meta property="og:image" content="https://jansjosef871-blip.github.io/odulbox/og-image.png">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -32,7 +32,7 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "OdulBox",
-      "url": "https://YOUR-USERNAME.github.io/odulbox/",
+      "url": "https://jansjosef871-blip.github.io/odulbox/",
       "applicationCategory": "EntertainmentApplication",
       "operatingSystem": "Any",
       "description": "Spin the daily wheel, complete tasks and invite friends to win real rewards.",
@@ -41,6 +41,7 @@
     </script>
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+    <link rel="sitemap" type="application/xml" href="sitemap.xml">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -193,6 +194,12 @@
                 <input type="text" id="cfg-zone-banner" placeholder="Banner Zone ID (yan/sol slotlar)">
                 <input type="text" id="cfg-zone-native" placeholder="Native Ads Zone ID (banner slotları)">
                 <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock kodunu aktif et</label>
+                <h4 class="admin-sec">🎨 Kendi Banner Reklam Kodların (AdSense, özel HTML)</h4>
+                <p class="admin-note">Her kutuya reklam agindan aldigin HTML/JS kodunu yapistir. Dolu olan kutu, o slot icin Zone ID'yi gecersiz kilar.</p>
+                <label class="admin-label">Ust banner (728x90): <textarea id="cb-ad-zone-top" rows="3"></textarea></label>
+                <label class="admin-label">Orta banner (cark alti): <textarea id="cb-ad-zone-mid" rows="3"></textarea></label>
+                <label class="admin-label">Sol sidebar: <textarea id="cb-ad-zone-side-left" rows="3"></textarea></label>
+                <label class="admin-label">Sag sidebar: <textarea id="cb-ad-zone-side-right" rows="3"></textarea></label>
 
                 <h4 class="admin-sec">🎁 Ödül Ayarları</h4>
                 <label class="admin-label">Davet bonusu ($): <input type="number" step="0.01" id="cfg-ref-bonus"></label>

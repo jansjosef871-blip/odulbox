@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0c1b"/>
+      <stop offset="100%" stop-color="#1d183a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff3366"/>
+      <stop offset="100%" stop-color="#ff6b9d"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#4834d4" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#0f0c1b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Wheel illustration -->
+  <g transform="translate(940,315)">
+    <circle r="180" fill="#1d183a" stroke="url(#accent)" stroke-width="6"/>
+    <g>
+      <path d="M0,0 L0,-170 A170,170 0 0 1 120,-120 Z" fill="#FF6B6B"/>
+      <path d="M0,0 L120,-120 A170,170 0 0 1 170,0 Z" fill="#4ECDC4"/>
+      <path d="M0,0 L170,0 A170,170 0 0 1 120,120 Z" fill="#FFD93D"/>
+      <path d="M0,0 L120,120 A170,170 0 0 1 0,170 Z" fill="#6BCB77"/>
+      <path d="M0,0 L0,170 A170,170 0 0 1 -120,120 Z" fill="#9B5DE5"/>
+      <path d="M0,0 L-120,120 A170,170 0 0 1 -170,0 Z" fill="#00B4D8"/>
+      <path d="M0,0 L-170,0 A170,170 0 0 1 -120,-120 Z" fill="#FF8C42"/>
+      <path d="M0,0 L-120,-120 A170,170 0 0 1 0,-170 Z" fill="#F72585"/>
+    </g>
+    <circle r="55" fill="#0f0c1b" stroke="#ffffff" stroke-width="5"/>
+    <text y="18" text-anchor="middle" font-size="48">🎁</text>
+    <polygon points="0,-215 -22,-185 22,-185" fill="#ff3366"/>
+  </g>
+
+  <!-- Logo & headline -->
+  <text x="80" y="150" font-family="Segoe UI, Arial, sans-serif" font-size="56" font-weight="800" fill="#ffffff">🎁 Odul<tspan fill="#ff3366">Box</tspan></text>
+  <text x="80" y="250" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="800" fill="#ffffff">Spin. Win.</text>
+  <text x="80" y="330" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="800" fill="url(#accent)">Real Rewards.</text>
+  <text x="80" y="410" font-family="Segoe UI, Arial, sans-serif" font-size="28" fill="#a29bfe">Daily wheel • Tasks • Invite friends</text>
+  <text x="80" y="455" font-family="Segoe UI, Arial, sans-serif" font-size="28" fill="#a29bfe">Withdraw via PayPal • Papara • Steam</text>
+
+  <rect x="80" y="500" width="330" height="66" rx="33" fill="url(#accent)"/>
+  <text x="245" y="543" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" fill="#ffffff">Start Winning — Free!</text>
+</svg>

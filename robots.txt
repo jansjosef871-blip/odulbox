@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jansjosef871-blip.github.io/odulbox/sitemap.xml
