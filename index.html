@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="monetag" content="7715ba8fc62264e1c986fed392996563">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OdulBox - Küresel Çevir ve Kazan</title>
+    <title>OdulBox - Spin & Win Global</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://googleapis.com" rel="stylesheet">
 </head>
@@ -32,7 +32,7 @@
         </div>
 
         <h1 id="txt-welcome">OdulBox'a Hoş Geldiniz!</h1>
-        <p id="txt-subtitle">Her gün çarkı çevirin, görevleri tamamlayın ve gerçek sonuçları alır!</p>
+        <p id="txt-subtitle">Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!</p>
 
         <!-- Şans Çarkı Alanı -->
         <div class="wheel-container">
@@ -48,6 +48,7 @@
 
         <!-- GÖREVLER VE ÖDÜLLER BÖLÜMÜ -->
         <section class="tasks-rewards-section">
+            <!-- Görevler Bloku -->
             <div class="info-box">
                 <h3 id="txt-tasks-title">Günlük Görevler</h3>
                 
@@ -74,6 +75,7 @@
                 </div>
             </div>
 
+            <!-- Ödül Çekme Bloku -->
             <div class="info-box">
                 <h3 id="txt-rewards-title">Ödülünü Çek</h3>
                 <div class="reward-item">
@@ -88,11 +90,12 @@
         </section>
     </main>
 
-    <!-- GİRİŞ YAP / KAYIT OL AÇILIR PENCERESİ -->
+    <!-- GİRİŞ YAP / KAYIT OL AÇILIR PENCERESİ (MODAL) -->
     <div id="auth-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
             
+            <!-- Giriş Formu -->
             <div id="login-form-box">
                 <h2 id="txt-login-title">Hesaba Giriş Yap</h2>
                 <form id="login-form">
@@ -103,6 +106,7 @@
                 <p class="switch-form-txt"><span id="txt-no-account">Hesabınız yok mu?</span> <a href="#" id="go-to-register">Register</a></p>
             </div>
 
+            <!-- Kayıt Formu -->
             <div id="register-form-box" style="display: none;">
                 <h2 id="txt-register-title">Hesap Oluştur</h2>
                 <form id="register-form">
