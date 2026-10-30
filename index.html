@@ -9,52 +9,67 @@
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: #0f0c1b !important; color: #ffffff !important; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 0 20px; }
-        header { width: 100%; max-width: 1200px; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #231d42; }
-        .logo { font-size: 20px; font-weight: 700; cursor: pointer; user-select: none; }
+        body { background-color: #0f0c1b !important; color: #ffffff !important; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 0 160px; }
+        header { width: 100%; max-width: 1200px; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #231d42; z-index: 10; }
+        .logo { font-size: 24px; font-weight: 700; cursor: pointer; user-select: none; }
         .logo span { color: #ff3366; }
-        .header-right { display: flex; align-items: center; gap: 10px; }
-        .user-status { background: #1d183a; padding: 6px 12px; border-radius: 20px; font-weight: 600; border: 1px solid #ff3366; font-size: 12px; display: none; }
-        .auth-trigger-btn { background: #ff3366; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 12px; }
-        .logout-btn { background: transparent; color: #a29bfe; border: 1px solid #231d42; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 12px; display: none; }
-        .lang-selector { background: #1d183a; border: 1px solid #ff3366; color: white; padding: 5px; border-radius: 15px; font-size: 11px; outline: none; cursor: pointer; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .user-status { background: #1d183a; padding: 10px 20px; border-radius: 20px; font-weight: 600; border: 1px solid #ff3366; display: none; }
+        .auth-trigger-btn { background: #ff3366; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; }
+        .logout-btn { background: transparent; color: #a29bfe; border: 1px solid #231d42; padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; display: none; }
+        .lang-selector { background: #1d183a; border: 1px solid #ff3366; color: white; padding: 5px 10px; border-radius: 15px; font-size: 13px; outline: none; cursor: pointer; }
         
-        .container { text-align: center; padding: 20px 0; width: 100%; max-width: 600px; }
-        h1 { font-size: 24px; margin-bottom: 8px; color: white !important; }
-        p { color: #a29bfe; font-size: 13px; margin-bottom: 20px; }
+        .container { text-align: center; padding: 20px 0 40px 0; max-width: 800px; width: 100%; }
+        h1 { font-size: 32px; margin-bottom: 10px; color: white !important; }
+        p { color: #a29bfe; margin-bottom: 30px; }
         
-        .ad-banner { background: linear-gradient(135deg, #1d183a 0%, #110d26 100%); border: 1px dashed #4834d4; padding: 15px; border-radius: 10px; color: #ff3366; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 20px; text-align: center; width: 100%; min-height: 70px; display: flex; justify-content: center; align-items: center; }
-        .ad-banner img { width: 100%; max-height: 90px; object-fit: contain; cursor: pointer; }
+        .ad-banner { background: linear-gradient(135deg, #1d183a 0%, #110d26 100%); border: 1px dashed #4834d4; padding: 15px; border-radius: 10px; color: #ff3366; font-size: 13px; font-weight: 600; text-transform: uppercase; margin-bottom: 25px; text-align: center; width: 100%; overflow: hidden; display: flex; justify-content: center; align-items: center; min-height: 90px; }
+        .ad-banner img, .ad-sidebar img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+        .ad-top { max-width: 728px; margin: 10px auto 25px auto; }
+        .ad-middle { max-width: 500px; margin: 20px auto; }
         
-        .mega-box-container { background: #1d183a; border: 2px solid #ff3366; border-radius: 15px; padding: 25px; margin: 15px auto; width: 100%; box-shadow: 0 0 20px rgba(255, 51, 102, 0.2); text-align: center; }
-        .gift-box-icon { font-size: 50px; margin-bottom: 10px; }
-        .mega-spin-link-btn { display: block; width: 100%; background: #ff3366; color: white; border: none; padding: 12px; border-radius: 30px; font-weight: 700; font-size: 14px; text-transform: uppercase; cursor: pointer; }
-        
-        .tasks-rewards-section { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; text-align: left; width: 100%; }
-        .info-box { background: #1d183a; border: 1px solid #231d42; padding: 15px; border-radius: 12px; }
-        .info-box h3 { font-size: 16px; margin-bottom: 12px; color: #ffffff; border-bottom: 2px solid #ff3366; padding-bottom: 30sn; display: inline-block; }
-        
-        .task-item, .reward-item { display: flex; justify-content: space-between; align-items: center; background: #0f0c1b; padding: 10px; border-radius: 8px; margin-bottom: 8px; border: 1px solid #231d42; }
-        .task-info { display: flex; align-items: center; gap: 8px; }
-        .task-info p { margin: 0; color: white; font-size: 13px; font-weight: 600; }
-        .task-icon { font-size: 18px; }
-        .task-reward-amount { font-size: 11px; color: #2ecc71; font-weight: bold; }
-        .task-link-button, .withdraw-btn { background: #ff3366; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; }
+        .ad-sidebar { position: fixed; top: 100px; width: 140px; height: 600px; background: linear-gradient(180deg, #1d183a 0%, #0f0c1b 100%); border: 1px dashed #ff3366; color: #a29bfe; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; text-orientation: mixed; font-weight: bold; border-radius: 8px; overflow: hidden; }
+        .ad-left { left: 10px; } .ad-right { right: 10px; }
 
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 12, 27, 0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal-content { background-color: #1d183a; padding: 25px; border: 1px solid #231d42; width: 90%; max-width: 380px; border-radius: 15px; position: relative; text-align: center; }
-        .close-btn { position: absolute; right: 15px; top: 10px; color: #a29bfe; font-size: 24px; cursor: pointer; }
-        .modal h2 { margin-bottom: 15px; font-size: 18px; color: white; }
-        .modal input, .modal select { width: 100%; padding: 10px; margin-bottom: 10px; background: #0f0c1b; border: 1px solid #231d42; border-radius: 8px; color: white; font-size: 13px; outline: none; }
-        .form-submit-btn { width: 100%; padding: 10px; background: #ff3366; color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
-        .admin-section-title { text-align: left; font-size: 13px; color: #ff3366; font-weight: bold; margin: 12px 0 6px 0; }
-        .switch-form-txt { margin-top: 10px; font-size: 11px; color: #a29bfe; }
+        .mega-box-container { background: #1d183a; border: 2px solid #ff3366; border-radius: 15px; padding: 30px; margin: 20px auto; max-width: 500px; box-shadow: 0 0 30px rgba(255, 51, 102, 0.2); text-align: center; }
+        .gift-box-icon { font-size: 60px; margin-bottom: 15px; }
+        .mega-spin-link-btn { display: block; width: 100%; background: #ff3366; color: white; border: none; padding: 12px 25px; border-radius: 30px; font-weight: 700; font-size: 15px; text-transform: uppercase; cursor: pointer; }
+        .mega-spin-link-btn:hover { background: #e02454; }
+
+        .tasks-rewards-section { display: flex; gap: 20px; margin-top: 30px; text-align: left; width: 100%; }
+        .info-box { flex: 1; background: #1d183a; border: 1px solid #231d42; padding: 20px; border-radius: 12px; }
+        .info-box h3 { font-size: 18px; margin-bottom: 15px; color: #ffffff; border-bottom: 2px solid #ff3366; padding-bottom: 5px; display: inline-block; }
+        
+        .task-item, .reward-item { display: flex; justify-content: space-between; align-items: center; background: #0f0c1b; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #231d42; }
+        .task-info { display: flex; align-items: center; gap: 10px; }
+        .task-info p { margin: 0; color: white; font-size: 14px; font-weight: 600; }
+        .task-icon { font-size: 20px; }
+        .task-reward-amount { font-size: 12px; color: #2ecc71; font-weight: bold; }
+        .task-link-button, .withdraw-btn { background: #ff3366; color: white; border: none; padding: 6px 15px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; text-align: center; }
+        .task-link-button:hover, .withdraw-btn:hover { background: #e02454; }
+
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 12, 27, 0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+        .modal-content { background-color: #1d183a; padding: 30px; border: 1px solid #231d42; width: 95%; max-width: 500px; border-radius: 15px; position: relative; box-shadow: 0 0 25px rgba(255, 51, 102, 0.2); max-height: 85vh; overflow-y: auto; }
+        .close-btn { position: absolute; right: 20px; top: 15px; color: #a29bfe; font-size: 28px; cursor: pointer; }
+        .modal h2 { margin-bottom: 15px; font-size: 20px; color: white; text-align: center; border-bottom: 1px solid #231d42; padding-bottom: 10px; }
+        .modal input, .modal select { width: 100%; padding: 10px 12px; margin-bottom: 10px; background: #0f0c1b; border: 1px solid #231d42; border-radius: 8px; color: white; font-size: 13px; outline: none; }
+        .form-submit-btn { width: 100%; padding: 10px; background: #ff3366; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 5px; }
+        .admin-section-title { text-align: left; font-size: 14px; color: #ff3366; font-weight: bold; margin: 15px 0 8px 0; border-left: 3px solid #ff3366; padding-left: 8px; }
+        .switch-form-txt { margin-top: 15px; font-size: 12px; color: #a29bfe; text-align: center; }
         .switch-form-txt a { color: #ff3366; text-decoration: none; font-weight: 600; }
-        .request-list-item { background: #0f0c1b; border: 1px solid #231d42; padding: 8px; margin-bottom: 5px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
-        .delete-req-btn { background: #e74c3c; color: white; border: none; padding: 3px 6px; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        
+        .request-list-item { background: #0f0c1b; border: 1px solid #231d42; border-radius: 6px; padding: 10px; margin-bottom: 8px; text-align: left; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .delete-req-btn { background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+
+        @media (max-width: 1100px) { body { padding: 0 20px; } .ad-sidebar { display: none; } }
+        @media (max-width: 600px) { .tasks-rewards-section { flex-direction: column; } }
     </style>
 </head>
 <body>
+
+    <!-- Reklam Alanları -->
+    <div id="ad-left-area" class="ad-sidebar ad-left">[🔥 REKLAM]</div>
+    <div id="ad-right-area" class="ad-sidebar ad-right">[🔥 REKLAM]</div>
 
     <header>
         <div id="site-logo" class="logo">🎁 Odul<span>Box</span></div>
@@ -71,7 +86,7 @@
     </header>
 
     <main class="container">
-        <div id="ad-top-area" class="ad-banner">[TOP AD BANNER]</div>
+        <div id="ad-top-area" class="ad-banner ad-top">[TOP AD BANNER]</div>
         <h1 id="txt-welcome">OdulBox'a Hoş Geldiniz!</h1>
         <p id="txt-subtitle">Görevleri tamamlayın, şans kutusunu açın ve gerçek dolar ödülleri kazanın!</p>
 
@@ -80,7 +95,7 @@
             <button id="btn-spin" class="mega-spin-link-btn">ŞANS KUTUSUNU AÇ VE KAZAN!</button>
         </div>
 
-        <div id="ad-mid-area" class="ad-banner">[NATIVE AD]</div>
+        <div id="ad-mid-area" class="ad-banner ad-middle">[NATIVE AD]</div>
 
         <section class="tasks-rewards-section">
             <div class="info-box">
@@ -106,7 +121,7 @@
                     <input type="password" id="login-password" placeholder="Şifre" required>
                     <button type="submit" class="form-submit-btn" id="modal-login-btn">Giriş Yap</button>
                 </form>
-                <p class="switch-form-txt"><span id="modal-no-acc">Hesabınız yok mu?</span> <a href="#" id="go-to-register">Kayıt Ol</a></p>
+                <p class="switch-form-txt">Hesabınız yok mu? <a href="#" id="go-to-register">Kayıt Ol</a></p>
             </div>
             <div id="register-form-box" style="display: none;">
                 <h2 id="modal-reg-title">Hesap Oluştur</h2>
@@ -116,26 +131,3 @@
                     <input type="password" id="reg-password" placeholder="Şifre" required>
                     <button type="submit" class="form-submit-btn" id="modal-reg-btn">Kayıt Ol</button>
                 </form>
-                <p class="switch-form-txt"><span id="modal-have-acc">Zaten üye misiniz?</span> <a href="#" id="go-to-login">Giriş Yap</a></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN MODAL -->
-    <div id="admin-modal" class="modal">
-        <div class="modal-content">
-            <span id="close-admin-btn" class="close-btn">&times;</span>
-            <h2 style="color: #ff3366; font-size:16px;">OdulBox Admin Control Panel</h2>
-            <div class="admin-section-title">1. Reklam Yönetimi</div>
-            <form id="admin-ad-form">
-                <select id="admin-ad-select">
-                    <option value="top">Üst Banner</option>
-                    <option value="mid">Alt Banner</option>
-                </select>
-                <input type="url" id="admin-ad-url" placeholder="SmartLink URL" required>
-                <input type="url" id="admin-img-url" placeholder="Görsel Linki">
-                <button type="submit" class="form-submit-btn" style="background:#2ecc71;">Yayınla</button>
-            </form>
-            <div class="admin-section-title">2. Bakiye Düzenle</div>
-            <form id="admin-balance-form">
-                <input type="email" id="admin-user-email" placeholder="Kullanıcı E-postası" required>
