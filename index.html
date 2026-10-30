@@ -56,7 +56,7 @@
             border-radius: 20px;
             font-weight: 600;
             border: 1px solid #ff3366;
-            display: none; /* İlk başta tamamen gizli duracak */
+            display: none;
         }
 
         .auth-trigger-btn {
@@ -77,7 +77,7 @@
             border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            display: none;
         }
 
         .logout-btn:hover {
@@ -291,10 +291,9 @@
     <header>
         <div class="logo">🎁 Odul<span>Box</span></div>
         <div class="header-right">
-            <!-- Bakiye Alanı Başlangıçta Gizli (CSS display:none) -->
             <span id="txt-balance" class="user-status">Bakiye: 0.00 $</span>
             <button id="auth-nav-btn" class="auth-trigger-btn">Giriş Yap / Kayıt Ol</button>
-            <button id="logout-btn" class="logout-btn" style="display: none;">Çıkış Yap</button>
+            <button id="logout-btn" class="logout-btn">Çıkış Yap</button>
         </div>
     </header>
 
@@ -305,7 +304,7 @@
         </div>
 
         <h1>OdulBox'a Hoş Geldiniz!</h1>
-        <p>Görevleri tamamlayın, reklamlara tıklayın ogrenin ve gerçek dolar ödülleri kazanın!</p>
+        <p>Görevleri tamamlayın, reklamlara tıklayın ve gerçek dolar ödülleri kazanın!</p>
 
         <!-- SAF HTML ŞANS KUTUSU -->
         <div class="mega-box-container">
@@ -327,3 +326,5 @@
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-icon">📱</span>
+                        <div>
+                            <p class="task-name">Instagram Hesabını Takip Et</p>
