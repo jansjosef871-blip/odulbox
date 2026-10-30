@@ -19,7 +19,7 @@
     <meta property="og:title" content="OdulBox - Spin & Win Real Rewards Every Day">
     <meta property="og:description" content="Spin the wheel, complete tasks, invite friends and win real rewards. Withdraw via PayPal, Papara or Steam!">
     <meta property="og:url" content="https://jansjosef871-blip.github.io/odulbox/">
-    <meta property="og:image" content="https://jansjosef871-blip.github.io/odulbox/og-image.png">
+    <meta property="og:image" content="https://github.io">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -40,21 +40,32 @@
     }
     </script>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
-    <link rel="sitemap" type="application/xml" href="sitemap.xml">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://w3.org' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Tam uyumluluk için gerekli ek stiller */
+        .referral-link-row { display: flex; gap: 10px; margin: 10px 0; }
+        .referral-link-row input { flex: 1; padding: 10px; background: #0f0c1b; border: 1px solid #231d42; color: #white; border-radius: 8px; outline: none; }
+        .referral-stats { font-size: 13px; color: #2ecc71; margin-top: 5px; font-weight: bold; }
+        .admin-section-title { text-align: left; font-size: 14px; color: #ff3366; font-weight: bold; margin: 15px 0 8px 0; border-left: 3px solid #ff3366; padding-left: 8px; }
+        .admin-label { display: block; text-align: left; font-size: 12px; color: #a29bfe; margin-bottom: 4px; }
+        .request-list-item { background: #0f0c1b; border: 1px solid #231d42; border-radius: 6px; padding: 10px; margin-bottom: 8px; text-align: left; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .delete-req-btn { background: #e74c3c; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+        .ad-banner img, .ad-sidebar img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+    </style>
 </head>
 <body>
 
-    <!-- Sol ve Sağ Dikey Reklam Alanları (Monetag banner slotları) -->
-    <div class="ad-sidebar ad-left" id="ad-zone-side-left" data-slot="sidebar">[🔥 AD SPACE]</div>
-    <div class="ad-sidebar ad-right" id="ad-zone-side-right" data-slot="sidebar">[🔥 AD SPACE]</div>
+    <!-- Sol ve Sağ Dikey Reklam Alanları -->
+    <div class="ad-sidebar ad-left" id="ad-zone-side-left" data-slot="sidebar">[🔥 REKLAM ALANI]</div>
+    <div class="ad-sidebar ad-right" id="ad-zone-side-right" data-slot="sidebar">[🔥 REKLAM ALANI]</div>
 
     <!-- Üst Menü -->
     <header>
-        <div class="logo">🎁 Odul<span>Box</span></div>
+        <div id="site-logo" class="logo">🎁 Odul<span>Box</span></div>
         <div class="header-right">
-            <span id="txt-balance" class="user-status">Balance: 0.00 $</span>
+            <span id="txt-balance" class="user-status" style="display: none;">Balance: 0.00 $</span>
             <button id="auth-nav-btn" class="auth-trigger-btn">Login / Register</button>
             <button id="logout-btn" class="logout-btn" style="display: none;">Logout</button>
         </div>
@@ -93,25 +104,47 @@
         <section class="tasks-rewards-section">
             <div class="info-box">
                 <h3 id="txt-tasks-title">Daily Tasks</h3>
-                <div class="task-item">
-                    <div class="task-info">
-                        <span class="task-icon">📱</span>
-                        <div>
-                            <p class="task-name" id="txt-task-1">Follow Instagram Account</p>
-                            <span class="task-reward-amount">+ 0.05 $</span>
+                <div id="tasks-list-container">
+                    <div class="task-item">
+                        <div class="task-info">
+                            <span class="task-icon">📱</span>
+                            <div>
+                                <p class="task-name" id="txt-task-1">Follow Instagram Account</p>
+                                <span class="task-reward-amount">+ 0.05 $</span>
+                            </div>
                         </div>
+                        <button class="task-btn custom-action-btn" data-action="task" data-id="task1" data-reward="0.05">Do Task</button>
                     </div>
-                    <button class="task-btn" id="btn-task-1">Do Task</button>
-                </div>
-                <div class="task-item">
-                    <div class="task-info">
-                        <span class="task-icon">🎥</span>
-                        <div>
-                            <p class="task-name" id="txt-task-2">Watch 30s YouTube Video</p>
-                            <span class="task-reward-amount">+ 0.10 $</span>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <span class="task-icon">🎥</span>
+                            <div>
+                                <p class="task-name" id="txt-task-2">Watch 30s YouTube Video</p>
+                                <span class="task-reward-amount">+ 0.10 $</span>
+                            </div>
                         </div>
+                        <button class="task-btn custom-action-btn" data-action="task" data-id="task2" data-reward="0.10">Do Task</button>
                     </div>
-                    <button class="task-btn" id="btn-task-2">Do Task</button>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <span class="task-icon">📢</span>
+                            <div>
+                                <p class="task-name">Join Telegram Channel</p>
+                                <span class="task-reward-amount">+ 0.05 $</span>
+                            </div>
+                        </div>
+                        <button class="task-btn custom-action-btn" data-action="task" data-id="task3" data-reward="0.05">Do Task</button>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-info">
+                            <span class="task-icon">🐦</span>
+                            <div>
+                                <p class="task-name">Follow Twitter (X) Account</p>
+                                <span class="task-reward-amount">+ 0.05 $</span>
+                            </div>
+                        </div>
+                        <button class="task-btn custom-action-btn" data-action="task" data-id="task4" data-reward="0.05">Do Task</button>
+                    </div>
                 </div>
             </div>
 
@@ -119,11 +152,11 @@
                 <h3 id="txt-rewards-title">Withdraw Rewards</h3>
                 <div class="reward-item">
                     <span>💵 PayPal / Papara (Min. 5$)</span>
-                    <button class="withdraw-btn" id="btn-draw-1">Claim</button>
+                    <button class="withdraw-btn custom-action-btn" data-action="withdraw" data-min="5.00" data-name="PayPal / Papara">Claim</button>
                 </div>
                 <div class="reward-item">
                     <span>🎮 Steam Wallet Code (Min. 10$)</span>
-                    <button class="withdraw-btn" id="btn-draw-2">Claim</button>
+                    <button class="withdraw-btn custom-action-btn" data-action="withdraw" data-min="10.00" data-name="Steam Wallet Code">Claim</button>
                 </div>
             </div>
         </section>
@@ -132,7 +165,7 @@
     <!-- GİRİŞ / KAYIT MODAL -->
     <div id="auth-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
+            <span class="close-btn" id="close-auth-btn">&times;</span>
             <div id="login-form-box">
                 <h2 id="txt-login-title">Login to Account</h2>
                 <form id="login-form">
@@ -145,83 +178,4 @@
             <div id="register-form-box" style="display: none;">
                 <h2 id="txt-register-title">Create Account</h2>
                 <form id="register-form">
-                    <input type="text" id="reg-username" placeholder="Username" required>
-                    <input type="email" id="reg-email" placeholder="Email" required>
-                    <input type="password" id="reg-password" placeholder="Password" required>
-                    <button type="submit" class="form-submit-btn" id="btn-register-submit">Register</button>
-                </form>
-                <p class="switch-form-txt"><span id="txt-have-account">Already have an account?</span> <a href="#" id="go-to-login">Login</a></p>
-            </div>
-        </div>
-    </div>
 
-    <!-- ============ GİZL PANELİ ============ -->
-    <!-- Erişim: site adresinin sonuna #admin-panel ekle (ör: odulbox.netlify.com/#admin-panel) -->
-    <div id="admin-panel" class="modal admin-modal">
-        <div class="modal-content admin-content">
-            <span class="close-btn" data-close="admin-panel">&times;</span>
-
-            <!-- Kurulum sihirbazı: ilk açılışta şifre belirle -->
-            <div id="admin-setup-box">
-                <h2>⚙️ Admin Kurulum Sihirbazı</h2>
-                <p class="admin-note">İlk kez buradasın. Admin şifreni belirle, sonra Monetag bilgilerini gir.</p>
-                <form id="admin-setup-form">
-                    <input type="password" id="admin-setup-pass" placeholder="Yeni admin şifresi" required>
-                    <input type="password" id="admin-setup-pass2" placeholder="Şifreyi tekrar gir" required>
-                    <button type="submit" class="form-submit-btn">Kurulumu Tamamla</button>
-                </form>
-            </div>
-
-            <!-- Şifre girişi -->
-            <div id="admin-login-box" style="display:none;">
-                <h2>🔐 Admin Girişi</h2>
-                <form id="admin-login-form">
-                    <input type="password" id="admin-login-pass" placeholder="Admin şifresi" required>
-                    <button type="submit" class="form-submit-btn">Giriş</button>
-                </form>
-            </div>
-
-            <!-- Panel içeriği -->
-            <div id="admin-dashboard" style="display:none;">
-                <h2>⚙️ OdulBox Admin Panel</h2>
-
-                <h4 class="admin-sec">💰 Monetag Reklam Kurulumu</h4>
-                <p class="admin-note">Monetag.com → siteni ekle → her formatın Zone ID'sini buraya yapıştır. Boş bırakırsan o format açılmaz.</p>
-                <input type="text" id="cfg-direct-link" placeholder="Monetag Direct Link - tam URL buraya yapistir">
-                <input type="text" id="cfg-zone-popunder" placeholder="Popunder Zone ID (varsa)">
-                <input type="text" id="cfg-zone-onclick" placeholder="Onclick (Vignette) Zone ID">
-                <input type="text" id="cfg-zone-interstitial" placeholder="In-App Interstitial Zone ID">
-                <input type="text" id="cfg-zone-banner" placeholder="Banner Zone ID (yan/sol slotlar)">
-                <input type="text" id="cfg-zone-native" placeholder="Native Ads Zone ID (banner slotları)">
-                <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock kodunu aktif et</label>
-                <h4 class="admin-sec">🎨 Kendi Banner Reklam Kodların (AdSense, özel HTML)</h4>
-                <p class="admin-note">Her kutuya reklam agindan aldigin HTML/JS kodunu yapistir. Dolu olan kutu, o slot icin Zone ID'yi gecersiz kilar.</p>
-                <label class="admin-label">Ust banner (728x90): <textarea id="cb-ad-zone-top" rows="3"></textarea></label>
-                <label class="admin-label">Orta banner (cark alti): <textarea id="cb-ad-zone-mid" rows="3"></textarea></label>
-                <label class="admin-label">Sol sidebar: <textarea id="cb-ad-zone-side-left" rows="3"></textarea></label>
-                <label class="admin-label">Sag sidebar: <textarea id="cb-ad-zone-side-right" rows="3"></textarea></label>
-
-                <h4 class="admin-sec">🎁 Ödül Ayarları</h4>
-                <label class="admin-label">Davet bonusu ($): <input type="number" step="0.01" id="cfg-ref-bonus"></label>
-                <label class="admin-label">Instagram görev ödülü ($): <input type="number" step="0.01" id="cfg-task1"></label>
-                <label class="admin-label">YouTube görev ödülü ($): <input type="number" step="0.01" id="cfg-task2"></label>
-                <label class="admin-label">Instagram görev linki: <input type="text" id="cfg-task1-url"></label>
-                <label class="admin-label">YouTube görev linki: <input type="text" id="cfg-task2-url"></label>
-                <label class="admin-label">Çekim alt limiti ($): <input type="number" step="0.01" id="cfg-min-withdraw"></label>
-
-                <h4 class="admin-sec">👥 Kullanıcılar & Talepler</h4>
-                <div id="admin-users-list" class="admin-users"></div>
-                <h4 class="admin-sec">💸 Cekim Talepleri</h4>
-                <div id="admin-withdrawals-list" class="admin-users"></div>
-                <p class="admin-note">Onayladigin talep "paid" isaretlenir, kullanici tekrar talep acabilir. Reddedersen bakiye iade edilir.</p>
-
-                <button id="admin-save-btn" class="form-submit-btn">💾 Kaydet & Uygula</button>
-                <button id="admin-logout-btn" class="admin-secondary-btn">Panelden Çık</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Gizli admin tetikleyici: klavye ile de açılır -->
-    <script src="script.js"></script>
-</body>
-</html>
