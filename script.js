@@ -174,9 +174,18 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
 
     allUsers.push(newUser);
     localStorage.setItem('odulbox_users', JSON.stringify(allUsers));
-    alert(userLang === 'tr' ? "Kayıt başarılı! Giriş yapabilirsiniz." : "Registration success! Please login.");
-    registerBox.style.display = "none";
-    loginBox.style.display = "block";
+
+    // Otomatik giriş: kayıt sonrası bakiye hemen görünsün
+    loggedInUser = newUser;
+    saveSession(newUser);
+    updateUIForLoggedInUser();
+    modal.style.display = "none";
+    if (sessionStorage.getItem('odulbox_show_invite_msg')) {
+        sessionStorage.removeItem('odulbox_show_invite_msg');
+        alert(lang.invitedBy);
+    } else {
+        alert(userLang === 'tr' ? `Hoş geldin ${username}! Hesabın oluşturuldu. 🎉` : `Welcome ${username}! Account created. 🎉`);
+    }
 });
 
 document.getElementById('login-form').addEventListener('submit', function(e) {
@@ -237,13 +246,55 @@ document.getElementById('btn-task-2').addEventListener('click', () => {
 });
 
 // Çekim
+const withdrawLang = {
+    tr: { askMethod:"Hangi yöntemle çekmek istersin?", askInfo:"Ödeme bilgini gir (e-posta / telefon / IBAN):", ok:"Talebin alındı! 24-48 saat içinde ödenecek. 🎉", pending:"⚠️ Bu talebin zaten beklemede. Ödeme yapılmadan yeni talep açamazsın." },
+    en: { askMethod:"Which method do you want to withdraw with?", askInfo:"Enter your payment info (email / phone / IBAN):", ok:"Request received! Will be paid within 24-48h. 🎉", pending:"⚠️ You already have a pending request. You can't open a new one until it's paid." }
+};
+const wl = withdrawLang[userLang] || withdrawLang.en;
+
+function getWithdrawRequests() {
+    return JSON.parse(localStorage.getItem('odulbox_withdrawals')) || [];
+}
+
 function handleWithdraw(minAmount, rewardName) {
     if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
     if (loggedInUser.balance < minAmount) {
         alert(`${lang.withdrawFail} ${minAmount.toFixed(2)} $ / ${lang.balance} ${loggedInUser.balance.toFixed(2)} $`);
         return;
     }
-    alert(lang.withdrawOK);
+
+    // Bekleyen talep kontrolü
+    const requests = getWithdrawRequests();
+    const existing = requests.find(r => r.email === loggedInUser.email && r.status === 'pending');
+    if (existing) { alert(wl.pending); return; }
+
+    // Ödeme bilgisi al
+    const payInfo = prompt(wl.askInfo);
+    if (!payInfo || payInfo.trim() === "") return;
+
+    // Talebi oluştur
+    const req = {
+        id: Date.now(),
+        username: loggedInUser.username,
+        email: loggedInUser.email,
+        amount: loggedInUser.balance,
+        method: rewardName,
+        payInfo: payInfo.trim(),
+        date: new Date().toISOString(),
+        status: 'pending'
+    };
+    requests.push(req);
+    localStorage.setItem('odulbox_withdrawals', JSON.stringify(requests));
+
+    // Bakiyeyi sıfırla (para çekildi sayılır)
+    loggedInUser.balance = 0;
+    saveSession(loggedInUser);
+    const allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    const idx = allUsers.findIndex(u => u.email === loggedInUser.email);
+    if (idx > -1) { allUsers[idx].balance = 0; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); }
+    updateUIForLoggedInUser();
+
+    alert(wl.ok);
 }
 document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(cfg.minWithdraw, "PayPal/Papara"));
 document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(cfg.minWithdraw + 5, "Steam Wallet"));
@@ -549,12 +600,58 @@ function fillAdminForm() {
 function renderAdminUsers() {
     const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
     const box = document.getElementById('admin-users-list');
-    if (!users.length) { box.innerHTML = '<p class="admin-note">Henüz kullanıcı yok.</p>'; return; }
-    box.innerHTML = users.map(u => `
+    if (!users.length) { box.innerHTML = '<p class="admin-note">Henüz kullanıcı yok.</p>'; }
+    else {
+        box.innerHTML = users.map(u => `
         <div class="admin-user-row">
             <span>${u.username} <small>(${u.email})</small></span>
             <span>$${(u.balance||0).toFixed(2)} • ${u.refs||0} davet</span>
         </div>`).join('');
+    }
+    renderAdminWithdrawals();
+}
+
+function renderAdminWithdrawals() {
+    const reqs = JSON.parse(localStorage.getItem('odulbox_withdrawals')) || [];
+    const box = document.getElementById('admin-withdrawals-list');
+    if (!box) return;
+    if (!reqs.length) { box.innerHTML = '<p class="admin-note">Çekim talebi yok.</p>'; return; }
+    box.innerHTML = reqs.slice().reverse().map(r => `
+        <div class="admin-withdraw-row ${r.status==='pending' ? 'wd-pending' : 'wd-paid'}">
+            <div>
+                <b>${r.username}</b> • $${r.amount.toFixed(2)}<br>
+                <small>${r.method} • ${r.payInfo}</small><br>
+                <small>${new Date(r.date).toLocaleString()}</small>
+            </div>
+            <div class="wd-actions">
+                ${r.status==='pending'
+                    ? `<button class="wd-btn wd-pay" data-id="${r.id}" data-act="pay">✔ Ödendi</button>
+                       <button class="wd-btn wd-rej" data-id="${r.id}" data-act="reject">✖ Reddet</button>`
+                    : `<span class="wd-status">${r.status === 'paid' ? '✅ Ödendi' : '❌ Reddedildi'}</span>`}
+            </div>
+        </div>`).join('');
+
+    box.querySelectorAll('.wd-btn').forEach(btn => btn.onclick = () => {
+        const id = parseInt(btn.dataset.id);
+        const act = btn.dataset.act;
+        const reqs = JSON.parse(localStorage.getItem('odulbox_withdrawals')) || [];
+        const req = reqs.find(r => r.id === id);
+        if (!req) return;
+        if (act === 'reject') {
+            // Bakiyeyi iade et
+            const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+            const u = users.find(x => x.email === req.email);
+            if (u) { u.balance = +(u.balance + req.amount).toFixed(2); localStorage.setItem('odulbox_users', JSON.stringify(users)); }
+            req.status = 'rejected';
+            alert('Talep reddedildi, bakiye kullanıcıya iade edildi.');
+        } else {
+            req.status = 'paid';
+            alert('Ödeme yapıldı olarak işaretlendi. 💸');
+        }
+        localStorage.setItem('odulbox_withdrawals', JSON.stringify(reqs));
+        renderAdminWithdrawals();
+        renderAdminUsers();
+    });
 }
 
 // Kaydet & Uygula
