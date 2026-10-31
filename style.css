@@ -138,8 +138,9 @@ p {
 .ad-sidebar {
     position: fixed;
     top: 100px;
-    width: 160px;
+    width: 140px;
     height: 600px;
+    max-width: 9vw;
     background: linear-gradient(180deg, #1d183a 0%, #0f0c1b 100%);
     border: 1px dashed #ff3366;
     color: #a29bfe;
@@ -147,16 +148,28 @@ p {
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 1px;
-    padding: 6px;
+    padding: 5px;
     overflow: hidden;
     border-radius: 8px;
     z-index: 5;
 }
 
-.ad-left { left: 10px; }
-.ad-right { right: 10px; }
+.ad-left { left: 8px; }
+.ad-right { right: 8px; }
+
+/* Sidebar reklamı ne kadar büyük olursa olsun kutunun içine haps et */
+.ad-sidebar img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* İçerik sidebar'larla çakışmasın: dar ekranda sidebar gizle, genişte içerik ortada */
+@media (max-width: 1150px) {
+    .ad-sidebar { display: none !important; }
+}
 
 .wheel-container {
     position: relative;
