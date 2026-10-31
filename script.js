@@ -754,10 +754,27 @@ let _bannerFileData = null;
 document.getElementById('banner-file').addEventListener('change', e => {
     const f = e.target.files[0];
     if (!f) return;
+    if (!f.type.startsWith('image/')) { alert('Sadece resim dosyası seç (JPG/PNG/WebP).'); e.target.value=''; return; }
     const r = new FileReader();
     r.onload = () => {
-        _bannerFileData = r.result;
-        document.getElementById('banner-preview').innerHTML = `<img src="${_bannerFileData}" style="max-width:100%;max-height:120px;border-radius:6px;margin-top:6px;">`;
+        // Resmi otomatik küçült (localStorage'a sığması için)
+        const img = new Image();
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            // Slot genişlikleri: üst 728, orta 500, sidebar 140
+            const maxW = 740, maxH = 620;
+            let w = img.width, h = img.height;
+            if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+            if (h > maxH) { w = Math.round(w * maxH / h); h = maxH; }
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            _bannerFileData = canvas.toDataURL('image/jpeg', 0.82);
+            document.getElementById('banner-preview').innerHTML =
+                `<img src="${_bannerFileData}" style="max-width:100%;max-height:120px;border-radius:6px;margin-top:6px;">` +
+                `<small style="color:#2ecc71;">✅ Hazır (${Math.round(_bannerFileData.length/1024)} KB) — "Banner Olarak Yükle"ye bas</small>`;
+        };
+        img.onerror = () => alert('Resim okunamadı, başka bir dosya dene.');
+        img.src = r.result;
     };
     r.readAsDataURL(f);
 });
@@ -768,9 +785,14 @@ document.getElementById('banner-upload-btn').onclick = () => {
     const url = document.getElementById('banner-url').value.trim();
     cfg.customBanners = cfg.customBanners || {};
     cfg.customBanners[slot] = url
-        ? `<a href="${url}" target="_blank" rel="noopener"><img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;max-height:inherit;object-fit:contain;display:block;"></a>`
-        : `<img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;max-height:inherit;object-fit:contain;display:block;">`;
-    saveCfg();
+        ? `<a href="${url}" target="_blank" rel="noopener"><img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;object-fit:contain;display:block;"></a>`
+        : `<img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;object-fit:contain;display:block;">`;
+    try {
+        saveCfg();
+    } catch(err) {
+        alert('❌ Depolama dolu! Daha küçük bir resim seç (öneri: 100-300 KB altı).');
+        return;
+    }
     document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
     initMonetagZones();
     alert('✅ Banner yüklendi ve slota uygulandı!');
