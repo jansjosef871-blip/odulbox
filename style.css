@@ -144,7 +144,7 @@ p {
     background: linear-gradient(180deg, #1d183a 0%, #0f0c1b 100%);
     border: 1px dashed #ff3366;
     color: #a29bfe;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     font-weight: bold;
@@ -166,9 +166,13 @@ p {
     object-fit: contain;
 }
 
-/* İçerik sidebar'larla çakışmasın: dar ekranda sidebar gizle, genişte içerik ortada */
+/* İçerik sidebar'larla çakışmasın: yalnızca 1150px ALTI gizle (mobile), üstünde göster */
 @media (max-width: 1150px) {
     .ad-sidebar { display: none !important; }
+}
+/* 1151px ve üstü: garanti görünür */
+@media (min-width: 1151px) {
+    .ad-sidebar { display: flex !important; }
 }
 
 .wheel-container {
@@ -269,7 +273,16 @@ p {
     display: inline-block;
 }
 
-#tasks-container { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+#tasks-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+.tasks-rewards-section {
+    display: flex !important;
+    flex-direction: column !important;
+}
 
 .task-item, .reward-item {
     display: flex;
