@@ -93,9 +93,11 @@ if (!loggedInUser) {
 }
 
 function updateUIForLoggedInUser() {
+    const balEl = document.getElementById('txt-balance');
     if (loggedInUser) {
+        balEl.style.display = "inline-block";
         const bal = (typeof loggedInUser.balance === 'number' && !isNaN(loggedInUser.balance)) ? loggedInUser.balance : 0;
-        document.getElementById('txt-balance').innerText = `${lang.balance} ${bal.toFixed(2)} $`;
+        balEl.innerText = `${lang.balance} ${bal.toFixed(2)} $`;
         authNavBtn.innerText = loggedInUser.username;
         authNavBtn.style.pointerEvents = "none";
         logoutBtn.style.display = "block";
@@ -104,7 +106,7 @@ function updateUIForLoggedInUser() {
         document.getElementById('referral-link').value = `${base}?ref=${loggedInUser.refCode}`;
         document.getElementById('txt-referral-stats').innerText = `${lang.yourRefs} ${(loggedInUser.refs||0)}`;
     } else {
-        document.getElementById('txt-balance').innerText = `${lang.balance} 0.00 $`;
+        balEl.style.display = "none"; // kayıt/giriş yapılmadan bakiye görünmez
         authNavBtn.innerText = lang.authNavBtn;
         authNavBtn.style.pointerEvents = "auto";
         logoutBtn.style.display = "none";
@@ -407,12 +409,16 @@ function initMonetagZones() {
     }
 
     // Banner / Native slotlara Monetag etiketi koy
-    if (cfg.zoneNative) {
-        document.querySelectorAll('.ad-banner[data-slot]').forEach(el => loadMonetagTag(el, cfg.zoneNative, 'native'));
-    }
-    if (cfg.zoneBanner) {
-        document.querySelectorAll('.ad-sidebar[data-slot="sidebar"]').forEach(el => loadMonetagTag(el, cfg.zoneBanner, 'banner'));
-    }
+    // ÖNEMLİ: Önce HER slot için admin özel kodu/resmi var mı bak; yoksa Zone ID kullan;
+    // o da yoksa placeholder metin kalsın.
+    document.querySelectorAll('[data-slot]').forEach(el => {
+        const custom = cfg.customBanners && cfg.customBanners[el.id];
+        if (custom) { loadMonetagTag(el, '', 'custom'); return; }
+        if (el.classList.contains('ad-sidebar') && cfg.zoneBanner) { loadMonetagTag(el, cfg.zoneBanner, 'banner'); return; }
+        if (el.classList.contains('ad-banner') && cfg.zoneNative) { loadMonetagTag(el, cfg.zoneNative, 'native'); }
+    });
+    // Yan bannerler masaüstünde her zaman gorunur olsun (geniş ekran kontrolü)
+    document.querySelectorAll('.ad-sidebar').forEach(el => { if (window.innerWidth > 1100) el.style.display = 'flex'; });
     if (cfg.zonePopunder) {
         const s = document.createElement('script');
         s.src = `${MONETAG_SDK}/pu.js?z=${cfg.zonePopunder}`;
@@ -435,11 +441,10 @@ function initMonetagZones() {
 function loadMonetagTag(container, zone, type) {
     if (!container || container.dataset.loaded) return;
     container.dataset.loaded = "1";
-    // ADMIN ÖZEL REKLAM KODU: slot için admin HTML/JS kodu girilmişse onu kullan (AdSense, özel banner vs.)
+    // ADMIN ÖZEL REKLAM KODU: slot için admin HTML/JS kodu girilmişse onu kullan (AdSense, resim banner vs.)
     const customCode = cfg.customBanners && cfg.customBanners[container.id];
     if (customCode) {
         container.innerHTML = customCode;
-        // Özel koddaki scriptleri çalıştır
         container.querySelectorAll('script').forEach(old => {
             const s = document.createElement('script');
             if (old.src) s.src = old.src; else s.textContent = old.textContent;
@@ -448,6 +453,7 @@ function loadMonetagTag(container, zone, type) {
         });
         return;
     }
+    if (type === 'custom') return; // özel kod bekleniyordu ama yok
     container.innerHTML = `<iframe src="about:blank" style="width:100%;height:${type==='sidebar'?'580':'90'}px;border:0;"></iframe>`;
     const iframe = container.querySelector('iframe');
     const doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -653,6 +659,44 @@ function renderAdminWithdrawals() {
         renderAdminUsers();
     });
 }
+
+// ---- BİLGİSAYARDAN BANNER RESMİ YÜKLEME ----
+let _bannerFileData = null;
+document.getElementById('banner-file').addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+        _bannerFileData = r.result;
+        document.getElementById('banner-preview').innerHTML = `<img src="${_bannerFileData}" style="max-width:100%;max-height:120px;border-radius:6px;margin-top:6px;">`;
+    };
+    r.readAsDataURL(f);
+});
+
+document.getElementById('banner-upload-btn').onclick = () => {
+    if (!_bannerFileData) { alert('Önce bir resim seç!'); return; }
+    const slot = document.getElementById('banner-slot').value;
+    const url = document.getElementById('banner-url').value.trim();
+    cfg.customBanners = cfg.customBanners || {};
+    cfg.customBanners[slot] = url
+        ? `<a href="${url}" target="_blank" rel="noopener"><img src="${_bannerFileData}" style="width:100%;display:block;border-radius:6px;"></a>`
+        : `<img src="${_bannerFileData}" style="width:100%;display:block;border-radius:6px;">`;
+    saveCfg();
+    document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
+    initMonetagZones();
+    alert('✅ Banner yüklendi ve slota uygulandı!');
+};
+
+document.getElementById('banner-clear-btn').onclick = () => {
+    // Sadece resim bannerlarını temizle (img içerenler)
+    cfg.customBanners = cfg.customBanners || {};
+    Object.keys(cfg.customBanners).forEach(k => { if (cfg.customBanners[k].includes('<img')) delete cfg.customBanners[k]; });
+    saveCfg();
+    document.getElementById('banner-preview').innerHTML = '';
+    document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
+    initMonetagZones();
+    alert('Resim bannerları silindi.');
+};
 
 // Kaydet & Uygula
 document.getElementById('admin-save-btn').onclick = () => {

@@ -1,129 +1,242 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OdulBox - Spin & Win Global</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://googleapis.com" rel="stylesheet">
-</head>
+    <title>OdulBox - Spin & Win Real Rewards Every Day</title>
 
+    <!-- ============ SEO ============ -->
+    <meta name="description" content="OdulBox - Spin the daily wheel, complete tasks, invite friends and win real rewards. Withdraw via PayPal, Papara or Steam. Free to join, worldwide.">
+    <meta name="keywords" content="odulbox, spin and win, daily rewards, free rewards, earn money online, referral rewards, paypal rewards, steam gift card, çevirme kazan, ödüllü çark">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="OdulBox">
+    <meta name="theme-color" content="#0f0c1b">
+    <link rel="canonical" href="https://jansjosef871-blip.github.io/odulbox/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="OdulBox">
+    <meta property="og:title" content="OdulBox - Spin & Win Real Rewards Every Day">
+    <meta property="og:description" content="Spin the wheel, complete tasks, invite friends and win real rewards. Withdraw via PayPal, Papara or Steam!">
+    <meta property="og:url" content="https://jansjosef871-blip.github.io/odulbox/">
+    <meta property="og:image" content="https://jansjosef871-blip.github.io/odulbox/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="OdulBox - Spin & Win Real Rewards">
+    <meta name="twitter:description" content="Spin, complete tasks, refer friends — win real rewards!">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "OdulBox",
+      "url": "https://jansjosef871-blip.github.io/odulbox/",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "Any",
+      "description": "Spin the daily wheel, complete tasks and invite friends to win real rewards.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+    <link rel="sitemap" type="application/xml" href="sitemap.xml">
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
 
-    <!-- Sol ve Sağ Dikey Reklam Alanları -->
-    <div class="ad-sidebar ad-left" id="txt-ad-left">[🔥 REKLAM ALANI]</div>
-    <div class="ad-sidebar ad-right" id="txt-ad-right">[🔥 REKLAM ALANI]</div>
+    <!-- Sol ve Sağ Dikey Reklam Alanları (Monetag banner slotları) -->
+    <div class="ad-sidebar ad-left" id="ad-zone-side-left" data-slot="sidebar">[🔥 AD SPACE]</div>
+    <div class="ad-sidebar ad-right" id="ad-zone-side-right" data-slot="sidebar">[🔥 AD SPACE]</div>
 
     <!-- Üst Menü -->
     <header>
         <div class="logo">🎁 Odul<span>Box</span></div>
         <div class="header-right">
-            <span id="txt-balance" class="user-status">Bakiye: 0.00 $</span>
-            <button id="auth-nav-btn" class="auth-trigger-btn">Giriş Yap / Kayıt Ol</button>
-            <button id="logout-btn" class="logout-btn" style="display: none;">Çıkış Yap</button>
+            <span id="txt-balance" class="user-status">Balance: 0.00 $</span>
+            <button id="auth-nav-btn" class="auth-trigger-btn">Login / Register</button>
+            <button id="logout-btn" class="logout-btn" style="display: none;">Logout</button>
         </div>
     </header>
 
-    <!-- Ana İçerik Alanı -->
+    <!-- Ana İçerik -->
     <main class="container">
-        <!-- Üst Banner Reklam Alanı -->
-        <div class="ad-banner ad-top" id="txt-ad-top">
-            [Sponsorlu Reklam Bandı 728x90 - Reklam Verin]
-        </div>
+        <!-- Üst Banner Reklamı -->
+        <div class="ad-banner ad-top" id="ad-zone-top" data-slot="top">[SPONSORED BANNER 728x90]</div>
 
-        <h1 id="txt-welcome">OdulBox'a Hoş Geldiniz!</h1>
-        <p id="txt-subtitle">Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!</p>
+        <h1 id="txt-welcome">Welcome to OdulBox!</h1>
+        <p id="txt-subtitle">Spin the wheel every day, complete tasks and win real rewards!</p>
 
-        <!-- Şans Çarkı Alanı -->
+        <!-- Şans Çarkı -->
         <div class="wheel-container">
             <div class="pointer">▼</div>
             <canvas id="wheel" width="400" height="400"></canvas>
-            <button id="spin-btn">ÇEVİR!</button>
+            <button id="spin-btn" aria-label="Spin the wheel">SPIN!</button>
         </div>
 
-        <!-- Çark Altı Native Reklam Alanı -->
-        <div class="ad-banner ad-middle" id="txt-ad-mid">
-            [Yüksek Kazançlı Sponsorlu Reklam Alanı]
-        </div>
+        <!-- Çark Altı Reklam -->
+        <div class="ad-banner ad-middle" id="ad-zone-mid" data-slot="middle">[HIGH PAYING AD SPACE]</div>
 
-        <!-- GÖREVLER VE ÖDÜLLER BÖLÜMÜ -->
+        <!-- DAVET / REFERANS BÖLÜMÜ -->
+        <section class="info-box referral-box">
+            <h3 id="txt-referral-title">Invite & Earn</h3>
+            <p id="txt-referral-desc">Share your link — earn bonus every time a friend joins!</p>
+            <div class="referral-link-row">
+                <input type="text" id="referral-link" readonly value="Login to get your referral link">
+                <button id="copy-ref-btn" class="task-btn">Copy</button>
+            </div>
+            <p class="referral-stats" id="txt-referral-stats"></p>
+        </section>
+
+        <!-- GÖREVLER VE ÖDÜLLER -->
         <section class="tasks-rewards-section">
-            <!-- Görevler Bloku -->
             <div class="info-box">
-                <h3 id="txt-tasks-title">Günlük Görevler</h3>
-
+                <h3 id="txt-tasks-title">Daily Tasks</h3>
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-icon">📱</span>
                         <div>
-                            <p class="task-name">Instagram Hesabını Takip Et</p>
+                            <p class="task-name" id="txt-task-1">Follow Instagram Account</p>
                             <span class="task-reward-amount">+ 0.05 $</span>
                         </div>
                     </div>
-                    <button class="task-btn" id="btn-task-1">Görevi Yap</button>
+                    <button class="task-btn" id="btn-task-1">Do Task</button>
                 </div>
-
                 <div class="task-item">
                     <div class="task-info">
                         <span class="task-icon">🎥</span>
                         <div>
-                            <p class="task-name">30sn YouTube Videosu İzle</p>
+                            <p class="task-name" id="txt-task-2">Watch 30s YouTube Video</p>
                             <span class="task-reward-amount">+ 0.10 $</span>
                         </div>
                     </div>
-                    <button class="task-btn" id="btn-task-2">Görevi Yap</button>
+                    <button class="task-btn" id="btn-task-2">Do Task</button>
                 </div>
             </div>
 
-            <!-- Ödül Çekme Bloku -->
             <div class="info-box">
-                <h3 id="txt-rewards-title">Ödülünü Çek</h3>
+                <h3 id="txt-rewards-title">Withdraw Rewards</h3>
                 <div class="reward-item">
                     <span>💵 PayPal / Papara (Min. 5$)</span>
-                    <button class="withdraw-btn" id="btn-draw-1">Talep Et</button>
+                    <button class="withdraw-btn" id="btn-draw-1">Claim</button>
                 </div>
                 <div class="reward-item">
                     <span>🎮 Steam Wallet Code (Min. 10$)</span>
-                    <button class="withdraw-btn" id="btn-draw-2">Talep Et</button>
+                    <button class="withdraw-btn" id="btn-draw-2">Claim</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- GİRİŞ YAP / KAYIT OL AÇILIR PENCERESİ (MODAL) -->
+    <!-- GİRİŞ / KAYIT MODAL -->
     <div id="auth-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
-
-            <!-- Giriş Formu -->
             <div id="login-form-box">
-                <h2 id="txt-login-title">Hesaba Giriş Yap</h2>
+                <h2 id="txt-login-title">Login to Account</h2>
                 <form id="login-form">
                     <input type="email" id="login-email" placeholder="Email" required>
                     <input type="password" id="login-password" placeholder="Password" required>
                     <button type="submit" class="form-submit-btn" id="btn-login-submit">Login</button>
                 </form>
-                <p class="switch-form-txt"><span id="txt-no-account">Hesabınız yok mu?</span> <a href="#"
-                        id="go-to-register">Register</a></p>
+                <p class="switch-form-txt"><span id="txt-no-account">Don't have an account?</span> <a href="#" id="go-to-register">Register</a></p>
             </div>
-
-            <!-- Kayıt Formu -->
             <div id="register-form-box" style="display: none;">
-                <h2 id="txt-register-title">Hesap Oluştur</h2>
+                <h2 id="txt-register-title">Create Account</h2>
                 <form id="register-form">
-                    <input type="text" id="reg-username" placeholder="Kullanıcı Adı" required>
+                    <input type="text" id="reg-username" placeholder="Username" required>
                     <input type="email" id="reg-email" placeholder="Email" required>
                     <input type="password" id="reg-password" placeholder="Password" required>
                     <button type="submit" class="form-submit-btn" id="btn-register-submit">Register</button>
                 </form>
-                <p class="switch-form-txt"><span id="txt-have-account">Zaten üye misiniz?</span> <a href="#"
-                        id="go-to-login">Login</a></p>
+                <p class="switch-form-txt"><span id="txt-have-account">Already have an account?</span> <a href="#" id="go-to-login">Login</a></p>
             </div>
         </div>
     </div>
 
+    <!-- ============ GİZL PANELİ ============ -->
+    <!-- Erişim: site adresinin sonuna #admin-panel ekle (ör: odulbox.netlify.com/#admin-panel) -->
+    <div id="admin-panel" class="modal admin-modal">
+        <div class="modal-content admin-content">
+            <span class="close-btn" data-close="admin-panel">&times;</span>
+
+            <!-- Kurulum sihirbazı: ilk açılışta şifre belirle -->
+            <div id="admin-setup-box">
+                <h2>⚙️ Admin Kurulum Sihirbazı</h2>
+                <p class="admin-note">İlk kez buradasın. Admin şifreni belirle, sonra Monetag bilgilerini gir.</p>
+                <form id="admin-setup-form">
+                    <input type="password" id="admin-setup-pass" placeholder="Yeni admin şifresi" required>
+                    <input type="password" id="admin-setup-pass2" placeholder="Şifreyi tekrar gir" required>
+                    <button type="submit" class="form-submit-btn">Kurulumu Tamamla</button>
+                </form>
+            </div>
+
+            <!-- Şifre girişi -->
+            <div id="admin-login-box" style="display:none;">
+                <h2>🔐 Admin Girişi</h2>
+                <form id="admin-login-form">
+                    <input type="password" id="admin-login-pass" placeholder="Admin şifresi" required>
+                    <button type="submit" class="form-submit-btn">Giriş</button>
+                </form>
+            </div>
+
+            <!-- Panel içeriği -->
+            <div id="admin-dashboard" style="display:none;">
+                <h2>⚙️ OdulBox Admin Panel</h2>
+
+                <h4 class="admin-sec">💰 Monetag Reklam Kurulumu</h4>
+                <p class="admin-note">Monetag.com → siteni ekle → her formatın Zone ID'sini buraya yapıştır. Boş bırakırsan o format açılmaz.</p>
+                <input type="text" id="cfg-direct-link" placeholder="Monetag Direct Link - tam URL buraya yapistir">
+                <input type="text" id="cfg-zone-popunder" placeholder="Popunder Zone ID (varsa)">
+                <input type="text" id="cfg-zone-onclick" placeholder="Onclick (Vignette) Zone ID">
+                <input type="text" id="cfg-zone-interstitial" placeholder="In-App Interstitial Zone ID">
+                <input type="text" id="cfg-zone-banner" placeholder="Banner Zone ID (yan/sol slotlar)">
+                <input type="text" id="cfg-zone-native" placeholder="Native Ads Zone ID (banner slotları)">
+                <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock kodunu aktif et</label>
+                <h4 class="admin-sec">🎨 Kendi Banner Reklam Kodların (AdSense, özel HTML)</h4>
+                <p class="admin-note">Her kutuya reklam agindan aldigin HTML/JS kodunu yapistir. Dolu olan kutu, o slot icin Zone ID'yi gecersiz kilar.</p>
+                <label class="admin-label">Ust banner (728x90): <textarea id="cb-ad-zone-top" rows="3"></textarea></label>
+                <label class="admin-label">Orta banner (cark alti): <textarea id="cb-ad-zone-mid" rows="3"></textarea></label>
+                <label class="admin-label">Sol sidebar: <textarea id="cb-ad-zone-side-left" rows="3"></textarea></label>
+                <label class="admin-label">Sag sidebar: <textarea id="cb-ad-zone-side-right" rows="3"></textarea></label>
+                <h4 class="admin-sec">🖼️ Bilgisayardan Banner Resmi Yükle</h4>
+                <p class="admin-note">Bir resim sec, hangi slotta gornecegini isaretle, kaydet. Resim tarayicida saklanir, o slotun yerine gecer.</p>
+                <label class="admin-label">Resim sec: <input type="file" id="banner-file" accept="image/*"></label>
+                <label class="admin-label">Slot: 
+                    <select id="banner-slot">
+                        <option value="ad-zone-top">Ust banner</option>
+                        <option value="ad-zone-mid">Orta banner (cark alti)</option>
+                        <option value="ad-zone-side-left">Sol sidebar</option>
+                        <option value="ad-zone-side-right">Sag sidebar</option>
+                    </select>
+                </label>
+                <label class="admin-label">Tiklama linki (opsiyonel): <input type="text" id="banner-url" placeholder="https://siteniz.com"></label>
+                <div id="banner-preview"></div>
+                <button id="banner-upload-btn" class="admin-secondary-btn">🖼️ Banner Olarak Yükle</button>
+                <button id="banner-clear-btn" class="admin-secondary-btn">🗑️ Tüm Resim Bannerlari Sil</button>
+
+                <h4 class="admin-sec">🎁 Ödül Ayarları</h4>
+                <label class="admin-label">Davet bonusu ($): <input type="number" step="0.01" id="cfg-ref-bonus"></label>
+                <label class="admin-label">Instagram görev ödülü ($): <input type="number" step="0.01" id="cfg-task1"></label>
+                <label class="admin-label">YouTube görev ödülü ($): <input type="number" step="0.01" id="cfg-task2"></label>
+                <label class="admin-label">Instagram görev linki: <input type="text" id="cfg-task1-url"></label>
+                <label class="admin-label">YouTube görev linki: <input type="text" id="cfg-task2-url"></label>
+                <label class="admin-label">Çekim alt limiti ($): <input type="number" step="0.01" id="cfg-min-withdraw"></label>
+
+                <h4 class="admin-sec">👥 Kullanıcılar & Talepler</h4>
+                <div id="admin-users-list" class="admin-users"></div>
+                <h4 class="admin-sec">💸 Cekim Talepleri</h4>
+                <div id="admin-withdrawals-list" class="admin-users"></div>
+                <p class="admin-note">Onayladigin talep "paid" isaretlenir, kullanici tekrar talep acabilir. Reddedersen bakiye iade edilir.</p>
+
+                <button id="admin-save-btn" class="form-submit-btn">💾 Kaydet & Uygula</button>
+                <button id="admin-logout-btn" class="admin-secondary-btn">Panelden Çık</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gizli admin tetikleyici: klavye ile de açılır -->
     <script src="script.js"></script>
 </body>
-
 </html>
