@@ -231,21 +231,78 @@ function addBalance(amount) {
     return true;
 }
 
-// Görevler
-document.getElementById('btn-task-1').addEventListener('click', () => {
+// ============ GÜNLÜK GÖREVLER (6 görev, dinamik) ============
+const TASKS = [
+    { id:1, icon:"📱", nameKey:"taskInsta", reward:()=>cfg.task1Reward, url:()=>cfg.task1Url },
+    { id:2, icon:"🎥", nameKey:"taskYoutube", reward:()=>cfg.task2Reward, url:()=>cfg.task2Url },
+    { id:3, icon:"📸", fixed:{tr:"Instagram Reel Beğen & Yorum Yap",en:"Like & Comment on an Instagram Reel"}, reward:()=>0.05, url:()=>cfg.task1Url.replace('instagram.com','instagram.com/reel') },
+    { id:4, icon:"▶️", fixed:{tr:"YouTube Kanalına Abone Ol",en:"Subscribe to a YouTube Channel"}, reward:()=>0.08, url:()=>cfg.task2Url },
+    { id:5, icon:"🌐", fixed:{tr:"Sponsor Sitesini 30sn Ziyaret Et",en:"Visit Sponsor Site for 30s"}, reward:()=>0.03, url:()=>cfg.directLink || cfg.task1Url },
+    { id:6, icon:"👥", fixed:{tr:"Arkadaşını Davet Et (davet başına)",en:"Invite a Friend (per invite)"}, reward:()=>cfg.refBonus, url:null } // ref sistemi otomatik
+];
+
+function isTaskDoneToday(taskId) {
+    if (!loggedInUser) return false;
+    const done = loggedInUser.tasksDone || {};
+    return done[taskId] === new Date().toDateString();
+}
+function markTaskDone(taskId) {
+    if (!loggedInUser) return;
+    loggedInUser.tasksDone = loggedInUser.tasksDone || {};
+    loggedInUser.tasksDone[taskId] = new Date().toDateString();
+    saveSession(loggedInUser);
+    const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    const idx = users.findIndex(u => u.email === loggedInUser.email);
+    if (idx > -1) { users[idx].tasksDone = loggedInUser.tasksDone; localStorage.setItem('odulbox_users', JSON.stringify(users)); }
+}
+
+function renderTasks() {
+    const c = document.getElementById('tasks-container');
+    if (!c) return;
+    c.innerHTML = TASKS.map(t => {
+        const name = t.fixed ? (t.fixed[userLang] || t.fixed.en) : lang[t.nameKey];
+        const reward = t.reward();
+        const done = isTaskDoneToday(t.id);
+        return `
+        <div class="task-item" style="${done?'opacity:0.55;':''}">
+            <div class="task-info">
+                <span class="task-icon">${t.icon}</span>
+                <div>
+                    <p class="task-name">${name}</p>
+                    <span class="task-reward-amount">+ ${reward.toFixed(2)} $</span>
+                </div>
+            <button class="task-btn" data-task="${t.id}" ${done?'disabled':''}>${done?'✔':lang.doTaskBtn}</button>
+        </div>`;
+    }).join('');
+
+    c.querySelectorAll('.task-btn[data-task]').forEach(btn => {
+        btn.onclick = () => doTask(parseInt(btn.dataset.task));
+    });
+}
+
+function doTask(taskId) {
     if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
-    window.open(cfg.task1Url, '_blank');
+    if (isTaskDoneToday(taskId)) { alert(userLang==='tr' ? "Bu görevi bugün yaptın! Yarın tekrar." : "You did this task today! Come back tomorrow."); return; }
+    const t = TASKS.find(x => x.id === taskId);
+    if (!t) return;
+
+    // Davet görevi: sadece link göster
+    if (taskId === 6) {
+        document.getElementById('referral-link').focus();
+        document.getElementById('copy-ref-btn').click();
+        return;
+    }
+
+    window.open(t.url(), '_blank');
     setTimeout(() => {
-        if (addBalance(cfg.task1Reward)) alert(`${lang.taskDone} +${cfg.task1Reward.toFixed(2)} $ ${lang.addedBalance}`);
+        const reward = t.reward();
+        if (addBalance(reward)) {
+            markTaskDone(taskId);
+            renderTasks();
+            alert(`${lang.taskDone} +${reward.toFixed(2)} $ ${lang.addedBalance}`);
+        }
     }, 1500);
-});
-document.getElementById('btn-task-2').addEventListener('click', () => {
-    if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return; }
-    window.open(cfg.task2Url, '_blank');
-    setTimeout(() => {
-        if (addBalance(cfg.task2Reward)) alert(`${lang.taskDone} +${cfg.task2Reward.toFixed(2)} $ ${lang.addedBalance}`);
-    }, 1500);
-});
+}
 
 // Çekim
 const withdrawLang = {
@@ -519,7 +576,7 @@ function initDirectLinkMode() {
     // 2) Görev butonlarında: görev linki yerine Direct Link'i önce aç
     document.querySelectorAll('.task-btn, .withdraw-btn').forEach(btn => {
         btn.addEventListener('click', e => {
-            if (btn.id === 'btn-task-1' || btn.id === 'btn-task-2') {
+            if (btn.hasAttribute('data-task')) {
                 setTimeout(openDirectLink, 200); // görev linkiyle birlikte çalışır
             }
         });
@@ -755,6 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applyTranslations();
     drawWheel();
     updateUIForLoggedInUser();
+    renderTasks();
     initMonetagZones();
     if (sessionStorage.getItem('odulbox_show_invite_msg') && loggedInUser) {
         sessionStorage.removeItem('odulbox_show_invite_msg');
