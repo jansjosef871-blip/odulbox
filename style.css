@@ -293,13 +293,21 @@ p {
     border-radius: 8px;
     margin-bottom: 10px;
     border: 1px solid #231d42;
+    flex-wrap: wrap;      /* dar ekranda buton alta insin */
+    gap: 8px;
+    overflow: hidden;
 }
 
 .task-info {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex: 1;
+    min-width: 0;         /* uzun metin taşmasın */
 }
+
+/* Sayfa yatay kaydırmasını tamamen engelle */
+body, html { overflow-x: hidden !important; max-width: 100vw; }
 
 .task-info p {
     margin: 0;

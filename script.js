@@ -274,6 +274,7 @@ function renderTasks() {
                     <p class="task-name">${name}</p>
                     <span class="task-reward-amount">+ ${reward.toFixed(2)} $</span>
                 </div>
+            </div>
             <button class="task-btn" data-task="${t.id}" ${done?'disabled':''}>${done?'✔':lang.doTaskBtn}</button>
         </div>`;
     }).join('');
