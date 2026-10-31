@@ -259,6 +259,9 @@ function markTaskDone(taskId) {
 function renderTasks() {
     const c = document.getElementById('tasks-container');
     if (!c) return;
+    c.style.display = 'flex';
+    c.style.flexDirection = 'column';
+    c.style.gap = '10px';
     c.innerHTML = TASKS.map(t => {
         const name = t.fixed ? (t.fixed[userLang] || t.fixed.en) : lang[t.nameKey];
         const reward = t.reward();

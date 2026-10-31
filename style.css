@@ -269,6 +269,8 @@ p {
     display: inline-block;
 }
 
+#tasks-container { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+
 .task-item, .reward-item {
     display: flex;
     justify-content: space-between;
