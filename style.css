@@ -242,9 +242,14 @@ p {
 
 .tasks-rewards-section {
     display: flex;
+    flex-direction: column; /* görevler ve çekim kutuları alt alta */
     gap: 20px;
     margin-top: 30px;
     text-align: left;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
 
 .info-box {
