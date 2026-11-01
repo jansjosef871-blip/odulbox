@@ -183,6 +183,51 @@ p {
 .ad-left { left: 8px; }
 .ad-right { right: 8px; }
 
+/* ============ ÜST DUYURU ŞERİDİ ============ */
+.ticker-bar {
+    width: 100%; background: linear-gradient(90deg, #ff3366, #9B5DE5, #ff3366);
+    background-size: 200% 100%; animation: tickerBg 8s linear infinite;
+    overflow: hidden; white-space: nowrap; padding: 8px 0; font-size: 13px; font-weight: 600;
+}
+@keyframes tickerBg { to { background-position: 200% 0; } }
+.ticker-track { display: inline-block; animation: tickerScroll 25s linear infinite; }
+.ticker-track span { margin: 0 30px; }
+@keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ============ CANLI KAZANÇ BANDI ============ */
+.live-winners {
+    background: rgba(46, 204, 113, 0.08); border: 1px solid rgba(46,204,113,0.35);
+    border-radius: 30px; padding: 9px 18px; margin: 0 auto 22px auto;
+    display: inline-block; font-size: 13.5px; color: #d8ffe8; max-width: 95%;
+}
+.live-winners b { color: #fff; }
+.live-winners .lw-amt { color: #2ecc71; }
+.lw-dot {
+    display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+    background: #2ecc71; margin-right: 6px; box-shadow: 0 0 8px #2ecc71;
+    animation: lwBlink 1.4s ease-in-out infinite;
+}
+@keyframes lwBlink { 0%,100%{opacity:1;} 50%{opacity:0.25;} }
+.lw-anim { animation: lwSlide 0.5s ease; }
+@keyframes lwSlide { from { opacity: 0; transform: translateY(8px);} to { opacity: 1; transform: none;} }
+
+/* ============ ÇARK BAŞLIK ============ */
+.wheel-section-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 14px; }
+.wheel-title {
+    font-size: 26px; font-weight: 800; letter-spacing: 3px; margin: 0;
+    background: linear-gradient(90deg, #ffd93d, #ff3366, #ffd93d);
+    background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; animation: shineText 3s linear infinite;
+}
+@keyframes shineText { to { background-position: 200% center; } }
+.fire-emoji { font-size: 26px; animation: fireWiggle 0.8s ease-in-out infinite alternate; }
+@keyframes fireWiggle { from { transform: rotate(-12deg) scale(1);} to { transform: rotate(12deg) scale(1.15);} }
+
+/* ============ KRIPTO ÇEKİM ============ */
+.crypto-item { border-left: 3px solid #ffd93d; }
+.crypto-item .task-icon { font-size: 24px; color: #ffd93d; width: 34px; text-align: center; }
+.crypto-note { font-size: 12px; color: #ffd93d !important; margin-top: 10px; text-align: center; }
+
 /* Sidebar reklamı ne kadar büyük olursa olsun kutunun içine haps et */
 .ad-sidebar img {
     max-width: 100%;

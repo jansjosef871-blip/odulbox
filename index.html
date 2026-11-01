@@ -50,6 +50,13 @@
     <div class="ad-sidebar ad-left" id="ad-zone-side-left" data-slot="sidebar">[🔥 AD SPACE]</div>
     <div class="ad-sidebar ad-right" id="ad-zone-side-right" data-slot="sidebar">[🔥 AD SPACE]</div>
 
+    <!-- Üst Duyuru Şeridi -->
+    <div class="ticker-bar">
+        <div class="ticker-track">
+            <span>🏆 son kazanan: Mert** — 0.50 $</span><span>💸 Bu hafta ödenen: $12,480</span><span>🌍 47 ülkeden kullanıcı</span><span>⚡ Kripto ile 24 saatte ödeme</span><span>🎁 Bugün çarkı 8,214 kişi çevirdi</span><span>🏆 son kazanan: Mert** — 0.50 $</span><span>💸 Bu hafta ödenen: $12,480</span><span>🌍 47 ülkeden kullanıcı</span><span>⚡ Kripto ile 24 saatte ödeme</span><span>🎁 Bugün çarkı 8,214 kişi çevirdi</span>
+        </div>
+    </div>
+
     <!-- Üst Menü -->
     <header>
         <div class="logo">🎁 Odul<span>Box</span></div>
@@ -67,6 +74,16 @@
 
         <h1 id="txt-welcome">Welcome to OdulBox!</h1>
         <p id="txt-subtitle">Spin the wheel every day, complete tasks and win real rewards!</p>
+
+        <!-- Canlı Kazanç Bandı -->
+        <div class="live-winners" id="live-winners"></div>
+
+        <!-- Şans Çarkı Başlık -->
+        <div class="wheel-section-header">
+            <span class="fire-emoji">🔥</span>
+            <h2 class="wheel-title">ŞANS ÇARKI</h2>
+            <span class="fire-emoji">🔥</span>
+        </div>
 
         <!-- Şans Çarkı -->
         <div class="wheel-container">
@@ -98,14 +115,47 @@
 
             <div class="info-box">
                 <h3 id="txt-rewards-title">Withdraw Rewards</h3>
-                <div class="reward-item">
-                    <span>💵 PayPal / Papara (Min. 5$)</span>
-                    <button class="withdraw-btn" id="btn-draw-1">Claim</button>
+                <div class="reward-item crypto-item">
+                    <div class="task-info">
+                        <span class="task-icon">₿</span>
+                        <div>
+                            <p class="task-name">₿ Bitcoin (BTC)</p>
+                            <span class="task-reward-amount">Min. 10$ • Anında</span>
+                        </div>
+                    </div>
+                    <button class="withdraw-btn" id="btn-draw-1">Talep Et</button>
                 </div>
-                <div class="reward-item">
-                    <span>🎮 Steam Wallet Code (Min. 10$)</span>
-                    <button class="withdraw-btn" id="btn-draw-2">Claim</button>
+                <div class="reward-item crypto-item">
+                    <div class="task-info">
+                        <span class="task-icon">Ξ</span>
+                        <div>
+                            <p class="task-name">Ξ Ethereum (ETH)</p>
+                            <span class="task-reward-amount">Min. 10$ • Anında</span>
+                        </div>
+                    </div>
+                    <button class="withdraw-btn" id="btn-draw-2">Talep Et</button>
                 </div>
+                <div class="reward-item crypto-item">
+                    <div class="task-info">
+                        <span class="task-icon">₮</span>
+                        <div>
+                            <p class="task-name">₮ USDT (TRC20)</p>
+                            <span class="task-reward-amount">Min. 5$ • Düşük komisyon</span>
+                        </div>
+                    </div>
+                    <button class="withdraw-btn" id="btn-draw-3">Talep Et</button>
+                </div>
+                <div class="reward-item crypto-item">
+                    <div class="task-info">
+                        <span class="task-icon">◎</span>
+                        <div>
+                            <p class="task-name">◎ Solana (SOL)</p>
+                            <span class="task-reward-amount">Min. 5$ • Saniyeler içinde</span>
+                        </div>
+                    </div>
+                    <button class="withdraw-btn" id="btn-draw-4">Talep Et</button>
+                </div>
+                <p class="crypto-note">⚡ Kripto ödemeler cüzdan adresine 24 saat içinde gönderilir — banka bekleme yok!</p>
             </div>
         </section>
     </main>

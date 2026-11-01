@@ -308,10 +308,10 @@ function doTask(taskId) {
     }, 1500);
 }
 
-// Çekim
+// Çekim (Kripto)
 const withdrawLang = {
-    tr: { askMethod:"Hangi yöntemle çekmek istersin?", askInfo:"Ödeme bilgini gir (e-posta / telefon / IBAN):", ok:"Talebin alındı! 24-48 saat içinde ödenecek. 🎉", pending:"⚠️ Bu talebin zaten beklemede. Ödeme yapılmadan yeni talep açamazsın." },
-    en: { askMethod:"Which method do you want to withdraw with?", askInfo:"Enter your payment info (email / phone / IBAN):", ok:"Request received! Will be paid within 24-48h. 🎉", pending:"⚠️ You already have a pending request. You can't open a new one until it's paid." }
+    tr: { askMethod:"Hangi cüzdana ödeme yapalım?", askInfo:"Kripto cüzdan adresini gir (BTC / ETH / USDT / SOL):", ok:"Talebin alındı! Kripto ödemen 24 saat içinde cüzdanına gönderilecek. ⚡", pending:"⚠️ Bu talebin zaten beklemede. Ödeme yapılmadan yeni talep açamazsın.", invalidAddr:"Geçersiz cüzdan adresi! Adres en az 20 karakter olmalı." },
+    en: { askMethod:"Which wallet should we pay to?", askInfo:"Enter your crypto wallet address (BTC / ETH / USDT / SOL):", ok:"Request received! Your crypto payment will be sent within 24h. ⚡", pending:"⚠️ You already have a pending request. You can't open a new one until it's paid.", invalidAddr:"Invalid wallet address! Address must be at least 20 characters." }
 };
 const wl = withdrawLang[userLang] || withdrawLang.en;
 
@@ -331,9 +331,10 @@ function handleWithdraw(minAmount, rewardName) {
     const existing = requests.find(r => r.email === loggedInUser.email && r.status === 'pending');
     if (existing) { alert(wl.pending); return; }
 
-    // Ödeme bilgisi al
+    // Kripto cüzdan adresi al
     const payInfo = prompt(wl.askInfo);
     if (!payInfo || payInfo.trim() === "") return;
+    if (payInfo.trim().length < 20) { alert(wl.invalidAddr); return; }
 
     // Talebi oluştur
     const req = {
@@ -359,8 +360,27 @@ function handleWithdraw(minAmount, rewardName) {
 
     alert(wl.ok);
 }
-document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(cfg.minWithdraw, "PayPal/Papara"));
-document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(cfg.minWithdraw + 5, "Steam Wallet"));
+document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(10, "Bitcoin (BTC)"));
+document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(10, "Ethereum (ETH)"));
+document.getElementById('btn-draw-3').addEventListener('click', () => handleWithdraw(5, "USDT (TRC20)"));
+document.getElementById('btn-draw-4').addEventListener('click', () => handleWithdraw(5, "Solana (SOL)"));
+
+// ============ CANLI KAZANÇ BANDI (Trendyol tarzı sosyal kanıt) ============
+const fakeWinners = [
+    { n:"Mert**", c:"TR", a:0.50 }, { n:"Sofia**", c:"ES", a:0.20 }, { n:"John**", c:"US", a:0.50 },
+    { n:"Ayşe**", c:"TR", a:0.10 }, { n:"Luca**", c:"IT", a:0.03 }, { n:"Emma**", c:"DE", a:0.20 },
+    { n:"Ahmed**", c:"EG", a:0.05 }, { n:"Ana**", c:"BR", a:0.50 }, { n:"Yuki**", c:"JP", a:0.10 },
+    { n:"Karan**", c:"IN", a:0.02 }
+];
+function showLiveWinner() {
+    const box = document.getElementById('live-winners');
+    if (!box) return;
+    const w = fakeWinners[Math.floor(Math.random()*fakeWinners.length)];
+    const mins = Math.floor(Math.random()*9)+1;
+    box.innerHTML = `<span class="lw-dot"></span> 🎉 <b>${w.n}</b> (${w.c}) az önce çarktan <b class="lw-amt">$${w.a.toFixed(2)}</b> kazandı • ${mins} dk önce`;
+    box.classList.remove('lw-anim'); void box.offsetWidth; box.classList.add('lw-anim');
+}
+setInterval(showLiveWinner, 6000);
 
 // ============ 6. ŞANS ÇARKI ============
 const wheelCanvas = document.getElementById('wheel');
@@ -928,6 +948,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateUIForLoggedInUser();
     renderTasks();
     initMonetagZones();
+    showLiveWinner();
     if (sessionStorage.getItem('odulbox_show_invite_msg') && loggedInUser) {
         sessionStorage.removeItem('odulbox_show_invite_msg');
         alert(lang.invitedBy);
