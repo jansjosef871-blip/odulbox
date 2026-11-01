@@ -914,8 +914,8 @@ document.getElementById('banner-upload-btn').onclick = () => {
 const SLOT_NAMES = {
     'ad-zone-top': 'Üst Banner (728x90)',
     'ad-zone-mid': 'Çark Altı Banner',
-    'txt-ad-left': 'Sol Dikey (telefonda üstte)',
-    'txt-ad-right': 'Sağ Dikey (telefonda üstte)'
+    'ad-zone-side-left': 'Sol Dikey (160x600)',
+    'ad-zone-side-right': 'Sağ Dikey (160x600)'
 };
 function renderBannerManager() {
     const box = document.getElementById('banner-managed-list');
