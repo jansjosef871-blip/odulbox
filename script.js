@@ -652,6 +652,21 @@ function setupAdminTabs() {
     });
 }
 setupAdminTabs();
+
+// Kullanıcı arama + çekim filtreleme
+function setupAdminExtras() {
+    const search = document.getElementById('admin-user-search');
+    if (search) search.addEventListener('input', renderAdminUsers);
+    document.querySelectorAll('.admin-filter').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.admin-filter').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            window._wdFilter = btn.dataset.wfilter;
+            renderAdminWithdrawals();
+        };
+    });
+}
+setupAdminExtras();
 function renderAdminState() {
     if (!cfg.adminPassHash) {
         adminSetupBox.style.display = "block"; adminLoginBox.style.display = "none"; adminDashboard.style.display = "none";
@@ -746,23 +761,45 @@ function fillAdminForm() {
 function renderAdminUsers() {
     const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
     const box = document.getElementById('admin-users-list');
-    if (!users.length) { box.innerHTML = '<p class="admin-note">Henüz kullanıcı yok.</p>'; }
+    const searchEl = document.getElementById('admin-user-search');
+    const q = (searchEl && searchEl.value || '').toLowerCase();
+    const filtered = q ? users.filter(u => u.username.toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q)) : users;
+    if (!filtered.length) { box.innerHTML = `<p class="admin-note">${q ? 'Sonuç bulunamadı.' : 'Henüz kullanıcı yok.'}</p>`; }
     else {
-        box.innerHTML = users.map(u => `
+        box.innerHTML = filtered.map(u => `
         <div class="admin-user-row">
-            <span>${u.username} <small>(${u.email})</small></span>
-            <span>$${(u.balance||0).toFixed(2)} • ${u.refs||0} davet</span>
+            <span><b>${u.username}</b><br><small>${u.email}</small></span>
+            <span class="admin-user-right"><span class="stat-chip chip-green">$${(u.balance||0).toFixed(2)}</span><span class="stat-chip chip-purple">${u.refs||0} davet</span></span>
         </div>`).join('');
     }
+    renderAdminStats();
     renderAdminWithdrawals();
 }
 
-function renderAdminWithdrawals() {
+// Özet istatistik kartları
+function renderAdminStats() {
+    const statsBox = document.getElementById('admin-stats');
+    if (!statsBox) return;
+    const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
+    const reqs = JSON.parse(localStorage.getItem('odulbox_withdrawals')) || [];
+    const totalBal = users.reduce((s,u) => s + (u.balance||0), 0);
+    const pending = reqs.filter(r => r.status === 'pending');
+    const paidSum = reqs.filter(r => r.status === 'paid').reduce((s,r) => s + r.amount, 0);
+    statsBox.innerHTML = `
+        <div class="stat-card"><span class="stat-num">${users.length}</span><span class="stat-lbl">Kullanıcı</span></div>
+        <div class="stat-card"><span class="stat-num">$${totalBal.toFixed(2)}</span><span class="stat-lbl">Bekleyen Bakiye</span></div>
+        <div class="stat-card stat-warn"><span class="stat-num">${pending.length}</span><span class="stat-lbl">Bekleyen Çekim</span></div>
+        <div class="stat-card stat-ok"><span class="stat-num">$${paidSum.toFixed(2)}</span><span class="stat-lbl">Toplam Ödenen</span></div>`;
+}
+
+function renderAdminWithdrawals(filter) {
     const reqs = JSON.parse(localStorage.getItem('odulbox_withdrawals')) || [];
     const box = document.getElementById('admin-withdrawals-list');
     if (!box) return;
-    if (!reqs.length) { box.innerHTML = '<p class="admin-note">Çekim talebi yok.</p>'; return; }
-    box.innerHTML = reqs.slice().reverse().map(r => `
+    const f = filter || (window._wdFilter || 'all');
+    const shown = f === 'all' ? reqs : reqs.filter(r => r.status === f);
+    if (!shown.length) { box.innerHTML = '<p class="admin-note">Bu filtrede çekim talebi yok.</p>'; return; }
+    box.innerHTML = shown.slice().reverse().map(r => `
         <div class="admin-withdraw-row ${r.status==='pending' ? 'wd-pending' : 'wd-paid'}">
             <div>
                 <b>${r.username}</b> • $${r.amount.toFixed(2)}<br>
@@ -795,6 +832,7 @@ function renderAdminWithdrawals() {
             alert('Ödeme yapıldı olarak işaretlendi. 💸');
         }
         localStorage.setItem('odulbox_withdrawals', JSON.stringify(reqs));
+        renderAdminStats();
         renderAdminWithdrawals();
         renderAdminUsers();
     });

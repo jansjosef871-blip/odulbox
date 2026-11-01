@@ -494,6 +494,42 @@ body, html { overflow-x: hidden !important; max-width: 100vw; }
 }
 .admin-user-row small { color: #a29bfe; }
 
+/* Özet istatistik kartları */
+.admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+.stat-card {
+    background: linear-gradient(160deg, #1d183a, #14102b); border: 1px solid #2a2148;
+    border-radius: 12px; padding: 12px 8px; text-align: center; position: relative; overflow: hidden;
+}
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, #ff3366, #9B5DE5); }
+.stat-card.stat-ok::before { background: linear-gradient(90deg, #2ecc71, #00b4d8); }
+.stat-card.stat-warn::before { background: linear-gradient(90deg, #ffd93d, #ff9f1c); }
+.stat-num { display: block; font-size: 20px; font-weight: 800; color: #fff; }
+.stat-card.stat-ok .stat-num { color: #2ecc71; }
+.stat-card.stat-warn .stat-num { color: #ffd93d; }
+.stat-lbl { font-size: 10.5px; color: #a29bfe; text-transform: uppercase; letter-spacing: 0.5px; }
+@media (max-width: 520px) { .admin-stats { grid-template-columns: repeat(2, 1fr); } }
+
+.stat-chip { display: inline-block; padding: 3px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; margin-left: 4px; }
+.chip-green { background: rgba(46,204,113,0.15); color: #2ecc71; }
+.chip-purple { background: rgba(155,93,229,0.18); color: #b79cff; }
+.admin-user-right { text-align: right; }
+.admin-user-row b { color: #fff; }
+.admin-search { margin-bottom: 10px; }
+
+/* Çekim filtreleri */
+.admin-filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.admin-filter {
+    padding: 6px 12px; border-radius: 16px; border: 1px solid #231d42; background: transparent;
+    color: #a29bfe; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+}
+.admin-filter:hover { color: #fff; }
+.admin-filter.active { background: linear-gradient(135deg, #ff3366, #9B5DE5); color: #fff; border-color: transparent; }
+
+/* Çekim kartları iyileştirme */
+.admin-withdraw-row { background: #0f0c1b; transition: transform 0.15s; }
+.admin-withdraw-row:hover { transform: translateX(3px); }
+.admin-withdraw-row b { color: #fff; }
+
 /* ============ ADMIN ÇEKİM TALEPLERİ ============ */
 .admin-withdraw-row {
     display: flex; justify-content: space-between; align-items: center;

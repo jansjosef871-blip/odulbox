@@ -168,6 +168,9 @@
                     <h2>⚡ Kontrol Paneli</h2>
                     <button id="admin-logout-btn" class="admin-pill-btn">Çıkış</button>
                 </div>
+                <!-- Ozet istatistik kartlari -->
+                <div class="admin-stats" id="admin-stats"></div>
+
                 <div class="admin-tabs">
                     <button class="admin-tab active" data-tab="tab-ads">📢 Reklamlar</button>
                     <button class="admin-tab" data-tab="tab-banners">🖼 Bannerlar</button>
@@ -242,10 +245,17 @@
 
                 <div id="tab-users" class="admin-tab-page" style="display:none;">
                     <h4 class="admin-sec">👥 Kayıtlı Kullanıcılar</h4>
+                    <input type="text" id="admin-user-search" class="admin-search" placeholder="🔍 Kullanıcı ara (isim / e-posta)">
                     <div id="admin-users-list" class="admin-users"></div>
                     <h4 class="admin-sec">💸 Çekim Talepleri</h4>
+                    <div class="admin-filter-row">
+                        <button class="admin-filter active" data-wfilter="all">Tümü</button>
+                        <button class="admin-filter" data-wfilter="pending">⏳ Bekleyen</button>
+                        <button class="admin-filter" data-wfilter="paid">✅ Ödenen</button>
+                        <button class="admin-filter" data-wfilter="rejected">❌ Reddedilen</button>
+                    </div>
                     <div id="admin-withdrawals-list" class="admin-users"></div>
-                    <p class="admin-note">Onayladığın talep "paid" işaretlenir. Reddedersen bakiye iade edilir.</p>
+                    <p class="admin-note">Onayladığın talep "paid" işaretlenir. Reddedersen bakiye iade edilir. Ödemeyi yaptıktan sonra ✓ Ödendi'ye bas.</p>
                 </div>
 
                 <button id="admin-save-btn" class="form-submit-btn">💾 Kaydet & Uygula</button>
