@@ -893,9 +893,10 @@ document.getElementById('banner-upload-btn').onclick = () => {
     const slot = document.getElementById('banner-slot').value;
     const url = document.getElementById('banner-url').value.trim();
     cfg.customBanners = cfg.customBanners || {};
+    // responsive: resim her ekranda tam genislik + yukseklik otomatik -> telefonda da ayni banner gorunur
     cfg.customBanners[slot] = url
-        ? `<a href="${url}" target="_blank" rel="noopener"><img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;object-fit:contain;display:block;"></a>`
-        : `<img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;object-fit:contain;display:block;">`;
+        ? `<a href="${url}" target="_blank" rel="noopener"><img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;display:block;object-fit:contain;"></a>`
+        : `<img src="${_bannerFileData}" alt="banner" style="width:100%;height:auto;display:block;object-fit:contain;">`;
     try {
         saveCfg();
     } catch(err) {
@@ -904,8 +905,42 @@ document.getElementById('banner-upload-btn').onclick = () => {
     }
     document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
     initMonetagZones();
-    alert('✅ Banner yüklendi ve slota uygulandı!');
+    renderBannerManager();
+    alert('✅ Banner yüklendi! Artık TÜM cihazlarda (telefon/tablet/PC) herkese görünür.');
 };
+
+// ---- YÜKLÜ BANNERLAR YÖNETİMİ (kullanıcı dostu) ----
+const SLOT_NAMES = {
+    'ad-zone-top': 'Üst Banner (728x90)',
+    'ad-zone-mid': 'Çark Altı Banner',
+    'txt-ad-left': 'Sol Dikey (telefonda üstte)',
+    'txt-ad-right': 'Sağ Dikey (telefonda üstte)'
+};
+function renderBannerManager() {
+    const box = document.getElementById('banner-managed-list');
+    if (!box) return;
+    cfg.customBanners = cfg.customBanners || {};
+    const entries = Object.entries(cfg.customBanners);
+    if (!entries.length) { box.innerHTML = '<p class="admin-note">Henüz banner yüklenmedi. Yukarıdan resim seçip yükle.</p>'; return; }
+    box.innerHTML = entries.map(([slot, html]) => `
+        <div class="managed-banner">
+            <div class="mb-preview">${html}</div>
+            <div class="mb-info">
+                <b>${SLOT_NAMES[slot] || slot}</b>
+                <small>${html.includes('<img') ? '🖼️ Resim banner' : '💻 Özel kod'} • ${Math.round(html.length/1024)} KB</small>
+            </div>
+            <button class="wd-btn wd-rej" data-slot-del="${slot}">✖ Kaldır</button>
+        </div>`).join('');
+    box.querySelectorAll('[data-slot-del]').forEach(btn => btn.onclick = () => {
+        delete cfg.customBanners[btn.dataset.slotDel];
+        saveCfg();
+        document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
+        initMonetagZones();
+        renderBannerManager();
+        alert('Banner kaldırıldı.');
+    });
+}
+renderBannerManager();
 
 document.getElementById('banner-clear-btn').onclick = () => {
     // Sadece resim bannerlarını temizle (img içerenler)
@@ -915,6 +950,7 @@ document.getElementById('banner-clear-btn').onclick = () => {
     document.getElementById('banner-preview').innerHTML = '';
     document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
     initMonetagZones();
+    renderBannerManager();
     alert('Resim bannerları silindi.');
 };
 
