@@ -366,10 +366,10 @@ document.getElementById('btn-draw-2').addEventListener('click', () => handleWith
 const wheelCanvas = document.getElementById('wheel');
 const spinButton = document.getElementById('spin-btn');
 const wheelSegments = [
-    { label:"0.01 $", value:0.01, color:"#FF6B6B" }, { label:"0.05 $", value:0.05, color:"#4ECDC4" },
-    { label:"0.02 $", value:0.02, color:"#FFD93D" }, { label:"0.10 $", value:0.10, color:"#6BCB77" },
-    { label:"0.01 $", value:0.01, color:"#FF8C42" }, { label:"0.20 $", value:0.20, color:"#9B5DE5" },
-    { label:"0.03 $", value:0.03, color:"#00B4D8" }, { label:"0.50 $", value:0.50, color:"#F72585" }
+    { label:"0.01 $", value:0.01, color:"#FF3366" }, { label:"0.05 $", value:0.05, color:"#1E1633" },
+    { label:"0.02 $", value:0.02, color:"#FFD93D", dark:true }, { label:"0.10 $", value:0.10, color:"#1E1633" },
+    { label:"0.01 $", value:0.01, color:"#00B4D8" }, { label:"0.20 $", value:0.20, color:"#1E1633" },
+    { label:"0.03 $", value:0.03, color:"#9B5DE5" }, { label:"0.50 $", value:0.50, color:"#FFD93D", dark:true }
 ];
 const segmentAngle = (Math.PI*2)/wheelSegments.length;
 let currentRotation = 0, isSpinning = false;
@@ -377,48 +377,81 @@ let currentRotation = 0, isSpinning = false;
 function drawWheel() {
     if (!wheelCanvas) return;
     const ctx = wheelCanvas.getContext('2d');
-    const W = wheelCanvas.width, cx = W/2, cy = W/2, r = W/2 - 22;
+    const W = wheelCanvas.width, cx = W/2, cy = W/2, r = W/2 - 18;
     ctx.clearRect(0,0,W,W);
 
-    // Dış parlak çerçeve (3 katmanlı)
-    ctx.beginPath(); ctx.arc(cx,cy,r+18,0,Math.PI*2);
+    // Dış metal çerçeve (poli açılı efekt için iki degrade katmanı)
     const ringGrad = ctx.createLinearGradient(0,0,W,W);
-    ringGrad.addColorStop(0,"#ff3366"); ringGrad.addColorStop(0.5,"#ff6b9d"); ringGrad.addColorStop(1,"#9B5DE5");
-    ctx.fillStyle = ringGrad; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,r+9,0,Math.PI*2); ctx.fillStyle="#0f0c1b"; ctx.fill();
+    ringGrad.addColorStop(0,"#2a1a4a"); ringGrad.addColorStop(0.35,"#ff3366");
+    ringGrad.addColorStop(0.55,"#ffd93d"); ringGrad.addColorStop(0.8,"#9B5DE5"); ringGrad.addColorStop(1,"#1E1633");
+    ctx.beginPath(); ctx.arc(cx,cy,r+16,0,Math.PI*2); ctx.fillStyle=ringGrad; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r+8,0,Math.PI*2); ctx.fillStyle="#0f0c1b"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx,cy,r+6,0,Math.PI*2);
+    ctx.strokeStyle="rgba(255,217,61,0.55)"; ctx.lineWidth=2; ctx.stroke();
 
-    // Segmentler + altın çivi (pin) her sınırda
+    // Segmentler (konik gradyan ile kazanç hissi)
     wheelSegments.forEach((s,i) => {
         const a0 = i*segmentAngle, a1 = (i+1)*segmentAngle;
         ctx.beginPath(); ctx.moveTo(cx,cy);
         ctx.arc(cx,cy,r, a0, a1); ctx.closePath();
-        ctx.fillStyle = s.color; ctx.fill();
-        ctx.strokeStyle = "rgba(15,12,27,0.9)"; ctx.lineWidth = 3; ctx.stroke();
+        const g = ctx.createRadialGradient(cx,cy,30,cx,cy,r);
+        g.addColorStop(0, s.color);
+        g.addColorStop(1, shadeColor(s.color, i%2===0 ? -18 : -34));
+        ctx.fillStyle = s.color==="#1E1633" ? s.color : g; ctx.fill();
+        ctx.strokeStyle = "rgba(255,217,61,0.35)"; ctx.lineWidth = 1.5; ctx.stroke();
 
-        // Sınır civisi
-        ctx.beginPath(); ctx.arc(cx + Math.cos(a0)*(r-8), cy + Math.sin(a0)*(r-8), 4, 0, Math.PI*2);
-        ctx.fillStyle = "#ffd93d"; ctx.fill();
-        ctx.strokeStyle = "#7a5a00"; ctx.lineWidth = 1.5; ctx.stroke();
+        // Altın pim
+        ctx.beginPath(); ctx.arc(cx + Math.cos(a0)*(r-6), cy + Math.sin(a0)*(r-6), 5, 0, Math.PI*2);
+        const pinG = ctx.createRadialGradient(cx + Math.cos(a0)*(r-6)-2, cy + Math.sin(a0)*(r-6)-2, 0, cx + Math.cos(a0)*(r-6), cy + Math.sin(a0)*(r-6), 5);
+        pinG.addColorStop(0,"#fff6cc"); pinG.addColorStop(0.5,"#ffd93d"); pinG.addColorStop(1,"#8a6a00");
+        ctx.fillStyle = pinG; ctx.fill();
 
         // Etiket
         ctx.save(); ctx.translate(cx,cy); ctx.rotate(a0 + segmentAngle/2);
-        ctx.textAlign="right"; ctx.fillStyle="#fff";
-        ctx.font="bold 19px 'Segoe UI', Arial";
-        ctx.shadowColor="rgba(0,0,0,0.55)"; ctx.shadowBlur=4;
-        ctx.fillText(s.label, r-18, 7); ctx.restore();
+        ctx.textAlign="right";
+        ctx.fillStyle = s.dark ? "#1E1633" : "#fff";
+        ctx.font="bold 20px 'Segoe UI', Arial";
+        ctx.shadowColor="rgba(0,0,0,0.45)"; ctx.shadowBlur=5;
+        ctx.fillText(s.label, r-16, 7); ctx.restore();
     });
 
-    // Merkez rozet: altın halka + koyu göbek + emoji
-    ctx.beginPath(); ctx.arc(cx,cy,46,0,Math.PI*2);
-    const hubGrad = ctx.createLinearGradient(cx-46,cy-46,cx+46,cy+46);
-    hubGrad.addColorStop(0,"#ffd93d"); hubGrad.addColorStop(1,"#ff9f1c");
+    // Merkez buton (altın halka + parlak göbek)
+    ctx.beginPath(); ctx.arc(cx,cy,50,0,Math.PI*2);
+    const hubGrad = ctx.createLinearGradient(cx-50,cy-50,cx+50,cy+50);
+    hubGrad.addColorStop(0,"#ffd93d"); hubGrad.addColorStop(0.5,"#ff9f1c"); hubGrad.addColorStop(1,"#c97600");
     ctx.fillStyle = hubGrad; ctx.fill();
-    ctx.beginPath(); ctx.arc(cx,cy,36,0,Math.PI*2); ctx.fillStyle="#1a1a2e"; ctx.fill();
-    ctx.strokeStyle="rgba(255,255,255,0.35)"; ctx.lineWidth=2; ctx.stroke();
-    ctx.fillStyle="#fff"; ctx.font="bold 24px Arial"; ctx.textAlign="center";
-    ctx.shadowColor="rgba(0,0,0,0.4)"; ctx.shadowBlur=3;
-    ctx.fillText("🎁", cx, cy+9);
+    ctx.beginPath(); ctx.arc(cx,cy,40,0,Math.PI*2);
+    ctx.fillStyle="#141026"; ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,0.25)"; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.fillStyle="#fff"; ctx.font="bold 26px Arial"; ctx.textAlign="center";
+    ctx.shadowColor="rgba(255,217,61,0.9)"; ctx.shadowBlur=8;
+    ctx.fillText("🎁", cx, cy+10);
     ctx.shadowBlur=0;
+}
+
+function shadeColor(hex, percent) {
+    const num = parseInt(hex.replace('#',''),16);
+    const amt = Math.round(2.55 * percent);
+    const R = Math.min(255, Math.max(0,(num>>16)+amt));
+    const G = Math.min(255, Math.max(0,((num>>8)&0xFF)+amt));
+    const B = Math.min(255, Math.max(0,(num&0xFF)+amt));
+    return `rgb(${R},${G},${B})`;
+}
+
+// Konfeti efekti (kazanınca patlar)
+function launchConfetti() {
+    const colors = ['#ff3366','#ffd93d','#00b4d8','#9b5de5','#6bcb77','#ffffff'];
+    for (let i=0;i<60;i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti';
+        el.style.left = Math.random()*100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random()*colors.length)];
+        el.style.animationDelay = (Math.random()*0.6)+'s';
+        el.style.animationDuration = (2.2 + Math.random()*1.5)+'s';
+        el.style.width = el.style.height = (6+Math.random()*8)+'px';
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(), 4200);
+    }
 }
 
 function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
@@ -439,18 +472,21 @@ function spinWheel() {
     spinButton.disabled = true;
     spinButton.style.opacity = "0.6";
 
-    const spins = 5 + Math.floor(Math.random()*3);
+    const spins = 6 + Math.floor(Math.random()*3);
     const randomAngle = Math.random()*Math.PI*2;
     const targetRotation = currentRotation + (spins*Math.PI*2) + randomAngle;
-    const duration = 5000, startRotation = currentRotation, startTime = performance.now();
+    const duration = 6200, startRotation = currentRotation, startTime = performance.now();
+    const easeOutQuint = t => 1 - Math.pow(1-t, 5);
 
     function animate(now) {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed/duration, 1);
-        const eased = easeOutCubic(progress);
+        const eased = easeOutQuint(progress);
         currentRotation = startRotation + (targetRotation - startRotation)*eased;
         wheelCanvas.style.transform = `rotate(${currentRotation}rad)`;
+        wheelCanvas.parentElement.classList.add('spinning');
         if (progress < 1) { requestAnimationFrame(animate); return; }
+        wheelCanvas.parentElement.classList.remove('spinning');
 
         isSpinning = false;
         spinButton.disabled = false;
@@ -467,6 +503,7 @@ function spinWheel() {
         loggedInUser.lastSpin = Date.now();
         loggedInUser.lastSpinDate = today;
         addBalance(won.value);
+        launchConfetti();
         alert(`${lang.winAlert} ${won.label} 🎉`);
     }
     requestAnimationFrame(animate);
@@ -602,6 +639,19 @@ function openAdmin() {
     adminPanelEl.style.display = "flex";
     renderAdminState();
 }
+
+// Admin sekme sistemi
+function setupAdminTabs() {
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+        tab.onclick = () => {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-page').forEach(p => p.style.display = 'none');
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).style.display = 'block';
+        };
+    });
+}
+setupAdminTabs();
 function renderAdminState() {
     if (!cfg.adminPassHash) {
         adminSetupBox.style.display = "block"; adminLoginBox.style.display = "none"; adminDashboard.style.display = "none";

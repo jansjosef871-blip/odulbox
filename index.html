@@ -143,7 +143,7 @@
             <span class="close-btn" data-close="admin-panel">&times;</span>
 
             <!-- Kurulum sihirbazı: ilk açılışta şifre belirle -->
-            <div id="admin-setup-box">
+            <div id="admin-setup-box" style="display:none;">
                 <h2>⚙️ Admin Kurulum Sihirbazı</h2>
                 <p class="admin-note">İlk kez buradasın. Admin şifreni belirle, sonra Monetag bilgilerini gir.</p>
                 <form id="admin-setup-form">
@@ -164,59 +164,94 @@
 
             <!-- Panel içeriği -->
             <div id="admin-dashboard" style="display:none;">
-                <h2>⚙️ OdulBox Admin Panel</h2>
+                <div class="admin-head">
+                    <h2>⚡ Kontrol Paneli</h2>
+                    <button id="admin-logout-btn" class="admin-pill-btn">Çıkış</button>
+                </div>
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="tab-ads">📢 Reklamlar</button>
+                    <button class="admin-tab" data-tab="tab-banners">🖼 Bannerlar</button>
+                    <button class="admin-tab" data-tab="tab-rewards">💰 Ödüller</button>
+                    <button class="admin-tab" data-tab="tab-users">👥 Kullanıcılar</button>
+                </div>
 
-                <h4 class="admin-sec">💰 Monetag Reklam Kurulumu</h4>
-                <p class="admin-note">Monetag.com → siteni ekle → her formatın Zone ID'sini buraya yapıştır. Boş bırakırsan o format açılmaz.</p>
-                <input type="text" id="cfg-direct-link" placeholder="Monetag Direct Link - tam URL buraya yapistir">
-                <input type="text" id="cfg-zone-popunder" placeholder="Popunder Zone ID (varsa)">
-                <input type="text" id="cfg-zone-onclick" placeholder="Onclick (Vignette) Zone ID">
-                <input type="text" id="cfg-zone-interstitial" placeholder="In-App Interstitial Zone ID">
-                <input type="text" id="cfg-zone-banner" placeholder="Banner Zone ID (yan/sol slotlar)">
-                <input type="text" id="cfg-zone-native" placeholder="Native Ads Zone ID (banner slotları)">
-                <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock kodunu aktif et</label>
-                <h4 class="admin-sec">🎨 Kendi Banner Reklam Kodların (AdSense, özel HTML)</h4>
-                <p class="admin-note">Her kutuya reklam agindan aldigin HTML/JS kodunu yapistir. Dolu olan kutu, o slot icin Zone ID'yi gecersiz kilar.</p>
-                <label class="admin-label">Ust banner (728x90): <textarea id="cb-ad-zone-top" rows="3"></textarea></label>
-                <label class="admin-label">Orta banner (cark alti): <textarea id="cb-ad-zone-mid" rows="3"></textarea></label>
-                <label class="admin-label">Sol sidebar: <textarea id="cb-ad-zone-side-left" rows="3"></textarea></label>
-                <label class="admin-label">Sag sidebar: <textarea id="cb-ad-zone-side-right" rows="3"></textarea></label>
-                <h4 class="admin-sec">🖼️ Bilgisayardan Banner Resmi Yükle</h4>
-                <p class="admin-note">Bir resim sec, hangi slotta gornecegini isaretle, kaydet. Resim tarayicida saklanir, o slotun yerine gecer.</p>
-                <label class="admin-label">Resim sec: <input type="file" id="banner-file" accept="image/*"></label>
-                <label class="admin-label">Slot: 
-                    <select id="banner-slot">
-                        <option value="ad-zone-top">Ust banner</option>
-                        <option value="ad-zone-mid">Orta banner (cark alti)</option>
-                        <option value="ad-zone-side-left">Sol sidebar</option>
-                        <option value="ad-zone-side-right">Sag sidebar</option>
+                <div id="tab-ads" class="admin-tab-page">
+                    <h4 class="admin-sec">💰 Monetag Reklam Kurulumu</h4>
+                    <p class="admin-note">Monetag.com → siteni ekle → her formatın Zone ID'sini buraya yapıştır. Boş bırakırsan o format açılmaz.</p>
+                    <label class="admin-label">Monetag Direct Link</label>
+                    <input type="text" id="cfg-direct-link" placeholder="https://...">
+                    <label class="admin-label">Popunder Zone ID</label>
+                    <input type="text" id="cfg-zone-popunder">
+                    <label class="admin-label">Onclick (Vignette) Zone ID</label>
+                    <input type="text" id="cfg-zone-onclick">
+                    <label class="admin-label">Interstitial Zone ID</label>
+                    <input type="text" id="cfg-zone-interstitial">
+                    <label class="admin-label">Banner Zone ID (sidebar)</label>
+                    <input type="text" id="cfg-zone-banner">
+                    <label class="admin-label">Native Zone ID (yatay banner)</label>
+                    <input type="text" id="cfg-zone-native">
+                    <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock kodunu aktif et</label>
+                    <h4 class="admin-sec">🎨 Özel Reklam Kodları (AdSense, HTML)</h4>
+                    <p class="admin-note">Dolu olan kutu, o slot için Zone ID'yi geçersiz kılar.</p>
+                    <label class="admin-label">Üst banner (728x90)</label>
+                    <textarea id="cb-ad-zone-top" rows="3"></textarea>
+                    <label class="admin-label">Orta banner (çark altı)</label>
+                    <textarea id="cb-ad-zone-mid" rows="3"></textarea>
+                    <label class="admin-label">Sol sidebar</label>
+                    <textarea id="cb-ad-zone-side-left" rows="3"></textarea>
+                    <label class="admin-label">Sağ sidebar</label>
+                    <textarea id="cb-ad-zone-side-right" rows="3"></textarea>
+                </div>
+
+                <div id="tab-banners" class="admin-tab-page" style="display:none;">
+                    <h4 class="admin-sec">🖼️ Bilgisayardan Banner Resmi Yükle</h4>
+                    <p class="admin-note">Resim seç, hangi slottaaretle, kaydet.</p>
+                    <label class="admin-label">Slot seç</label>
+                    <select id="banner-slot" class="admin-select">
+                        <option value="ad-zone-top">Üst Banner (728x90)</option>
+                        <option value="ad-zone-mid">Çark Altı (500x150)</option>
+                        <option value="txt-ad-left">Sol Dikey (160x600)</option>
+                        <option value="txt-ad-right">Sağ Dikey (160x600)</option>
                     </select>
-                </label>
-                <label class="admin-label">Tiklama linki (opsiyonel): <input type="text" id="banner-url" placeholder="https://siteniz.com"></label>
-                <div id="banner-preview"></div>
-                <button id="banner-upload-btn" class="admin-secondary-btn">🖼️ Banner Olarak Yükle</button>
-                <button id="banner-clear-btn" class="admin-secondary-btn">🗑️ Tüm Resim Bannerlari Sil</button>
+                    <label class="admin-label">Resim</label>
+                    <input type="file" id="banner-file" accept="image/*">
+                    <label class="admin-label">Tıklama linki (opsiyonel)</label>
+                    <input type="text" id="banner-url" placeholder="https://siteniz.com">
+                    <div id="banner-preview"></div>
+                    <div class="admin-btn-row">
+                        <button id="banner-upload-btn" class="form-submit-btn">🖼️ Banner Olarak Yükle</button>
+                        <button id="banner-clear-btn" class="admin-secondary-btn">🗑️ Bannerları Sil</button>
+                    </div>
+                </div>
 
-                <h4 class="admin-sec">🎁 Ödül Ayarları</h4>
-                <label class="admin-label">Davet bonusu ($): <input type="number" step="0.01" id="cfg-ref-bonus"></label>
-                <label class="admin-label">Instagram görev ödülü ($): <input type="number" step="0.01" id="cfg-task1"></label>
-                <label class="admin-label">YouTube görev ödülü ($): <input type="number" step="0.01" id="cfg-task2"></label>
-                <label class="admin-label">Instagram görev linki: <input type="text" id="cfg-task1-url"></label>
-                <label class="admin-label">YouTube görev linki: <input type="text" id="cfg-task2-url"></label>
-                <label class="admin-label">Çekim alt limiti ($): <input type="number" step="0.01" id="cfg-min-withdraw"></label>
+                <div id="tab-rewards" class="admin-tab-page" style="display:none;">
+                    <h4 class="admin-sec">🎁 Ödül Ayarları</h4>
+                    <label class="admin-label">Davet bonusu ($)</label>
+                    <input type="number" step="0.01" id="cfg-ref-bonus">
+                    <label class="admin-label">Instagram görev ödülü ($)</label>
+                    <input type="number" step="0.01" id="cfg-task1">
+                    <label class="admin-label">YouTube görev ödülü ($)</label>
+                    <input type="number" step="0.01" id="cfg-task2">
+                    <label class="admin-label">Instagram görev linki</label>
+                    <input type="text" id="cfg-task1-url">
+                    <label class="admin-label">YouTube görev linki</label>
+                    <input type="text" id="cfg-task2-url">
+                    <label class="admin-label">Çekim alt limiti ($)</label>
+                    <input type="number" step="0.01" id="cfg-min-withdraw">
+                </div>
 
-                <h4 class="admin-sec">👥 Kullanıcılar & Talepler</h4>
-                <div id="admin-users-list" class="admin-users"></div>
-                <h4 class="admin-sec">💸 Cekim Talepleri</h4>
-                <div id="admin-withdrawals-list" class="admin-users"></div>
-                <p class="admin-note">Onayladigin talep "paid" isaretlenir, kullanici tekrar talep acabilir. Reddedersen bakiye iade edilir.</p>
+                <div id="tab-users" class="admin-tab-page" style="display:none;">
+                    <h4 class="admin-sec">👥 Kayıtlı Kullanıcılar</h4>
+                    <div id="admin-users-list" class="admin-users"></div>
+                    <h4 class="admin-sec">💸 Çekim Talepleri</h4>
+                    <div id="admin-withdrawals-list" class="admin-users"></div>
+                    <p class="admin-note">Onayladığın talep "paid" işaretlenir. Reddedersen bakiye iade edilir.</p>
+                </div>
 
                 <button id="admin-save-btn" class="form-submit-btn">💾 Kaydet & Uygula</button>
-                <button id="admin-logout-btn" class="admin-secondary-btn">Panelden Çık</button>
             </div>
         </div>
     </div>
-
     <!-- Gizli admin tetikleyici: klavye ile de açılır -->
     <script src="script.js?v=12"></script>
 </body>
