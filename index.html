@@ -47,8 +47,6 @@
 <body>
 
     <!-- Sol ve Sağ Dikey Reklam Alanları (Monetag banner slotları) -->
-    <div class="ad-sidebar ad-left" id="ad-zone-side-left" data-slot="sidebar">[🔥 AD SPACE]</div>
-    <div class="ad-sidebar ad-right" id="ad-zone-side-right" data-slot="sidebar">[🔥 AD SPACE]</div>
 
     <!-- Üst Duyuru Şeridi -->
     <div class="ticker-bar">
@@ -244,27 +242,15 @@
                     <label class="admin-label">Native Zone ID (yatay banner)</label>
                     <input type="text" id="cfg-zone-native">
                     <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock kodunu aktif et</label>
-                    <h4 class="admin-sec">🎨 Özel Reklam Kodları (AdSense, HTML)</h4>
-                    <p class="admin-note">Dolu olan kutu, o slot için Zone ID'yi geçersiz kılar.</p>
-                    <label class="admin-label">Üst banner (728x90)</label>
-                    <textarea id="cb-ad-zone-top" rows="3"></textarea>
-                    <label class="admin-label">Orta banner (çark altı)</label>
-                    <textarea id="cb-ad-zone-mid" rows="3"></textarea>
-                    <label class="admin-label">Sol sidebar</label>
-                    <textarea id="cb-ad-zone-side-left" rows="3"></textarea>
-                    <label class="admin-label">Sağ sidebar</label>
-                    <textarea id="cb-ad-zone-side-right" rows="3"></textarea>
-                </div>
+                    
 
                 <div id="tab-banners" class="admin-tab-page" style="display:none;">
                     <h4 class="admin-sec">🖼️ Bilgisayardan Banner Resmi Yükle</h4>
-                    <p class="admin-note">Resim seç, hangi slottaaretle, kaydet.</p>
+                    <p class="admin-note">Resim seç, hangi slotta görüneceğini seç, kaydet.</p>
                     <label class="admin-label">Slot seç</label>
                     <select id="banner-slot" class="admin-select">
                         <option value="ad-zone-top">Üst Banner (728x90)</option>
                         <option value="ad-zone-mid">Çark Altı (500x150)</option>
-                        <option value="ad-zone-side-left">Sol Dikey (160x600)</option>
-                        <option value="ad-zone-side-right">Sağ Dikey (160x600)</option>
                     </select>
                     <label class="admin-label">Resim</label>
                     <input type="file" id="banner-file" accept="image/*">
@@ -276,7 +262,7 @@
                         <button id="banner-clear-btn" class="admin-secondary-btn">🗑️ Tümünü Sil</button>
                     </div>
                     <h4 class="admin-sec">📋 Yüklü Bannerlar</h4>
-                    <p class="admin-note">Yüklediğin bannerlar TÜM ziyaretçilere gösterilir — telefonda tam genişlik, dikey bannerlar akış içinde görünür.</p>
+                    <p class="admin-note">Yüklediğin bannerlar TÜM ziyaretçilere gösterilir — telefonda tam genişlik, masaüstünde slota sığacak şekilde.</p>
                     <div id="banner-managed-list"></div>
                 </div>
 

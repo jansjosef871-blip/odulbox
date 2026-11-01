@@ -772,10 +772,6 @@ function fillAdminForm() {
     document.getElementById('cfg-task1-url').value = cfg.task1Url;
     document.getElementById('cfg-task2-url').value = cfg.task2Url;
     document.getElementById('cfg-min-withdraw').value = cfg.minWithdraw;
-    // Özel banner kodları
-    ['ad-zone-top','ad-zone-mid','ad-zone-side-left','ad-zone-side-right'].forEach(id => {
-        document.getElementById('cb-'+id).value = (cfg.customBanners && cfg.customBanners[id]) || '';
-    });
     renderAdminUsers();
 }
 
@@ -914,8 +910,6 @@ document.getElementById('banner-upload-btn').onclick = () => {
 const SLOT_NAMES = {
     'ad-zone-top': 'Üst Banner (728x90)',
     'ad-zone-mid': 'Çark Altı Banner',
-    'ad-zone-side-left': 'Sol Dikey (160x600)',
-    'ad-zone-side-right': 'Sağ Dikey (160x600)'
 };
 function renderBannerManager() {
     const box = document.getElementById('banner-managed-list');
