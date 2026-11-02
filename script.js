@@ -64,7 +64,7 @@ const DEFAULTS = {
 // Bu dosya commit+push edilince bannerlar dünyanın her yerinden görünür olur.
 const PUBLISHED_BANNERS = {
     customBanners: {
-        "ad-zone-top": "<a href=\"https://digitalicaa.com/\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/Q7JRjh7h.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>",
+        "ad-zone-top": "<a href=\"https://digitalicaa.com/\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/j8Qq3rw.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>",
         "ad-zone-mid": "<a href=\"https://zoebet348.com\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/auPRiaG.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>"
     }
 };
