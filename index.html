@@ -252,8 +252,20 @@
                         <option value="ad-zone-top">Üst Banner (728x90)</option>
                         <option value="ad-zone-mid">Çark Altı (500x150)</option>
                     </select>
-                    <label class="admin-label">Resim</label>
-                    <input type="file" id="banner-file" accept="image/*">
+                    <div class="admin-method-tabs">
+                        <button class="admin-method active" data-method="file">📁 Bilgisayardan Yükle</button>
+                        <button class="admin-method" data-method="url">🌐 URL ile Ekle (tüm cihazlar)</button>
+                    </div>
+                    <div id="method-file">
+                        <label class="admin-label">Resim</label>
+                        <input type="file" id="banner-file" accept="image/*">
+                    </div>
+                    <div id="method-url" style="display:none;">
+                        <label class="admin-label">Banner resminin URL'si</label>
+                        <input type="text" id="banner-url-input" placeholder="https://i.imgur.com/abc.png">
+                        <p class="admin-note">💡 Resmi önce imgur.com veya kendi sunucuna yükle, linkini buraya yapıştır. Bu yöntemde banner <b>tüm cihazlarda</b> görünür!</p>
+                        <button id="banner-url-upload-btn" class="form-submit-btn" style="margin-top:8px;">🌐 URL ile Banner Ekle</button>
+                    </div>
                     <label class="admin-label">Tıklama linki (opsiyonel)</label>
                     <input type="text" id="banner-url" placeholder="https://siteniz.com">
                     <div id="banner-preview"></div>

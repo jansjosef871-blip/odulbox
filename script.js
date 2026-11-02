@@ -885,6 +885,34 @@ document.getElementById('banner-file').addEventListener('change', e => {
     r.readAsDataURL(f);
 });
 
+// ---- URL İLE BANNER EKLEME (tüm cihazlarda görünür) ----
+document.getElementById('banner-url-upload-btn')?.addEventListener('click', () => {
+    const url = document.getElementById('banner-url-input').value.trim();
+    if (!url) { alert('Önce banner resminin URL\'sini gir!'); return; }
+    if (!url.match(/^https?:\/\//)) { alert('URL "https://" ile başlamalı!'); return; }
+    const slot = document.getElementById('banner-slot').value;
+    const clickUrl = document.getElementById('banner-url').value.trim();
+    cfg.customBanners = cfg.customBanners || {};
+    cfg.customBanners[slot] = clickUrl
+        ? `<a href="${clickUrl}" target="_blank" rel="noopener"><img src="${url}" alt="banner" style="width:100%;height:auto;display:block;object-fit:contain;"></a>`
+        : `<img src="${url}" alt="banner" style="width:100%;height:auto;display:block;object-fit:contain;">`;
+    saveCfg();
+    document.querySelectorAll('[data-slot]').forEach(el => { el.dataset.loaded = ""; });
+    initMonetagZones();
+    renderBannerManager();
+    alert('✅ Banner URL ile eklendi! Artık TÜM cihazlarda (telefon/tablet/PC) herkese görünür.');
+});
+
+// method tab switching
+document.querySelectorAll('.admin-method').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('.admin-method').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('#method-file, #method-url').forEach(d => d.style.display = 'none');
+        btn.classList.add('active');
+        document.getElementById('method-' + btn.dataset.method).style.display = 'block';
+    };
+});
+
 document.getElementById('banner-upload-btn').onclick = () => {
     if (!_bannerFileData) { alert('Önce bir resim seç!'); return; }
     const slot = document.getElementById('banner-slot').value;
