@@ -59,7 +59,13 @@ const DEFAULTS = {
     task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
     minWithdraw:5.00
 };
-let cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
+// ==== YAYINLANMIŞ BANNERLAR (git'e gömülü - TÜM cihazlarda görünür) ====
+// Admin panelindeki "GitHub'a Yayınla" butonu bu bloğun içeriğini güncellemeni ister.
+// Bu dosya commit+push edilince bannerlar dünyanın her yerinden görünür olur.
+const PUBLISHED_BANNERS = {
+};
+
+let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
 
 function saveCfg() { localStorage.setItem('odulbox_cfg', JSON.stringify(cfg)); }
 
@@ -911,6 +917,22 @@ document.querySelectorAll('.admin-method').forEach(btn => {
         btn.classList.add('active');
         document.getElementById('method-' + btn.dataset.method).style.display = 'block';
     };
+});
+
+// ---- GitHub'a Yayınla (ortak banner sistemi) ----
+document.getElementById('banner-publish-btn')?.addEventListener('click', () => {
+    const json = JSON.stringify({ customBanners: cfg.customBanners || {} }, null, 4)
+        .replace('{\n}', '{\n}')  // koru
+        .split('\n').join('\n    '); // girinti
+    const code = 'const PUBLISHED_BANNERS = ' + json + ';';
+    // modal benzeri gösterim
+    const w = window.open('', '_blank', 'width=800,height=500');
+    w.document.write('<pre style="font-size:13px;background:#111;color:#0f0;padding:20px;white-space:pre-wrap;">' +
+        '<b>1. Bu kodu kopyala:</b><br><br>' +
+        code.replace(/</g,'&lt;') +
+        '<br><br><b>2. script.js dosyasında "const PUBLISHED_BANNERS" bloğunun içine yapıştır.</b><br>' +
+        '<b>3. GitHub\'a commit+push et (veya bana söyle, ben yaparım).</b><br>' +
+        '<b>4. 1-2 dakika sonra bannerlar TÜM cihazlarda görünür.</b></pre>');
 });
 
 document.getElementById('banner-upload-btn').onclick = () => {
