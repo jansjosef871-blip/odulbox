@@ -63,6 +63,9 @@ const DEFAULTS = {
 // Admin panelindeki "GitHub'a Yayınla" butonu bu bloğun içeriğini güncellemeni ister.
 // Bu dosya commit+push edilince bannerlar dünyanın her yerinden görünür olur.
 const PUBLISHED_BANNERS = {
+    customBanners: {
+        "ad-zone-top": "<a href=\"https://digitalicaa.com/\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/Q7JRjh7h.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>"
+    }
 };
 
 let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
