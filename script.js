@@ -378,10 +378,10 @@ document.getElementById('btn-draw-4').addEventListener('click', () => handleWith
 
 // ============ CANLI KAZANÇ BANDI (Trendyol tarzı sosyal kanıt) ============
 const fakeWinners = [
-    { n:"Mert**", c:"TR", a:0.50 }, { n:"Sofia**", c:"ES", a:0.20 }, { n:"John**", c:"US", a:0.50 },
-    { n:"Ayşe**", c:"TR", a:0.10 }, { n:"Luca**", c:"IT", a:0.03 }, { n:"Emma**", c:"DE", a:0.20 },
-    { n:"Ahmed**", c:"EG", a:0.05 }, { n:"Ana**", c:"BR", a:0.50 }, { n:"Yuki**", c:"JP", a:0.10 },
-    { n:"Karan**", c:"IN", a:0.02 }
+    { n:"Mert**", c:"TR", a:5.00 }, { n:"Sofia**", c:"ES", a:12.50 }, { n:"John**", c:"US", a:25.00 },
+    { n:"Ayşe**", c:"TR", a:8.20 }, { n:"Luca**", c:"IT", a:3.75 }, { n:"Emma**", c:"DE", a:15.00 },
+    { n:"Ahmed**", c:"EG", a:6.40 }, { n:"Ana**", c:"BR", a:22.00 }, { n:"Yuki**", c:"JP", a:9.90 },
+    { n:"Karan**", c:"IN", a:4.50 }, { n:"Emre**", c:"TR", a:2.50 }, { n:"Zara**", c:"AE", a:18.00 }
 ];
 function showLiveWinner() {
     const box = document.getElementById('live-winners');
@@ -397,10 +397,10 @@ setInterval(showLiveWinner, 6000);
 const wheelCanvas = document.getElementById('wheel');
 const spinButton = document.getElementById('spin-btn');
 const wheelSegments = [
-    { label:"0.01 $", value:0.01, color:"#FF3366" }, { label:"0.05 $", value:0.05, color:"#1E1633" },
-    { label:"0.02 $", value:0.02, color:"#FFD93D", dark:true }, { label:"0.10 $", value:0.10, color:"#1E1633" },
-    { label:"0.01 $", value:0.01, color:"#00B4D8" }, { label:"0.20 $", value:0.20, color:"#1E1633" },
-    { label:"0.03 $", value:0.03, color:"#9B5DE5" }, { label:"0.50 $", value:0.50, color:"#FFD93D", dark:true }
+    { label:"0.05 $", value:0.05, color:"#FF3366" }, { label:"0.25 $", value:0.25, color:"#1E1633" },
+    { label:"0.10 $", value:0.10, color:"#FFD93D", dark:true }, { label:"0.50 $", value:0.50, color:"#1E1633" },
+    { label:"0.15 $", value:0.15, color:"#00B4D8" }, { label:"1.00 $", value:1.00, color:"#FFD93D", dark:true },
+    { label:"0.30 $", value:0.30, color:"#9B5DE5" }, { label:"2.50 $", value:2.50, color:"#6BCB77" }
 ];
 const segmentAngle = (Math.PI*2)/wheelSegments.length;
 let currentRotation = 0, isSpinning = false;
