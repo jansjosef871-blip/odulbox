@@ -5,7 +5,7 @@
 
 // ============ 1. DİL PAKETİ (11 dil) ============
 const languages = {
-    tr: { welcome:"OdulBox'a Hoş Geldiniz!", subtitle:"Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!", balance:"Bakiye: ", adTopTxt:"[Sponsorlu Reklam Bandı]", adMidTxt:"[Yüksek Kazançlı Reklam Alanı]", adSideTxt:"[🔥 REKLAM ALANI]", spinBtn:"ÇEVİR!", winAlert:"Tebrikler! Kazandığınız:", authNavBtn:"Giriş Yap / Kayıt Ol", logoutBtnTxt:"Çıkış Yap", loginTitle:"Hesaba Giriş Yap", registerTitle:"Hesap Oluştur", noAccount:"Hesabınız yok mu?", haveAccount:"Zaten üye misiniz?", usernamePlh:"Kullanıcı Adı", tasksTitle:"Günlük Görevler", rewardsTitle:"Ödülünü Çek", taskInsta:"Instagram Hesabını Takip Et", taskYoutube:"30sn YouTube Videosu İzle", doTaskBtn:"Görevi Yap", claimBtn:"Talep Et", referralTitle:"Davet Et & Kazan", referralDesc:"Linkini paylaş — her arkadaşın katıldığında bonus kazanç!", copyBtn:"Kopyala", linkCopied:"Davet linki kopyalandı! 🎉", referralPlaceholder:"Davet linkin için giriş yap", loginFirst:"Lütfen önce giriş yapın!", taskDone:"Görev tamamlandı!", addedBalance:"bakiyenize eklendi.", withdrawOK:"Talebiniz alındı! Ödülünüz 24-48 saat içinde işlenecektir.", withdrawFail:"Yetersiz bakiye! Gerekli:", spinLogin:"Çarkı çevirmek için giriş yapmalısınız!", invitedBy:"Davet edildin! Davet eden arkadaşına bonus verildi 🎉", refs:"davet", yourRefs:"Toplam davet: ", multiWin:"🎉 TEBRİKLER! Bugün zaten kazandın — yarın tekrar çevir ve 2x daha fazla kazan!" },
+    tr: { welcome:"OdulBox'a Hoş Geldiniz!", subtitle:"Her gün çarkı çevirin, görevleri tamamlayın ve gerçek ödüller kazanın!", balance:"Bakiye: ", adTopTxt:"[Sponsorlu Reklam Bandı]", adMidTxt:"[Yüksek Kazançlı Reklam Alanı]", adSideTxt:"[🔥 REKLAM ALANI]", spinBtn:"ÇEVİR!", winAlert:"Tebrikler! Kazandığınız:", authNavBtn:"Giriş Yap / Kayıt Ol", logoutBtnTxt:"Çıkış Yap", loginTitle:"Hesaba Giriş Yap", registerTitle:"Hesap Oluştur", noAccount:"Hesabınız yok mu?", haveAccount:"Zaten üye misiniz?", usernamePlh:"Kullanıcı Adı", tasksTitle:"Günlük Görevler", rewardsTitle:"Ödülünü Çek", taskInsta:"Instagram Hesabını Takip Et", taskYoutube:"30sn YouTube Videosu İzle", doTaskBtn:"Görevi Yap", claimBtn:"Talep Et", referralTitle:"Davet Et & Kazan", referralDesc:"Linkini paylaş — her arkadaşın katıldığında bonus kazanç!", copyBtn:"Kopyala", linkCopied:"Davet linki kopyalandı! 🎉", referralPlaceholder:"Davet linkin için giriş yap", loginFirst:"Lütfen önce giriş yapın!", taskDone:"Görev tamamlandı!", addedBalance:"bakiyenize eklendi.", withdrawOK:"Talebiniz alındı! Ödülünüz ANINDA işlenecektir.", withdrawFail:"Yetersiz bakiye! Gerekli:", spinLogin:"Çarkı çevirmek için giriş yapmalısınız!", invitedBy:"Davet edildin! Davet eden arkadaşına bonus verildi 🎉", refs:"davet", yourRefs:"Toplam davet: ", multiWin:"🎉 TEBRİKLER! Bugün zaten kazandın — yarın tekrar çevir ve 2x daha fazla kazan!" },
     en: { welcome:"Welcome to OdulBox!", subtitle:"Spin the wheel every day, complete tasks and win real rewards!", balance:"Balance: ", adTopTxt:"[SPONSORED BANNER]", adMidTxt:"[HIGH PAYING AD SPACE]", adSideTxt:"[🔥 AD SPACE]", spinBtn:"SPIN!", winAlert:"Congratulations! You won:", authNavBtn:"Login / Register", logoutBtnTxt:"Logout", loginTitle:"Login to Account", registerTitle:"Create Account", noAccount:"Don't have an account?", haveAccount:"Already have an account?", usernamePlh:"Username", tasksTitle:"Daily Tasks", rewardsTitle:"Withdraw Rewards", taskInsta:"Follow Instagram Account", taskYoutube:"Watch 30s YouTube Video", doTaskBtn:"Do Task", claimBtn:"Claim", referralTitle:"Invite & Earn", referralDesc:"Share your link — earn bonus every time a friend joins!", copyBtn:"Copy", linkCopied:"Referral link copied! 🎉", referralPlaceholder:"Login to get your referral link", loginFirst:"Please login first!", taskDone:"Task completed!", addedBalance:"added to your balance.", withdrawOK:"Request received! Reward processed in 24-48h.", withdrawFail:"Insufficient balance! Required:", spinLogin:"You must login to spin!", invitedBy:"You were invited! Your friend got a bonus 🎉", refs:"refs", yourRefs:"Total invites: ", multiWin:"🎉 CONGRATS! You already won today — spin tomorrow for 2x rewards!" },
     es: { welcome:"¡Bienvenido a OdulBox!", subtitle:"¡Gira la rueda cada día, completa tareas y gana recompensas reales!", balance:"Saldo: ", adTopTxt:"[BANNER PATROCINADO]", adMidTxt:"[ESPACIO PUBLICITARIO PREMIUM]", adSideTxt:"[🔥 ESPACIO PUBLICITARIO]", spinBtn:"¡GIRA!", winAlert:"¡Felicidades! Ganaste:", authNavBtn:"Iniciar sesión", logoutBtnTxt:"Salir", loginTitle:"Iniciar Sesión", registerTitle:"Crear Cuenta", noAccount:"¿No tienes cuenta?", haveAccount:"¿Ya tienes cuenta?", usernamePlh:"Usuario", tasksTitle:"Tareas Diarias", rewardsTitle:"Retirar Premios", taskInsta:"Seguir cuenta de Instagram", taskYoutube:"Ver video de 30s en YouTube", doTaskBtn:"Hacer Tarea", claimBtn:"Reclamar", referralTitle:"Invita y Gana", referralDesc:"¡Comparte tu enlace — gana bonos por cada amigo!", copyBtn:"Copiar", linkCopied:"¡Enlace copiado! 🎉", referralPlaceholder:"Inicia sesión para tu enlace", loginFirst:"¡Inicia sesión primero!", taskDone:"¡Tarea completada!", addedBalance:"añadido a tu saldo.", withdrawOK:"¡Solicitud recibida! Procesada en 24-48h.", withdrawFail:"Saldo insuficiente! Requerido:", spinLogin:"¡Debes iniciar sesión para girar!", invitedBy:"¡Fuiste invitado! Tu amigo recibió un bono 🎉", refs:"invitaciones", yourRefs:"Invitaciones totales: ", multiWin:"🎉 ¡FELICIDADES! Ya ganaste hoy — ¡vuelve mañana por 2x!" },
     de: { welcome:"Willkommen bei OdulBox!", subtitle:"Drehe jeden Tag das Rad, erledige Aufgaben und gewinne echte Prämien!", balance:"Guthaben: ", adTopTxt:"[WERBEBANNER]", adMidTxt:"[PREMIUM WERBEFLÄCHE]", adSideTxt:"[🔥 WERBEFLÄCHE]", spinBtn:"DREHEN!", winAlert:"Glückwunsch! Du hast gewonnen:", authNavBtn:"Anmelden / Registrieren", logoutBtnTxt:"Abmelden", loginTitle:"Anmelden", registerTitle:"Konto Erstellen", noAccount:"Noch kein Konto?", haveAccount:"Schon registriert?", usernamePlh:"Benutzername", tasksTitle:"Tägliche Aufgaben", rewardsTitle:"Prämien Abheben", taskInsta:"Instagram-Konto folgen", taskYoutube:"30s YouTube-Video ansehen", doTaskBtn:"Aufgabe Starten", claimBtn:"Anfordern", referralTitle:"Einladen & Verdienen", referralDesc:"Teile deinen Link — Bonus pro Freund!", copyBtn:"Kopieren", linkCopied:"Link kopiert! 🎉", referralPlaceholder:"Für deinen Link anmelden", loginFirst:"Bitte zuerst anmelden!", taskDone:"Aufgabe erledigt!", addedBalance:"zum Guthaben hinzugefügt.", withdrawOK:"Anfrage erhalten! Bearbeitung in 24-48h.", withdrawFail:"Unzureichendes Guthaben! Erforderlich:", spinLogin:"Zum Drehen bitte anmelden!", invitedBy:"Du wurdest eingeladen! Dein Freund erhielt einen Bonus 🎉", refs:"Einladungen", yourRefs:"Einladungen gesamt: ", multiWin:"🎉 GLÜCKWUNSCH! Du hast heute schon gewonnen — morgen 2x!" },
@@ -55,7 +55,7 @@ const DEFAULTS = {
     antiBlock:false,
     directLink:"https://uplcm.com/4/12156047",
     customBanners:{},  // { "ad-zone-top": "<html>", ... }
-    refBonus:0.25, task1Reward:0.05, task2Reward:0.10,
+    refBonus:0.75, task1Reward:0.25, task2Reward:0.50,
     task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
     minWithdraw:5.00
 };
@@ -70,6 +70,20 @@ const PUBLISHED_BANNERS = {
 };
 
 let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
+cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
+
+// tek seferlik migrasyon: eski düşük görev ödüllerini yeni değerlere yükselt
+(function(){
+  try {
+    const raw = JSON.parse(localStorage.getItem('odulbox_cfg') || '{}');
+    if (raw && (raw.task1Reward === 0.05 || raw.task1Reward === undefined) ) { /* noop */ }
+    if (raw && typeof raw.task1Reward === 'number' && raw.task1Reward < 0.25) { raw.task1Reward = 0.25; }
+    if (raw && typeof raw.task2Reward === 'number' && raw.task2Reward < 0.50) { raw.task2Reward = 0.50; }
+    if (raw && typeof raw.refBonus === 'number' && raw.refBonus < 0.75) { raw.refBonus = 0.75; }
+    localStorage.setItem('odulbox_cfg', JSON.stringify(raw));
+  } catch(e) {}
+})();
+
 
 function saveCfg() { localStorage.setItem('odulbox_cfg', JSON.stringify(cfg)); }
 
@@ -244,12 +258,12 @@ function addBalance(amount) {
 
 // ============ GÜNLÜK GÖREVLER (6 görev, dinamik) ============
 const TASKS = [
-    { id:1, icon:"📱", nameKey:"taskInsta", reward:()=>cfg.task1Reward, url:()=>cfg.task1Url },
-    { id:2, icon:"🎥", nameKey:"taskYoutube", reward:()=>cfg.task2Reward, url:()=>cfg.task2Url },
-    { id:3, icon:"📸", fixed:{tr:"Instagram Reel Beğen & Yorum Yap",en:"Like & Comment on an Instagram Reel"}, reward:()=>0.05, url:()=>cfg.task1Url.replace('instagram.com','instagram.com/reel') },
-    { id:4, icon:"▶️", fixed:{tr:"YouTube Kanalına Abone Ol",en:"Subscribe to a YouTube Channel"}, reward:()=>0.08, url:()=>cfg.task2Url },
-    { id:5, icon:"🌐", fixed:{tr:"Sponsor Sitesini 30sn Ziyaret Et",en:"Visit Sponsor Site for 30s"}, reward:()=>0.03, url:()=>cfg.directLink || cfg.task1Url },
-    { id:6, icon:"👥", fixed:{tr:"Arkadaşını Davet Et (davet başına)",en:"Invite a Friend (per invite)"}, reward:()=>cfg.refBonus, url:null } // ref sistemi otomatik
+    { id:1, icon:"📱", nameKey:"taskInsta", reward:()=>cfg.task1Reward || 0.25, url:()=>cfg.task1Url },
+    { id:2, icon:"🎥", nameKey:"taskYoutube", reward:()=>cfg.task2Reward || 0.50, url:()=>cfg.task2Url },
+    { id:3, icon:"📸", fixed:{tr:"Instagram Reel Beğen & Yorum Yap",en:"Like & Comment on an Instagram Reel"}, reward:()=>0.25, url:()=>cfg.task1Url.replace('instagram.com','instagram.com/reel') },
+    { id:4, icon:"▶️", fixed:{tr:"YouTube Kanalına Abone Ol",en:"Subscribe to a YouTube Channel"}, reward:()=>0.40, url:()=>cfg.task2Url },
+    { id:5, icon:"🌐", fixed:{tr:"Sponsor Sitesini 30sn Ziyaret Et",en:"Visit Sponsor Site for 30s"}, reward:()=>0.15, url:()=>cfg.directLink || cfg.task1Url },
+    { id:6, icon:"👥", fixed:{tr:"Arkadaşını Davet Et (davet başına)",en:"Invite a Friend (per invite)"}, reward:()=>cfg.refBonus || 0.75, url:null }
 ];
 
 function isTaskDoneToday(taskId) {
@@ -321,8 +335,8 @@ function doTask(taskId) {
 
 // Çekim (Kripto)
 const withdrawLang = {
-    tr: { askMethod:"Hangi cüzdana ödeme yapalım?", askInfo:"Kripto cüzdan adresini gir (BTC / ETH / USDT / SOL):", ok:"Talebin alındı! Kripto ödemen 24 saat içinde cüzdanına gönderilecek. ⚡", pending:"⚠️ Bu talebin zaten beklemede. Ödeme yapılmadan yeni talep açamazsın.", invalidAddr:"Geçersiz cüzdan adresi! Adres en az 20 karakter olmalı." },
-    en: { askMethod:"Which wallet should we pay to?", askInfo:"Enter your crypto wallet address (BTC / ETH / USDT / SOL):", ok:"Request received! Your crypto payment will be sent within 24h. ⚡", pending:"⚠️ You already have a pending request. You can't open a new one until it's paid.", invalidAddr:"Invalid wallet address! Address must be at least 20 characters." }
+    tr: { askMethod:"Hangi cüzdana ödeme yapalım?", askInfo:"Kripto cüzdan adresini gir (BTC / ETH / USDT / SOL):", ok:"Talebin alındı! Kripto ödemen ANINDA cüzdanına gönderilecek. ⚡", pending:"⚠️ Bu talebin zaten beklemede. Ödeme yapılmadan yeni talep açamazsın.", invalidAddr:"Geçersiz cüzdan adresi! Adres en az 20 karakter olmalı." },
+    en: { askMethod:"Which wallet should we pay to?", askInfo:"Enter your crypto wallet address (BTC / ETH / USDT / SOL):", ok:"Request received! Your crypto payment sent instantly. ⚡", pending:"⚠️ You already have a pending request. You can't open a new one until it's paid.", invalidAddr:"Invalid wallet address! Address must be at least 20 characters." }
 };
 const wl = withdrawLang[userLang] || withdrawLang.en;
 
