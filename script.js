@@ -470,6 +470,22 @@ function shadeColor(hex, percent) {
 }
 
 // Konfeti efekti (kazanınca patlar)
+// Anlık kazanan duyurusu (çarkın üstünde şık overlay)
+function showWinPopup(amount) {
+    const div = document.createElement('div');
+    div.className = 'win-popup';
+    const card = document.createElement('div');
+    card.className = 'wp-card';
+    card.innerHTML = '<div class="wp-emoji">🎉</div><div class="wp-title">TEBRİKLER!</div><div class="wp-amt">+' + amount.toFixed(2) + ' $</div><div class="wp-sub">Bakiyene eklendi — yarın tekrar çevir, daha büyük kazan!</div>';
+    const btn = document.createElement('button');
+    btn.textContent = 'HARİKA!';
+    btn.onclick = () => div.remove();
+    card.appendChild(btn);
+    div.appendChild(card);
+    document.body.appendChild(div);
+    setTimeout(() => div.classList.add('show'), 10);
+}
+
 function launchConfetti() {
     const colors = ['#ff3366','#ffd93d','#00b4d8','#9b5de5','#6bcb77','#ffffff'];
     for (let i=0;i<60;i++) {
@@ -535,7 +551,7 @@ function spinWheel() {
         loggedInUser.lastSpinDate = today;
         addBalance(won.value);
         launchConfetti();
-        alert(`${lang.winAlert} ${won.label} 🎉`);
+        showWinPopup(won.value);
     }
     requestAnimationFrame(animate);
 }
