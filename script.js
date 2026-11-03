@@ -70,7 +70,6 @@ const PUBLISHED_BANNERS = {
 };
 
 let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
-cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
 
 // tek seferlik migrasyon: eski düşük görev ödüllerini yeni değerlere yükselt
 (function(){
@@ -86,6 +85,78 @@ cfg = Object.assign({}, DEFAULTS, JSON.parse(localStorage.getItem('odulbox_cfg')
 
 
 function saveCfg() { localStorage.setItem('odulbox_cfg', JSON.stringify(cfg)); }
+// ============ 3.5 BULUT SENK (kayıtlar tüm cihazlarda görünsün) ============
+// Ücretsiz JSON storage: api.restful-api.dev — CORS açık, POST/PUT/GET tarayıcıdan çalışır
+const CLOUD_BASE = 'https://api.restful-api.dev/objects';
+const CLOUD_USERS_OBJ = 'ff808181a09d98f701a1a25069dd24c1';
+const CLOUD_WD_OBJ    = 'ff808181a09d98f701a1a2506b1c24c2';
+let cloudSaveTimer = null;
+async function cloudGet(objId, key) {
+    try {
+        const r = await fetch(`${CLOUD_BASE}/${objId}`, { cache: 'no-store' });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        return (data && data.data && data.data[key]) || [];
+    } catch (e) { console.log('cloudGet hatası:', e.message); return null; }
+}
+async function cloudPush(objId, key, arr, objName) {
+    try {
+        const r = await fetch(`${CLOUD_BASE}/${objId}`, {
+            method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: objName, data: { [key]: arr } })
+        });
+        return r.ok;
+    } catch (e) { console.log('cloudPush hatası:', e.message); return false; }
+}
+// debounce'lu push (her kayıtta spam olmasın)
+function pushUsersCloud() {
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = setTimeout(() => {
+        cloudPush(CLOUD_USERS_OBJ, 'users', JSON.parse(localStorage.getItem('odulbox_users') || '[]'), 'odulbox-users-v1');
+    }, 1200);
+}
+function pushWithdrawalsCloud() {
+    clearTimeout(cloudWdTimer);
+    cloudWdTimer = setTimeout(() => {
+        cloudPush(CLOUD_WD_OBJ, 'withdrawals', JSON.parse(localStorage.getItem('odulbox_withdrawals') || '[]'), 'odulbox-withdrawals-v1');
+    }, 1200);
+}
+let cloudWdTimer = null;
+// sayfa açılışında: buluttan çek (localde eksikse veya bulutta fazlaysa merge)
+async function cloudPullOnStart() {
+    const [cUsers, cWd] = await Promise.all([
+        cloudGet(CLOUD_USERS_OBJ, 'users'),
+        cloudGet(CLOUD_WD_OBJ, 'withdrawals')
+    ]);
+    try {
+        if (Array.isArray(cUsers)) {
+            const lUsers = JSON.parse(localStorage.getItem('odulbox_users') || '[]');
+            // e-posta bazlı merge: bulut + local birleşimi, en yeni joinedAt kazanır
+            const map = {};
+            [...cUsers, ...lUsers].forEach(u => {
+                if (!u || !u.email) return;
+                const ex = map[u.email];
+                if (!ex || (u.joinedAt || 0) >= (ex.joinedAt || 0)) map[u.email] = u;
+            });
+            const merged = Object.values(map);
+            if (JSON.stringify(merged) !== JSON.stringify(lUsers)) {
+                localStorage.setItem('odulbox_users', JSON.stringify(merged));
+                pushUsersCloud();
+            }
+        }
+        if (Array.isArray(cWd)) {
+            const lWd = JSON.parse(localStorage.getItem('odulbox_withdrawals') || '[]');
+            const map = {};
+            [...cWd, ...lWd].forEach(r => { if (r && r.id) map[r.id] = r; });
+            const merged = Object.values(map);
+            if (JSON.stringify(merged) !== JSON.stringify(lWd)) {
+                localStorage.setItem('odulbox_withdrawals', JSON.stringify(merged));
+                pushWithdrawalsCloud();
+            }
+        }
+    } catch (e) { console.log('cloudPullOnStart hatası:', e.message); }
+}
+document.addEventListener('DOMContentLoaded', () => { cloudPullOnStart(); });
 
 // Basit hash (gizli panel için yeterli; sunucu tarafı auth yerine localStorage kullanılır)
 function simpleHash(s) { let h=0; for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;} return 'h'+Math.abs(h); }
@@ -201,6 +272,7 @@ document.getElementById('register-form').addEventListener('submit', function(e) 
 
     allUsers.push(newUser);
     localStorage.setItem('odulbox_users', JSON.stringify(allUsers));
+    pushUsersCloud();
 
     // Otomatik giriş: kayıt sonrası bakiye hemen görünsün
     loggedInUser = newUser;
@@ -251,7 +323,7 @@ function addBalance(amount) {
     saveSession(loggedInUser);
     const allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
     const idx = allUsers.findIndex(u => u.email === loggedInUser.email);
-    if (idx > -1) { allUsers[idx].balance = loggedInUser.balance; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); }
+    if (idx > -1) { allUsers[idx].balance = loggedInUser.balance; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); pushUsersCloud(); }
     updateUIForLoggedInUser();
     return true;
 }
@@ -278,7 +350,7 @@ function markTaskDone(taskId) {
     saveSession(loggedInUser);
     const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
     const idx = users.findIndex(u => u.email === loggedInUser.email);
-    if (idx > -1) { users[idx].tasksDone = loggedInUser.tasksDone; localStorage.setItem('odulbox_users', JSON.stringify(users)); }
+    if (idx > -1) { users[idx].tasksDone = loggedInUser.tasksDone; localStorage.setItem('odulbox_users', JSON.stringify(users)); pushUsersCloud(); }
 }
 
 function renderTasks() {
@@ -374,13 +446,14 @@ function handleWithdraw(minAmount, rewardName) {
     };
     requests.push(req);
     localStorage.setItem('odulbox_withdrawals', JSON.stringify(requests));
+    pushWithdrawalsCloud();
 
     // Bakiyeyi sıfırla (para çekildi sayılır)
     loggedInUser.balance = 0;
     saveSession(loggedInUser);
     const allUsers = JSON.parse(localStorage.getItem('odulbox_users')) || [];
     const idx = allUsers.findIndex(u => u.email === loggedInUser.email);
-    if (idx > -1) { allUsers[idx].balance = 0; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); }
+    if (idx > -1) { allUsers[idx].balance = 0; localStorage.setItem('odulbox_users', JSON.stringify(allUsers)); pushUsersCloud(); }
     updateUIForLoggedInUser();
 
     alert(wl.ok);
@@ -698,6 +771,8 @@ const adminDashboard = document.getElementById('admin-dashboard');
 
 function openAdmin() {
     adminPanelEl.style.display = "flex";
+    // Panel açılırken buluttan taze veri çek (kayıtlar tüm cihazlardan görünsün)
+    cloudPullOnStart().then(() => { if (adminDashboard.style.display === 'block') fillAdminForm(); });
     renderAdminState();
 }
 
@@ -709,6 +784,10 @@ function setupAdminTabs() {
             document.querySelectorAll('.admin-tab-page').forEach(p => p.style.display = 'none');
             tab.classList.add('active');
             document.getElementById(tab.dataset.tab).style.display = 'block';
+            if (tab.dataset.tab === 'tab-users') {
+                // sekmeye her girişte buluttan taze çek
+                cloudPullOnStart().then(() => renderAdminUsers());
+            }
         };
     });
 }
@@ -881,7 +960,7 @@ function renderAdminWithdrawals(filter) {
             // Bakiyeyi iade et
             const users = JSON.parse(localStorage.getItem('odulbox_users')) || [];
             const u = users.find(x => x.email === req.email);
-            if (u) { u.balance = +(u.balance + req.amount).toFixed(2); localStorage.setItem('odulbox_users', JSON.stringify(users)); }
+            if (u) { u.balance = +(u.balance + req.amount).toFixed(2); localStorage.setItem('odulbox_users', JSON.stringify(users)); pushUsersCloud(); }
             req.status = 'rejected';
             alert('Talep reddedildi, bakiye kullanıcıya iade edildi.');
         } else {
@@ -889,7 +968,7 @@ function renderAdminWithdrawals(filter) {
             alert('Ödeme yapıldı olarak işaretlendi. 💸');
         }
         localStorage.setItem('odulbox_withdrawals', JSON.stringify(reqs));
-        renderAdminStats();
+        pushWithdrawalsCloud();
         renderAdminWithdrawals();
         renderAdminUsers();
     });
