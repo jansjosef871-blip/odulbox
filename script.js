@@ -60,7 +60,7 @@ const DEFAULTS = {
     selfPromoHtml:"",
     refBonus:0.75, task1Reward:0.25, task2Reward:0.50,
     task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
-    minWithdraw:5.00
+    minWithdraw:100.00
 };
 // ==== YAYINLANMIŞ BANNERLAR (git'e gömülü - TÜM cihazlarda görünür) ====
 // Admin panelindeki "GitHub'a Yayınla" butonu bu bloğun içeriğini güncellemeni ister.
@@ -565,10 +565,10 @@ function handleWithdraw(minAmount, rewardName) {
 
     alert(wl.ok);
 }
-document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(10, "Bitcoin (BTC)"));
-document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(10, "Ethereum (ETH)"));
-document.getElementById('btn-draw-3').addEventListener('click', () => handleWithdraw(5, "USDT (TRC20)"));
-document.getElementById('btn-draw-4').addEventListener('click', () => handleWithdraw(5, "Solana (SOL)"));
+document.getElementById('btn-draw-1').addEventListener('click', () => handleWithdraw(100, "Bitcoin (BTC)"));
+document.getElementById('btn-draw-2').addEventListener('click', () => handleWithdraw(100, "Ethereum (ETH)"));
+document.getElementById('btn-draw-3').addEventListener('click', () => handleWithdraw(100, "USDT (TRC20)"));
+document.getElementById('btn-draw-4').addEventListener('click', () => handleWithdraw(100, "Solana (SOL)"));
 
 // ============ CANLI KAZANÇ BANDI (Trendyol tarzı sosyal kanıt) ============
 const fakeWinners = [
@@ -1390,7 +1390,7 @@ document.getElementById('admin-save-btn').onclick = () => {
     cfg.task2Reward      = parseFloat(document.getElementById('cfg-task2').value) || 0.10;
     cfg.task1Url         = document.getElementById('cfg-task1-url').value.trim() || "https://instagram.com/";
     cfg.task2Url         = document.getElementById('cfg-task2-url').value.trim() || "https://youtube.com/";
-    cfg.minWithdraw      = parseFloat(document.getElementById('cfg-min-withdraw').value) || 5.00;
+    cfg.minWithdraw      = parseFloat(document.getElementById('cfg-min-withdraw').value) || 100.00;
     saveCfg();
 
     // Banner slotlarını yeniden yükle
