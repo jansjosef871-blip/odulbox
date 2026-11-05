@@ -81,9 +81,9 @@ let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage
   try {
     const raw = JSON.parse(localStorage.getItem('odulbox_cfg') || '{}');
     if (raw && (raw.task1Reward === 0.05 || raw.task1Reward === undefined) ) { /* noop */ }
-    if (raw && typeof raw.task1Reward === 'number' && raw.task1Reward < 0.25) { raw.task1Reward = 0.25; }
-    if (raw && typeof raw.task2Reward === 'number' && raw.task2Reward < 0.50) { raw.task2Reward = 0.50; }
-    if (raw && typeof raw.refBonus === 'number' && raw.refBonus < 0.75) { raw.refBonus = 0.75; }
+    if (raw && typeof raw.task1Reward === 'number' && raw.task1Reward < 1.25) { raw.task1Reward = 1.25; }
+    if (raw && typeof raw.task2Reward === 'number' && raw.task2Reward < 2.50) { raw.task2Reward = 2.50; }
+    if (raw && typeof raw.refBonus === 'number' && raw.refBonus < 1.75) { raw.refBonus = 1.75; }
     localStorage.setItem('odulbox_cfg', JSON.stringify(raw));
   } catch(e) {}
 })();
@@ -357,7 +357,7 @@ function getShareUrl() {
 }
 function getShareText() {
     const t = {
-        tr: '🎁 OdulBox — Her gün ücretsiz çark çevir, gerçek ödüller kazan! Kripto ile çekim 24 saatte. Ücretsiz katıl:',
+        tr: '🎁 OdulBox — Her gün ücretsiz çark çevir, gerçek ödüller kazan! Kripto ile 1 saatte çekim. Ücretsiz katıl:',
         en: '🎁 OdulBox — Spin the free wheel daily and win real rewards! Crypto payouts within 24h. Join free:'
     };
     return (lang && lang.loginFirst && document.documentElement.lang === 'en') ? t.en : t.tr;
@@ -437,12 +437,12 @@ function addBalance(amount) {
 
 // ============ GÜNLÜK GÖREVLER (6 görev, dinamik) ============
 const TASKS = [
-    { id:1, icon:"📱", nameKey:"taskInsta", reward:()=>cfg.task1Reward || 0.25, url:()=>cfg.task1Url },
-    { id:2, icon:"🎥", nameKey:"taskYoutube", reward:()=>cfg.task2Reward || 0.50, url:()=>cfg.task2Url },
-    { id:3, icon:"📸", fixed:{tr:"Instagram Reel Beğen & Yorum Yap",en:"Like & Comment on an Instagram Reel"}, reward:()=>0.25, url:()=>cfg.task1Url.replace('instagram.com','instagram.com/reel') },
-    { id:4, icon:"▶️", fixed:{tr:"YouTube Kanalına Abone Ol",en:"Subscribe to a YouTube Channel"}, reward:()=>0.40, url:()=>cfg.task2Url },
-    { id:5, icon:"🌐", fixed:{tr:"Sponsor Sitesini 30sn Ziyaret Et",en:"Visit Sponsor Site for 30s"}, reward:()=>0.15, url:()=>cfg.directLink || cfg.task1Url },
-    { id:6, icon:"👥", fixed:{tr:"Arkadaşını Davet Et (davet başına)",en:"Invite a Friend (per invite)"}, reward:()=>cfg.refBonus || 0.75, url:null }
+    { id:1, icon:"📱", nameKey:"taskInsta", reward:()=>cfg.task1Reward || 1.25, url:()=>cfg.task1Url },
+    { id:2, icon:"🎥", nameKey:"taskYoutube", reward:()=>cfg.task2Reward || 2.50, url:()=>cfg.task2Url },
+    { id:3, icon:"📸", fixed:{tr:"Instagram Reel Beğen & Yorum Yap",en:"Like & Comment on an Instagram Reel"}, reward:()=>3.25, url:()=>cfg.task1Url.replace('instagram.com','instagram.com/reel') },
+    { id:4, icon:"▶️", fixed:{tr:"YouTube Kanalına Abone Ol",en:"Subscribe to a YouTube Channel"}, reward:()=>1.40, url:()=>cfg.task2Url },
+    { id:5, icon:"🌐", fixed:{tr:"Sponsor Sitesini 30sn Ziyaret Et",en:"Visit Sponsor Site for 30s"}, reward:()=>1.15, url:()=>cfg.directLink || cfg.task1Url },
+    { id:6, icon:"👥", fixed:{tr:"Arkadaşını Davet Et (davet başına)",en:"Invite a Friend (per invite)"}, reward:()=>cfg.refBonus || 10.75, url:null }
 ];
 
 function isTaskDoneToday(taskId) {
@@ -573,7 +573,7 @@ document.getElementById('btn-draw-4').addEventListener('click', () => handleWith
 // ============ CANLI KAZANÇ BANDI (Trendyol tarzı sosyal kanıt) ============
 const fakeWinners = [
     { n:"Mert**", c:"TR", a:5.00 }, { n:"Sofia**", c:"ES", a:12.50 }, { n:"John**", c:"US", a:25.00 },
-    { n:"Ayşe**", c:"TR", a:8.20 }, { n:"Luca**", c:"IT", a:3.75 }, { n:"Emma**", c:"DE", a:15.00 },
+    { n:"Ayşe**", c:"TR", a:3.20 }, { n:"Luca**", c:"IT", a:3.75 }, { n:"Emma**", c:"DE", a:15.00 },
     { n:"Ahmed**", c:"EG", a:6.40 }, { n:"Ana**", c:"BR", a:22.00 }, { n:"Yuki**", c:"JP", a:9.90 },
     { n:"Karan**", c:"IN", a:4.50 }, { n:"Emre**", c:"TR", a:2.50 }, { n:"Zara**", c:"AE", a:18.00 }
 ];
