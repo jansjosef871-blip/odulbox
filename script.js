@@ -347,6 +347,82 @@ document.getElementById('copy-ref-btn').onclick = function() {
     navigator.clipboard.writeText(input.value).then(() => alert(lang.linkCopied));
 };
 
+// ============ 4.5 VİRAL PAYLAŞIM MOTORU (sitenin kendi kendini tanıtması) ============
+// Tek tıkla WhatsApp/Telegram/X/Facebook/Reddit paylaşımı + cihazın yerel paylaşım menüsü.
+// Misafirler için evrensel site linki, üyeler için kişisel davet linki (ref kodsuz paylaşan da olur).
+function getShareUrl() {
+    return loggedInUser
+        ? `${location.origin}${location.pathname}?ref=${loggedInUser.refCode}`
+        : `${location.origin}${location.pathname}`;
+}
+function getShareText() {
+    const t = {
+        tr: '🎁 OdulBox — Her gün ücretsiz çark çevir, gerçek ödüller kazan! Kripto ile çekim 24 saatte. Ücretsiz katıl:',
+        en: '🎁 OdulBox — Spin the free wheel daily and win real rewards! Crypto payouts within 24h. Join free:'
+    };
+    return (lang && lang.loginFirst && document.documentElement.lang === 'en') ? t.en : t.tr;
+}
+function openShare(platform) {
+    const url = encodeURIComponent(getShareUrl());
+    const text = encodeURIComponent(getShareText());
+    const map = {
+        wa: `https://wa.me/?text=${text}%20${url}`,
+        tg: `https://t.me/share/url?url=${url}&text=${text}`,
+        x: `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+        fb: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        reddit: `https://www.reddit.com/submit?url=${url}&title=${text}`
+    };
+    window.open(map[platform], '_blank', 'noopener,width=600,height=500');
+    // paylaştı için teşekkür popup'ı gizle
+    hideViralPopup();
+}
+function initShareButtons() {
+    ['wa', 'tg', 'x', 'fb', 'reddit'].forEach(p => {
+        const el = document.getElementById('share-' + p);
+        if (el) el.onclick = (e) => { e.preventDefault(); openShare(p); };
+    });
+    const native = document.getElementById('share-native');
+    if (native) native.onclick = async (e) => {
+        e.preventDefault();
+        const shareData = { title: 'OdulBox 🎁', text: getShareText(), url: getShareUrl() };
+        if (navigator.share) {
+            try { await navigator.share(shareData); hideViralPopup(); } catch (e) {}
+        } else {
+            // eski tarayıcı: linki kopyala
+            try { await navigator.clipboard.writeText(getShareUrl()); alert('Link kopyalandı — istediğin yerde paylaş! 🎉'); } catch (e) {}
+        }
+    };
+}
+// ---- VİRAL POPUP: günde 1 kez, çark çevrildikten 30sn sonra göster ----
+function showViralPopup() {
+    const el = document.getElementById('viral-popup');
+    if (!el) return;
+    const today = new Date().toDateString();
+    if (localStorage.getItem('odulbox_viral_shown') === today) return; // bugün gösterildi
+    el.style.display = 'block';
+    localStorage.setItem('odulbox_viral_shown', today);
+}
+function hideViralPopup() {
+    const el = document.getElementById('viral-popup');
+    if (el) el.style.display = 'none';
+}
+function initViralPopup() {
+    const closeBtn = document.getElementById('viral-close');
+    if (closeBtn) closeBtn.onclick = hideViralPopup;
+    const shareBtn = document.getElementById('viral-share-btn');
+    if (shareBtn) shareBtn.onclick = () => {
+        const native = document.getElementById('share-native');
+        // popup'taki buton: mobilde yerel paylaş, masaüstünde WhatsApp (en yaygın)
+        if (navigator.share) native.click(); else openShare('wa');
+    };
+}
+document.addEventListener('DOMContentLoaded', () => {
+    initShareButtons();
+    initViralPopup();
+    // çark ilk çevrildikten 30sn sonra viral popup göster (en ilgili an)
+    setTimeout(showViralPopup, 30000);
+});
+
 // ============ 5. KAZANÇ EKLE ============
 function addBalance(amount) {
     if (!loggedInUser) { alert(lang.loginFirst); modal.style.display = "flex"; return false; }
