@@ -775,17 +775,25 @@ function initAdSense() {
 }
 
 // ---- ADSTERRA MODÜLÜ ----
-// Adsterra script kodu (admin'den) tüm data-slot'lara ya da body sonuna eklenir.
+// Adsterra script kodu (admin'den) tüm data-slot'lara izole iframe içinde yerleşir.
+// NEDEN IFRAME: atOptions global bir değişken — aynı kodu 2+ slot'a direkt koysan
+// her slot birbirinin atOptions'ını ezer ve ilk script hatalı çalışır.
+// Her slot kendi iframe'inde çalışır → çakışma yok, hepsi bağımsız kazanır.
 function initAdsterra() {
     if (!cfg.adsterraEnabled || !cfg.adsterraCode) return;
     const code = cfg.adsterraCode;
-    // Adsterra kodunu belirtilen slotlara yerleştir (custom banner önceliğini koru)
     document.querySelectorAll('[data-slot]').forEach(el => {
         if (el.dataset.adsterra === '1') return;
         if (el.dataset.adsense === '1') return;  // AdSense varsa Adsterra koyma
         if (cfg.customBanners && cfg.customBanners[el.id]) return;  // custom banner varsa dokunma
         el.dataset.adsterra = '1';
         el.dataset.loaded = '1';
+        // Kod iframe banner formatıysa (atOptions içeriyorsa) izole iframe ile çalıştır
+        if (code.includes('atOptions')) {
+            initAdsterraInIframe(el, code);
+            return;
+        }
+        // Diğer formatlar (popunder, social bar vs.): direkt yerleştir
         el.innerHTML = code;
         // script tag'lerini yeniden çalıştır (innerHTML ile eklenen script'ler çalışmaz)
         el.querySelectorAll('script').forEach(old => {
@@ -795,6 +803,19 @@ function initAdsterra() {
             document.head.appendChild(s);
         });
     });
+}
+function initAdsterraInIframe(container, code) {
+    // iframe dokümanı içinde atOptions'ı tanımla ve script'i çalıştır — global scope çakışması olmaz
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'border:0;width:100%;height:100%;min-height:60px;overflow:hidden;';
+    iframe.loading = 'lazy';
+    container.innerHTML = '';
+    container.appendChild(iframe);
+    const doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
+    if (!doc) return;
+    doc.open();
+    doc.write('<body style="margin:0;overflow:hidden;">' + code + '</body>');
+    doc.close();
 }
 
 // ---- DIRECT LINK MODU ----
