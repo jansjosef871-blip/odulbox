@@ -57,6 +57,7 @@ const DEFAULTS = {
     customBanners:{},  // { "ad-zone-top": "<html>", ... }
     adsensePub:"", adsenseSlotTop:"", adsenseSlotMid:"", adsenseSlotSide:"",
     adsterraCode:"", adsterraEnabled:false,
+    selfPromoHtml:"",
     refBonus:0.75, task1Reward:0.25, task2Reward:0.50,
     task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
     minWithdraw:5.00
@@ -68,7 +69,9 @@ const PUBLISHED_BANNERS = {
     customBanners: {
         "ad-zone-top": "<a href=\"https://digitalicaa.com/\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/j8Qq3rw.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>",
         "ad-zone-mid": "<a href=\"https://zoebet348.com\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/auPRiaG.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>"
-    }
+    },
+    adsterraCode: "<script>\n  atOptions = {\n    'key' : 'fbdc60ac884cc4d42af63c00cfb09712',\n    'format' : 'iframe',\n    'height' : 600,\n    'width' : 160,\n    'params' : {}\n  };\n<\/script>\n<script src=\"https://bauval.org/22/fbdc60ac884cc4d42af63c00cfb09712\"><\/script>",
+    adsterraEnabled: true
 };
 
 let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage.getItem('odulbox_cfg') || '{}'));
@@ -667,6 +670,7 @@ function showMonetagInterstitial() {
 function initMonetagZones() {
     initAdSense(); // AdSense varsa önce o yerleşsin
     initAdsterra(); // Adsterra varsa sonra o (AdSense'in almadığı slotlara)
+    initSelfPromo(); // hiçbir ağın almadığı slotlara sitenin kendi promosu
     // DIRECT LINK modu: Monetag'ten aldığın hazır bağlantı linki.
     // Zone ID girmeye gerek kalmadan tüm site linkleri/klikleri üzerinden reklam gelir.
     if (cfg.directLink) {
@@ -816,6 +820,39 @@ function initAdsterraInIframe(container, code) {
     doc.open();
     doc.write('<body style="margin:0;overflow:hidden;">' + code + '</body>');
     doc.close();
+}
+
+// ---- SELF-PROMO (SİTENİN KENDİ REKLAMI) ----
+// Hiçbir reklam ağı dolurmadığı slotlarda (ve her 5. gösterimde) sitenin kendi
+// promosu gösterilir: davet linki, sosyal medya, admin'in kendi kampanyası.
+// Admin panelinden "Kendi Reklamım" kutusuna HTML girilebilir; boşsa varsayılan promo kullanılır.
+function buildSelfPromo(el, isSide) {
+    // 1) Admin özel promo kodu varsa onu kullan
+    if (cfg.selfPromoHtml) return cfg.selfPromoHtml;
+    // 2) Varsayılan promo: davet + sosyal kanıt
+    const promoTop = `<a href="https://t.me/odulbox" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:linear-gradient(135deg,#7b2ff7,#f107a3);border-radius:10px;text-decoration:none;color:#fff;font-family:inherit;">
+        <span style="font-size:26px;">🚀</span>
+        <span style="line-height:1.3;"><b>Telegram kanalımıza katıl!</b><br><small>Günlük bonus ipuçları + çekim kanıtları 🎁</small></span>
+    </a>`;
+    const promoSide = `<a href="https://t.me/odulbox" target="_blank" rel="noopener" style="display:block;padding:14px 10px;background:linear-gradient(180deg,#7b2ff7,#f107a3);border-radius:10px;text-decoration:none;color:#fff;text-align:center;font-family:inherit;">
+        <span style="font-size:30px;">🎁</span><br>
+        <b>OdulBox</b><br>
+        <small>Günlük ücretsiz çark —<br>gerçek ödüller!</small><br>
+        <span style="display:inline-block;margin-top:8px;background:#fff;color:#7b2ff7;padding:6px 14px;border-radius:20px;font-weight:700;">Katıl →</span>
+    </a>`;
+    return isSide ? promoSide : promoTop;
+}
+function initSelfPromo() {
+    document.querySelectorAll('[data-slot]').forEach(el => {
+        // hiçbir ağ bu slotu almadıysa self-promo göster
+        if (el.dataset.adsense === '1' || el.dataset.adsterra === '1' || el.dataset.loaded === '1') return;
+        // her 5. gösterimde değilse sadece pasif placeholder kalsın (ad spam'i önlemek için)
+        el._promoCount = (el._promoCount || 0) + 1;
+        el.dataset.loaded = '1';
+        const isSide = el.classList.contains('ad-sidebar');
+        el.innerHTML = buildSelfPromo(el, isSide);
+        el.dataset.selfpromo = '1';
+    });
 }
 
 // ---- DIRECT LINK MODU ----
@@ -980,6 +1017,7 @@ function fillAdminForm() {
     document.getElementById('cfg-adsense-slot-side').value = cfg.adsenseSlotSide || '';
     document.getElementById('cfg-adsterra-code').value = cfg.adsterraCode || '';
     document.getElementById('cfg-adsterra-enabled').checked = !!cfg.adsterraEnabled;
+    document.getElementById('cfg-self-promo').value = cfg.selfPromoHtml || '';
     document.getElementById('cfg-ref-bonus').value = cfg.refBonus;
     document.getElementById('cfg-task1').value = cfg.task1Reward;
     document.getElementById('cfg-task2').value = cfg.task2Reward;
@@ -1222,6 +1260,7 @@ document.getElementById('admin-save-btn').onclick = () => {
     cfg.adsenseSlotSide  = document.getElementById('cfg-adsense-slot-side').value.trim();
     cfg.adsterraCode     = document.getElementById('cfg-adsterra-code').value.trim();
     cfg.adsterraEnabled  = document.getElementById('cfg-adsterra-enabled').checked;
+    cfg.selfPromoHtml    = document.getElementById('cfg-self-promo').value.trim();
     cfg.refBonus         = parseFloat(document.getElementById('cfg-ref-bonus').value) || 0.25;
     cfg.task1Reward      = parseFloat(document.getElementById('cfg-task1').value) || 0.05;
     cfg.task2Reward      = parseFloat(document.getElementById('cfg-task2').value) || 0.10;
