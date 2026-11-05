@@ -715,8 +715,8 @@ function initMonetagZones() {
     });
     // En son: hiçbir ağın almadığı slotlara sitenin kendi promosu
     initSelfPromo();
-    // Yan bannerler masaüstünde her zaman gorunur olsun (geniş ekran kontrolü)
-    document.querySelectorAll('.ad-sidebar').forEach(el => { if (window.innerWidth > 1100) el.style.display = 'flex'; });
+    // Yan bannerler: geniş ekranda sabit yan konumda göster; dar ekranda CSS ile gizli (display:none)
+    document.querySelectorAll('.ad-sidebar').forEach(el => { if (window.innerWidth > 600) el.style.display = 'flex'; });
     if (cfg.zonePopunder) {
         const s = document.createElement('script');
         s.src = `${MONETAG_SDK}/pu.js?z=${cfg.zonePopunder}`;
@@ -837,15 +837,27 @@ function initAdsterra() {
 }
 function initAdsterraInIframe(container, code) {
     // iframe dokümanı içinde atOptions'ı tanımla ve script'i çalıştır — global scope çakışması olmaz
+    // MOBİL: 160x600 dikey banner telefonda taşar — koddaki width/height'ı oku, dar ekranda ölçekle
+    const isMobile = window.innerWidth < 700;
+    const wMatch = code.match(/'width'\s*:\s*(\d+)/);
+    const hMatch = code.match(/'height'\s*:\s*(\d+)/);
+    let origW = wMatch ? +wMatch[1] : 160, origH = hMatch ? +hMatch[1] : 600;
+    // mobilde dikey banner'ı 300x250'ye sığdır (ölçek, taşma yok)
+    const scale = isMobile ? Math.min(300 / origW, 250 / origH, 1) : 1;
+    const dispW = Math.round(origW * scale), dispH = Math.round(origH * scale);
     const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'border:0;width:100%;height:100%;min-height:60px;overflow:hidden;';
+    iframe.style.cssText = `border:0;width:${dispW}px;height:${dispH}px;max-width:100%;overflow:hidden;`;
     iframe.loading = 'lazy';
+    iframe.scrolling = 'no';
     container.innerHTML = '';
+    container.style.display = 'flex';
+    container.style.alignItems = 'center';
+    container.style.justifyContent = 'center';
     container.appendChild(iframe);
     const doc = iframe.contentDocument || (iframe.contentWindow && iframe.contentWindow.document);
     if (!doc) return;
     doc.open();
-    doc.write('<body style="margin:0;overflow:hidden;">' + code + '</body>');
+    doc.write(`<body style="margin:0;overflow:hidden;width:${dispW}px;height:${dispH}px;">` + code + '</body>');
     doc.close();
 }
 
