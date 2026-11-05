@@ -55,6 +55,8 @@ const DEFAULTS = {
     antiBlock:false,
     directLink:"https://uplcm.com/4/12156047",
     customBanners:{},  // { "ad-zone-top": "<html>", ... }
+    adsensePub:"", adsenseSlotTop:"", adsenseSlotMid:"", adsenseSlotSide:"",
+    adsterraCode:"", adsterraEnabled:false,
     refBonus:0.75, task1Reward:0.25, task2Reward:0.50,
     task1Url:"https://instagram.com/", task2Url:"https://youtube.com/",
     minWithdraw:5.00
@@ -663,6 +665,8 @@ function showMonetagInterstitial() {
 }
 
 function initMonetagZones() {
+    initAdSense(); // AdSense varsa önce o yerleşsin
+    initAdsterra(); // Adsterra varsa sonra o (AdSense'in almadığı slotlara)
     // DIRECT LINK modu: Monetag'ten aldığın hazır bağlantı linki.
     // Zone ID girmeye gerek kalmadan tüm site linkleri/klikleri üzerinden reklam gelir.
     if (cfg.directLink) {
@@ -675,6 +679,8 @@ function initMonetagZones() {
     document.querySelectorAll('[data-slot]').forEach(el => {
         const custom = cfg.customBanners && cfg.customBanners[el.id];
         if (custom) { loadMonetagTag(el, '', 'custom'); return; }
+        // AdSense bu slotu aldıysa Monetag'e bulaşma
+        if (el.dataset.adsense === '1') return;
         if (el.classList.contains('ad-sidebar') && cfg.zoneBanner) { loadMonetagTag(el, cfg.zoneBanner, 'banner'); return; }
         if (el.classList.contains('ad-banner') && cfg.zoneNative) { loadMonetagTag(el, cfg.zoneNative, 'native'); }
     });
@@ -727,6 +733,68 @@ function loadAntiBlock() {
     // Anti-adblock helper
     const s = document.createElement('script');
     s.src = `${MONETAG_SDK}/aab.js`; s.async = true; document.body.appendChild(s);
+}
+
+// ---- GOOGLE ADSENSE MODÜLÜ ----
+// Publisher ID + slot ID'ler admin panelinden girilir.
+// Her slot için: custom banner > AdSense > Monetag Zone > placeholder önceliği.
+let _adsenseLibLoaded = false;
+function loadAdSenseLib(pub) {
+    if (_adsenseLibLoaded) return;
+    _adsenseLibLoaded = true;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${pub}`;
+    s.crossOrigin = 'anonymous';
+    document.head.appendChild(s);
+}
+function initAdSense() {
+    const pub = (cfg.adsensePub || '').trim();
+    if (!/^ca-pub-\d{10,20}$/.test(pub)) return; // geçersiz/boş — AdSense kapalı
+    loadAdSenseLib(pub);
+    const slots = {
+        'ad-zone-top': cfg.adsenseSlotTop,
+        'ad-zone-mid': cfg.adsenseSlotMid,
+        'ad-zone-side-left': cfg.adsenseSlotSide,
+        'ad-zone-side-right': cfg.adsenseSlotSide
+    };
+    document.querySelectorAll('[data-slot]').forEach(el => {
+        if (el.dataset.adsense === '1') return; // zaten yerleşti
+        const slotId = (slots[el.id] || '').trim();
+        if (!/^\d{8,12}$/.test(slotId)) return; // bu slot için ID yok
+        // custom banner varsa AdSense'i o slot'a koyma
+        if (cfg.customBanners && cfg.customBanners[el.id]) return;
+        el.dataset.adsense = '1';
+        el.dataset.loaded = '1';
+        const isSide = el.classList.contains('ad-sidebar');
+        el.innerHTML = `<ins class="adsbygoogle" style="display:block;${isSide ? 'width:160px;height:600px;' : 'width:100%;min-height:90px;'}"
+            data-ad-client="${pub}" data-ad-slot="${slotId}"
+            data-ad-format="${isSide ? 'vertical' : 'auto'}" data-full-width-responsive="true"></ins>`;
+        try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+    });
+}
+
+// ---- ADSTERRA MODÜLÜ ----
+// Adsterra script kodu (admin'den) tüm data-slot'lara ya da body sonuna eklenir.
+function initAdsterra() {
+    if (!cfg.adsterraEnabled || !cfg.adsterraCode) return;
+    const code = cfg.adsterraCode;
+    // Adsterra kodunu belirtilen slotlara yerleştir (custom banner önceliğini koru)
+    document.querySelectorAll('[data-slot]').forEach(el => {
+        if (el.dataset.adsterra === '1') return;
+        if (el.dataset.adsense === '1') return;  // AdSense varsa Adsterra koyma
+        if (cfg.customBanners && cfg.customBanners[el.id]) return;  // custom banner varsa dokunma
+        el.dataset.adsterra = '1';
+        el.dataset.loaded = '1';
+        el.innerHTML = code;
+        // script tag'lerini yeniden çalıştır (innerHTML ile eklenen script'ler çalışmaz)
+        el.querySelectorAll('script').forEach(old => {
+            const s = document.createElement('script');
+            if (old.src) s.src = old.src; else s.textContent = old.textContent;
+            Array.from(old.attributes).forEach(a => { if (a.name !== 'src') s.setAttribute(a.name, a.value); });
+            document.head.appendChild(s);
+        });
+    });
 }
 
 // ---- DIRECT LINK MODU ----
@@ -885,6 +953,12 @@ function fillAdminForm() {
     document.getElementById('cfg-zone-banner').value = cfg.zoneBanner;
     document.getElementById('cfg-zone-native').value = cfg.zoneNative;
     document.getElementById('cfg-antiblock').checked = cfg.antiBlock;
+    document.getElementById('cfg-adsense-pub').value = cfg.adsensePub || '';
+    document.getElementById('cfg-adsense-slot-top').value = cfg.adsenseSlotTop || '';
+    document.getElementById('cfg-adsense-slot-mid').value = cfg.adsenseSlotMid || '';
+    document.getElementById('cfg-adsense-slot-side').value = cfg.adsenseSlotSide || '';
+    document.getElementById('cfg-adsterra-code').value = cfg.adsterraCode || '';
+    document.getElementById('cfg-adsterra-enabled').checked = !!cfg.adsterraEnabled;
     document.getElementById('cfg-ref-bonus').value = cfg.refBonus;
     document.getElementById('cfg-task1').value = cfg.task1Reward;
     document.getElementById('cfg-task2').value = cfg.task2Reward;
@@ -1121,6 +1195,12 @@ document.getElementById('admin-save-btn').onclick = () => {
     cfg.zoneBanner       = document.getElementById('cfg-zone-banner').value.trim();
     cfg.zoneNative       = document.getElementById('cfg-zone-native').value.trim();
     cfg.antiBlock        = document.getElementById('cfg-antiblock').checked;
+    cfg.adsensePub       = document.getElementById('cfg-adsense-pub').value.trim();
+    cfg.adsenseSlotTop   = document.getElementById('cfg-adsense-slot-top').value.trim();
+    cfg.adsenseSlotMid   = document.getElementById('cfg-adsense-slot-mid').value.trim();
+    cfg.adsenseSlotSide  = document.getElementById('cfg-adsense-slot-side').value.trim();
+    cfg.adsterraCode     = document.getElementById('cfg-adsterra-code').value.trim();
+    cfg.adsterraEnabled  = document.getElementById('cfg-adsterra-enabled').checked;
     cfg.refBonus         = parseFloat(document.getElementById('cfg-ref-bonus').value) || 0.25;
     cfg.task1Reward      = parseFloat(document.getElementById('cfg-task1').value) || 0.05;
     cfg.task2Reward      = parseFloat(document.getElementById('cfg-task2').value) || 0.10;

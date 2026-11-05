@@ -260,6 +260,23 @@
                     <label class="admin-label">Native Zone ID (yatay banner)</label>
                     <input type="text" id="cfg-zone-native">
                     <label class="admin-check"><input type="checkbox" id="cfg-antiblock"> Anti-Adblock etkin</label>
+
+                    <h4 class="admin-sec">🟦 Google AdSense</h4>
+                    <p class="admin-note">AdSense hesabınız onaylandı! Publisher ID ve reklam birimi ID'lerini girin — otomatik yerleşir. Publisher ID: ca-pub-XXXXXXXXXXXXXXXX</p>
+                    <label class="admin-label">AdSense Publisher ID</label>
+                    <input type="text" id="cfg-adsense-pub" placeholder="ca-pub-1234567890123456">
+                    <label class="admin-label">Üst Banner AdSense Slot ID</label>
+                    <input type="text" id="cfg-adsense-slot-top" placeholder="1234567890">
+                    <label class="admin-label">Çark Altı AdSense Slot ID</label>
+                    <input type="text" id="cfg-adsense-slot-mid" placeholder="1234567890">
+                    <label class="admin-label">Yan Banner AdSense Slot ID</label>
+                    <input type="text" id="cfg-adsense-slot-side" placeholder="1234567890">
+
+                    <h4 class="admin-sec">🟧 Adsterra</h4>
+                    <p class="admin-note">Adsterra onayınız geldi! Reklam kodunu (script) buraya yapıştırın — slot'lara otomatik yerleşir. "Publisher ID" yerine Adsterra'nın verdiği tam script kodunu girin.</p>
+                    <label class="admin-label">Adsterra Reklam Kodu (script)</label>
+                    <textarea id="cfg-adsterra-code" class="admin-textarea" rows="5" placeholder="<script async...></script>"></textarea>
+                    <label class="admin-check"><input type="checkbox" id="cfg-adsterra-enabled"> Adsterra'yı etkinleştir</label>
                 </div>
 
                 <!-- TAB: BANNERLAR -->
