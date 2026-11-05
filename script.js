@@ -67,8 +67,8 @@ const DEFAULTS = {
 // Bu dosya commit+push edilince bannerlar dünyanın her yerinden görünür olur.
 const PUBLISHED_BANNERS = {
     customBanners: {
-        "ad-zone-top": "<a href=\"https://digitalicaa.com/\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/j8Qq3rw.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>",
-        "ad-zone-mid": "<a href=\"https://zoebet348.com\" target=\"_blank\" rel=\"noopener\"><img src=\"https://i.imgur.com/auPRiaG.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>"
+        "ad-zone-top": "<a href=\"https://digitalicaa.com/\" target=\"_blank\" rel=\"noopener\"><img src=\"assets/banner-top.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>",
+        "ad-zone-mid": "<a href=\"https://zoebet348.com\" target=\"_blank\" rel=\"noopener\"><img src=\"assets/banner-mid.jpg\" alt=\"banner\" style=\"width:100%;height:auto;display:block;object-fit:contain;\"></a>"
     },
     adsterraCode: "<script>\n  atOptions = {\n    'key' : 'fbdc60ac884cc4d42af63c00cfb09712',\n    'format' : 'iframe',\n    'height' : 600,\n    'width' : 160,\n    'params' : {}\n  };\n<\/script>\n<script src=\"https://bauval.org/22/fbdc60ac884cc4d42af63c00cfb09712\"><\/script>",
     adsterraEnabled: true
@@ -91,27 +91,53 @@ let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage
 
 function saveCfg() { localStorage.setItem('odulbox_cfg', JSON.stringify(cfg)); }
 // ============ 3.5 BULUT SENK (kayıtlar tüm cihazlarda görünsün) ============
-// Ücretsiz JSON storage: api.restful-api.dev — CORS açık, POST/PUT/GET tarayıcıdan çalışır
-const CLOUD_BASE = 'https://api.restful-api.dev/objects';
-const CLOUD_USERS_OBJ = 'ff808181a09d98f701a1a25069dd24c1';
-const CLOUD_WD_OBJ    = 'ff808181a09d98f701a1a2506b1c24c2';
+// Birincil: extendsclass JSON storage (PATCH ile güncelleme; CDN cache-bust şart!)
+// Yedek: api.restful-api.dev (günlük 50 istek limiti var — sadece fallback)
+const CLOUD_BASE = 'https://extendsclass.com/api/json-storage/bin';
+const CLOUD_USERS_OBJ = 'ecabfee';
+const CLOUD_WD_OBJ    = 'fdfbcff';
+const CLOUD_FALLBACK_BASE = 'https://api.restful-api.dev/objects';
+const CLOUD_USERS_FALLBACK = 'ff808181a09d98f701a1a25069dd24c1';
+const CLOUD_WD_FALLBACK    = 'ff808181a09d98f701a1a2506b1c24c2';
 let cloudSaveTimer = null;
 async function cloudGet(objId, key) {
+    // cache-buster: extendsclass CDN'i 2 saat cache'liyor — ?_=timestamp ile bypass
     try {
-        const r = await fetch(`${CLOUD_BASE}/${objId}`, { cache: 'no-store' });
-        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const r = await fetch(`${CLOUD_BASE}/${objId}?_=${Date.now()}`, { cache: 'no-store' });
+        if (r.ok) {
+            const data = await r.json();
+            return data && data[key] !== undefined ? data[key] : [];
+        }
+    } catch (e) { console.log('cloudGet birincil hata:', e.message); }
+    // fallback
+    try {
+        const r = await fetch(`${CLOUD_FALLBACK_BASE}/${CLOUD_USERS_FALLBACK === objId ? CLOUD_USERS_FALLBACK : CLOUD_WD_FALLBACK}`, { cache: 'no-store' });
+        if (!r.ok) return null;
         const data = await r.json();
         return (data && data.data && data.data[key]) || [];
-    } catch (e) { console.log('cloudGet hatası:', e.message); return null; }
+    } catch (e) { console.log('cloudGet yedek hata:', e.message); return null; }
 }
 async function cloudPush(objId, key, arr, objName) {
     try {
+        // extendsclass PATCH: tüm anahtarları korur, sadece bu anahtarı günceller
         const r = await fetch(`${CLOUD_BASE}/${objId}`, {
-            method: 'PUT', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: objName, data: { [key]: arr } })
+            method: 'PATCH', headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ [key]: arr })
         });
-        return r.ok;
-    } catch (e) { console.log('cloudPush hatası:', e.message); return false; }
+        if (r.ok) return true;
+        throw new Error('HTTP ' + r.status);
+    } catch (e) {
+        console.log('cloudPush birincil hata:', e.message);
+        // fallback: restful-api PUT (limit aşılabilir — sessizce geç)
+        try {
+            const fbId = objId === CLOUD_USERS_OBJ ? CLOUD_USERS_FALLBACK : CLOUD_WD_FALLBACK;
+            const r2 = await fetch(`${CLOUD_FALLBACK_BASE}/${fbId}`, {
+                method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: objName, data: { [key]: arr } })
+            });
+            return r2.ok;
+        } catch (e2) { console.log('cloudPush yedek hata:', e2.message); return false; }
+    }
 }
 // debounce'lu push (her kayıtta spam olmasın)
 function pushUsersCloud() {
@@ -670,7 +696,6 @@ function showMonetagInterstitial() {
 function initMonetagZones() {
     initAdSense(); // AdSense varsa önce o yerleşsin
     initAdsterra(); // Adsterra varsa sonra o (AdSense'in almadığı slotlara)
-    initSelfPromo(); // hiçbir ağın almadığı slotlara sitenin kendi promosu
     // DIRECT LINK modu: Monetag'ten aldığın hazır bağlantı linki.
     // Zone ID girmeye gerek kalmadan tüm site linkleri/klikleri üzerinden reklam gelir.
     if (cfg.directLink) {
@@ -688,6 +713,8 @@ function initMonetagZones() {
         if (el.classList.contains('ad-sidebar') && cfg.zoneBanner) { loadMonetagTag(el, cfg.zoneBanner, 'banner'); return; }
         if (el.classList.contains('ad-banner') && cfg.zoneNative) { loadMonetagTag(el, cfg.zoneNative, 'native'); }
     });
+    // En son: hiçbir ağın almadığı slotlara sitenin kendi promosu
+    initSelfPromo();
     // Yan bannerler masaüstünde her zaman gorunur olsun (geniş ekran kontrolü)
     document.querySelectorAll('.ad-sidebar').forEach(el => { if (window.innerWidth > 1100) el.style.display = 'flex'; });
     if (cfg.zonePopunder) {
