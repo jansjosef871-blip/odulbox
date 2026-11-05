@@ -91,98 +91,98 @@ let cfg = Object.assign({}, DEFAULTS, PUBLISHED_BANNERS, JSON.parse(localStorage
 
 function saveCfg() { localStorage.setItem('odulbox_cfg', JSON.stringify(cfg)); }
 // ============ 3.5 BULUT SENK (kayıtlar tüm cihazlarda görünsün) ============
-// Birincil: extendsclass JSON storage (PATCH ile güncelleme; CDN cache-bust şart!)
-// Yedek: api.restful-api.dev (günlük 50 istek limiti var — sadece fallback)
-const CLOUD_BASE = 'https://extendsclass.com/api/json-storage/bin';
-const CLOUD_USERS_OBJ = 'ecabfee';
-const CLOUD_WD_OBJ    = 'fdfbcff';
-const CLOUD_FALLBACK_BASE = 'https://api.restful-api.dev/objects';
-const CLOUD_USERS_FALLBACK = 'ff808181a09d98f701a1a25069dd24c1';
-const CLOUD_WD_FALLBACK    = 'ff808181a09d98f701a1a2506b1c24c2';
+// Ana yol: ntfy.sh pub/sub — CORS tam açık, POST text/plain = basit istek (preflight YOK, kesin çalışır)
+// Her kayıt/çekim, topic'e bir mesaj olarak yazılır. Admin açılışta tüm geçmişi çeker (since=all),
+// e-posta/ID bazlı birleştirir ve bulut + local senkron kalır.
+// (ntfy mesaj cache'i 12 saat — kalıcılık admin/localde birleşimle sağlanır; her cihaz pull yapar.)
+const NTFY_BASE = 'https://ntfy.sh';
+const NTFY_USERS_TOPIC = 'odulbox-users-7f3k9q';
+const NTFY_WD_TOPIC    = 'odulbox-wd-2m8x4v';
 let cloudSaveTimer = null;
-async function cloudGet(objId, key) {
-    // cache-buster: extendsclass CDN'i 2 saat cache'liyor — ?_=timestamp ile bypass
+async function ntfyPublish(topic, obj) {
     try {
-        const r = await fetch(`${CLOUD_BASE}/${objId}?_=${Date.now()}`, { cache: 'no-store' });
-        if (r.ok) {
-            const data = await r.json();
-            return data && data[key] !== undefined ? data[key] : [];
-        }
-    } catch (e) { console.log('cloudGet birincil hata:', e.message); }
-    // fallback
-    try {
-        const r = await fetch(`${CLOUD_FALLBACK_BASE}/${CLOUD_USERS_FALLBACK === objId ? CLOUD_USERS_FALLBACK : CLOUD_WD_FALLBACK}`, { cache: 'no-store' });
-        if (!r.ok) return null;
-        const data = await r.json();
-        return (data && data.data && data.data[key]) || [];
-    } catch (e) { console.log('cloudGet yedek hata:', e.message); return null; }
-}
-async function cloudPush(objId, key, arr, objName) {
-    try {
-        // extendsclass PATCH: tüm anahtarları korur, sadece bu anahtarı günceller
-        const r = await fetch(`${CLOUD_BASE}/${objId}`, {
-            method: 'PATCH', headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify({ [key]: arr })
+        const r = await fetch(`${NTFY_BASE}/${topic}`, {
+            method: 'POST', headers: { 'Content-Type': 'text/plain', 'Title': 'odulbox-sync' },
+            body: JSON.stringify(obj)
         });
-        if (r.ok) return true;
-        throw new Error('HTTP ' + r.status);
-    } catch (e) {
-        console.log('cloudPush birincil hata:', e.message);
-        // fallback: restful-api PUT (limit aşılabilir — sessizce geç)
-        try {
-            const fbId = objId === CLOUD_USERS_OBJ ? CLOUD_USERS_FALLBACK : CLOUD_WD_FALLBACK;
-            const r2 = await fetch(`${CLOUD_FALLBACK_BASE}/${fbId}`, {
-                method: 'PUT', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: objName, data: { [key]: arr } })
-            });
-            return r2.ok;
-        } catch (e2) { console.log('cloudPush yedek hata:', e2.message); return false; }
-    }
+        return r.ok;
+    } catch (e) { console.log('ntfyPublish hata:', e.message); return false; }
+}
+async function ntfyPollAll(topic) {
+    try {
+        const r = await fetch(`${NTFY_BASE}/${topic}/json?poll=1&since=all`, { cache: 'no-store' });
+        if (!r.ok) return null;
+        const txt = await r.text();
+        const lines = txt.trim().split('\n').filter(Boolean);
+        const msgs = [];
+        lines.forEach(l => { try { const o = JSON.parse(l); if (o.event === 'message' && o.message) msgs.push(JSON.parse(o.message)); } catch (e) {} });
+        return msgs;
+    } catch (e) { console.log('ntfyPollAll hata:', e.message); return null; }
+}
+// kullanıcı birleştirme: aynı e-posta → en yeni joinedAt kazanır
+function mergeUsers(cloudArr, localArr) {
+    const map = {};
+    [...cloudArr, ...localArr].forEach(u => {
+        if (!u || !u.email) return;
+        const ex = map[u.email];
+        if (!ex || (u.joinedAt || 0) >= (ex.joinedAt || 0)) map[u.email] = u;
+    });
+    return Object.values(map);
+}
+// çekim birleştirme: aynı id → 'paid'/'rejected' durumu 'pending'i ezer
+function mergeById(cloudArr, localArr) {
+    const map = {};
+    [...cloudArr, ...localArr].forEach(r => {
+        if (!r || !r.id) return;
+        const ex = map[r.id];
+        const rank = s => s === 'pending' ? 0 : 1;
+        if (!ex || rank(r.status) >= rank(ex.status)) map[r.id] = r;
+    });
+    return Object.values(map);
 }
 // debounce'lu push (her kayıtta spam olmasın)
 function pushUsersCloud() {
     clearTimeout(cloudSaveTimer);
-    cloudSaveTimer = setTimeout(() => {
-        cloudPush(CLOUD_USERS_OBJ, 'users', JSON.parse(localStorage.getItem('odulbox_users') || '[]'), 'odulbox-users-v1');
-    }, 1200);
+    cloudSaveTimer = setTimeout(async () => {
+        const users = JSON.parse(localStorage.getItem('odulbox_users') || '[]');
+        // ntfy tek mesaja sığdırmak için en fazla son 200 kayıt (kayıtlar kalıcı admin localinde birikir)
+        await ntfyPublish(NTFY_USERS_TOPIC, { type: 'users-full', users: users.slice(-200) });
+    }, 1500);
 }
 function pushWithdrawalsCloud() {
     clearTimeout(cloudWdTimer);
-    cloudWdTimer = setTimeout(() => {
-        cloudPush(CLOUD_WD_OBJ, 'withdrawals', JSON.parse(localStorage.getItem('odulbox_withdrawals') || '[]'), 'odulbox-withdrawals-v1');
-    }, 1200);
+    cloudWdTimer = setTimeout(async () => {
+        const wds = JSON.parse(localStorage.getItem('odulbox_withdrawals') || '[]');
+        await ntfyPublish(NTFY_WD_TOPIC, { type: 'wd-full', withdrawals: wds.slice(-200) });
+    }, 1500);
 }
 let cloudWdTimer = null;
-// sayfa açılışında: buluttan çek (localde eksikse veya bulutta fazlaysa merge)
+// sayfa açılışında: buluttan tüm geçmişi çek, local ile birleştir
 async function cloudPullOnStart() {
-    const [cUsers, cWd] = await Promise.all([
-        cloudGet(CLOUD_USERS_OBJ, 'users'),
-        cloudGet(CLOUD_WD_OBJ, 'withdrawals')
+    const [userMsgs, wdMsgs] = await Promise.all([
+        ntfyPollAll(NTFY_USERS_TOPIC),
+        ntfyPollAll(NTFY_WD_TOPIC)
     ]);
     try {
-        if (Array.isArray(cUsers)) {
+        if (Array.isArray(userMsgs) && userMsgs.length) {
+            // tüm mesajlardaki kullanıcıları topla
+            const cloudUsers = [];
+            userMsgs.forEach(m => { if (m && Array.isArray(m.users)) cloudUsers.push(...m.users); });
             const lUsers = JSON.parse(localStorage.getItem('odulbox_users') || '[]');
-            // e-posta bazlı merge: bulut + local birleşimi, en yeni joinedAt kazanır
-            const map = {};
-            [...cUsers, ...lUsers].forEach(u => {
-                if (!u || !u.email) return;
-                const ex = map[u.email];
-                if (!ex || (u.joinedAt || 0) >= (ex.joinedAt || 0)) map[u.email] = u;
-            });
-            const merged = Object.values(map);
+            const merged = mergeUsers(cloudUsers, lUsers);
             if (JSON.stringify(merged) !== JSON.stringify(lUsers)) {
                 localStorage.setItem('odulbox_users', JSON.stringify(merged));
-                pushUsersCloud();
+                if (adminUsersList) renderAdminUsers();
             }
         }
-        if (Array.isArray(cWd)) {
+        if (Array.isArray(wdMsgs) && wdMsgs.length) {
+            const cloudWd = [];
+            wdMsgs.forEach(m => { if (m && Array.isArray(m.withdrawals)) cloudWd.push(...m.withdrawals); });
             const lWd = JSON.parse(localStorage.getItem('odulbox_withdrawals') || '[]');
-            const map = {};
-            [...cWd, ...lWd].forEach(r => { if (r && r.id) map[r.id] = r; });
-            const merged = Object.values(map);
+            const merged = mergeById(cloudWd, lWd);
             if (JSON.stringify(merged) !== JSON.stringify(lWd)) {
                 localStorage.setItem('odulbox_withdrawals', JSON.stringify(merged));
-                pushWithdrawalsCloud();
+                if (typeof renderAdminWithdrawals === 'function') renderAdminWithdrawals();
             }
         }
     } catch (e) { console.log('cloudPullOnStart hatası:', e.message); }
@@ -1159,6 +1159,15 @@ function renderAdminUsers() {
     renderAdminStats();
     renderAdminWithdrawals();
 }
+
+// Tüm kayıtları sıfırla (admin) — kullanıcının kendi test/karmaşa verisini temizler
+document.getElementById('admin-clear-users-btn')?.addEventListener('click', () => {
+    if (!confirm('TÜM kullanıcı kayıtları ve çekim talepleri silinecek. Emin misin?')) return;
+    localStorage.removeItem('odulbox_users');
+    localStorage.removeItem('odulbox_withdrawals');
+    renderAdminUsers();
+    alert('Tüm kayıtlar silindi. 🗑️');
+});
 
 // Özet istatistik kartları
 function renderAdminStats() {
